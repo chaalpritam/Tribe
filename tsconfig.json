@@ -9,6 +9,9 @@
       "@navigation/*": [
         "src/navigation/*"
       ],
+      "@configs": [
+        "src/configs/index"
+      ],
       // "@hooks": ["src/hooks/index"],
     },
   }
