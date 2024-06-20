@@ -11,6 +11,7 @@ module.exports = {
           '@images': './src/images/*',
           '@navigation/*': './src/navigation/*',
           '@configs': './src/configs/index',
+          '@data': './src/data/index',
         },
       },
     ],

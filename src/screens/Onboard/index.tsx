@@ -1,11 +1,15 @@
 import {StyleSheet, Text, View, SafeAreaView, Image} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {PropsWithChildren, useEffect} from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import {IMAGE} from 'images';
 import PrimaryButton from 'components/Button/PrimaryButton';
 import {Colors} from 'configs';
 
-const Onboard = () => {
+type Props = PropsWithChildren<{
+  navigation: any;
+}>;
+
+const Onboard = ({navigation}: Props) => {
   useEffect(() => {
     SplashScreen.show();
 
@@ -16,12 +20,20 @@ const Onboard = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleNav = () => {
+    navigation.navigate('TribePager');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
         <Image style={styles.img} source={IMAGE.Onboard} />
       </View>
-      <PrimaryButton title="Login with phone" style={styles.btn} />
+      <PrimaryButton
+        title="Login with phone"
+        style={styles.btn}
+        onPress={handleNav}
+      />
       <Text style={styles.text}>Login with email</Text>
     </SafeAreaView>
   );

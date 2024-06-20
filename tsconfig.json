@@ -12,6 +12,9 @@
       "@configs": [
         "src/configs/index"
       ],
+      "@data": [
+        "src/data/index"
+      ]
       // "@hooks": ["src/hooks/index"],
     },
   }
