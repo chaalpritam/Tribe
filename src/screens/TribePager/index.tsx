@@ -5,36 +5,22 @@ import {
   TouchableOpacity,
   Animated,
   BackHandler,
-  Text,
   Platform,
   Image,
 } from 'react-native';
-import SplashScreen from 'react-native-splash-screen';
-import PagerView from 'react-native-pager-view';
 import {useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import PagerView from 'react-native-pager-view';
 import OnboardPage from 'components/OnBoard';
 import {ONBOARD} from 'data';
 import {Colors} from 'configs';
 import {IMAGE} from 'images';
 
-interface OnBoardProps {}
-
-const TribePager = memo((_props: OnBoardProps) => {
+const TribePager = memo(() => {
   const pagerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
   const buttonAnimation = useRef(new Animated.Value(0)).current;
-  const {navigate} = useNavigation();
-
-  useEffect(() => {
-    const hideSplashScreen = () => {
-      SplashScreen.hide();
-    };
-
-    const timeoutId = setTimeout(hideSplashScreen, 1000);
-
-    return () => clearTimeout(timeoutId);
-  }, []);
+  const navigation = useNavigation();
 
   const totalPages = ONBOARD.length;
 
@@ -68,6 +54,14 @@ const TribePager = memo((_props: OnBoardProps) => {
       duration: 300,
       useNativeDriver: true,
     }).start();
+  };
+
+  const handleNextPage = () => {
+    if (currentPage === totalPages - 1) {
+      navigation.navigate('Neighbourhood'); // Replace 'Neighbourhood' with your screen name
+    } else {
+      setPage(currentPage + 1);
+    }
   };
 
   const RenderButtons = ({pages}: {pages: number}) => {
@@ -108,7 +102,7 @@ const TribePager = memo((_props: OnBoardProps) => {
         ref={pagerRef}
         onPageScroll={handlePageChange}
         scrollEnabled={false} // Disable swipe gestures
-        useNext={false}>
+      >
         {ONBOARD.map((item, index) => (
           <View key={item.id.toString()}>
             <OnboardPage
@@ -124,13 +118,9 @@ const TribePager = memo((_props: OnBoardProps) => {
         style={{
           justifyContent: 'space-between',
           flexDirection: 'row',
-          //   backgroundColor: 'red',
         }}>
         <RenderButtons pages={totalPages} />
-        <TouchableOpacity
-          style={styles.arrowButton}
-          onPress={() => setPage(currentPage + 1)}
-          disabled={currentPage === totalPages - 1}>
+        <TouchableOpacity style={styles.arrowButton} onPress={handleNextPage}>
           <Image source={IMAGE.ArrowRight} />
         </TouchableOpacity>
       </View>
@@ -144,7 +134,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    // alignItems: 'center',
     marginHorizontal: 16,
   },
   pagerView: {
@@ -156,7 +145,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     paddingBottom: 20,
-    // backgroundColor: 'green',
   },
   buttonContainer: {
     marginHorizontal: 5,
@@ -173,7 +161,6 @@ const styles = StyleSheet.create({
     height: 4,
   },
   arrowButton: {
-    // position: 'absolute',
     bottom: 30,
     right: 30,
     width: 60,
@@ -193,9 +180,5 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
-  },
-  arrowText: {
-    fontSize: 24,
-    color: Colors.PrimaryColor,
   },
 });
