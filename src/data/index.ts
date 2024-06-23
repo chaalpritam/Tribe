@@ -30,3 +30,36 @@ export const ONBOARD = [
     image: IMAGE.neighbourhood,
   },
 ];
+
+export const PostData = [
+  {
+    id: 1,
+    title: 'Photo',
+    image: IMAGE.photo,
+  },
+  {
+    id: 2,
+    title: 'Question',
+    image: IMAGE.Questions,
+  },
+  {
+    id: 3,
+    title: 'Poll',
+    image: IMAGE.poll,
+  },
+  {
+    id: 4,
+    title: 'Event',
+    image: IMAGE.Event,
+  },
+  {
+    id: 5,
+    title: 'Tip',
+    image: IMAGE.trip,
+  },
+  {
+    id: 6,
+    title: 'Other',
+    image: IMAGE.Others,
+  },
+];

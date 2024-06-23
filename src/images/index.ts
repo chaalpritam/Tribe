@@ -5,4 +5,12 @@ export const IMAGE: any = {
   neighbourhood: require('images/neighbourhood.png'),
   neighbours: require('images/neighbours.png'),
   ArrowRight: require('images/ArrowRight.png'),
+  diversity: require('images/diversity.png'),
+  team: require('images/team.png'),
+  photo: require('images/photo.png'),
+  Questions: require('images/Questions.png'),
+  poll: require('images/poll.png'),
+  Event: require('images/Event.png'),
+  trip: require('images/trip.png'),
+  Others: require('images/Others.png'),
 };

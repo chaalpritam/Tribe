@@ -9,6 +9,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import PrimaryButton from 'components/Button/PrimaryButton';
+import {useNavigation} from '@react-navigation/native';
 
 const neighborhoods = [
   'HSR',
@@ -22,6 +23,11 @@ const neighborhoods = [
 
 const Neighbourhood = () => {
   const [selectedNeighborhood, setSelectedNeighborhood] = useState(null);
+  const navigation = useNavigation();
+
+  const handleNav = () => {
+    navigation.navigate('TribeWait');
+  };
 
   const renderItem = ({item}) => (
     <TouchableOpacity
@@ -44,7 +50,11 @@ const Neighbourhood = () => {
           keyExtractor={item => item}
         />
       </View>
-      <PrimaryButton title="Select Tribe" style={styles.btn} />
+      <PrimaryButton
+        title="Select Tribe"
+        style={styles.btn}
+        onPress={handleNav}
+      />
     </SafeAreaView>
   );
 };
