@@ -8,6 +8,7 @@ import TribeWait from 'screens/TribeWait';
 import TribeCount from 'screens/TribeCount';
 import WhatyouWanndo from 'screens/WhatyouWanndo';
 import Profile from 'screens/Profile';
+import WhatyouWann from 'screens/WhatyouWann';
 
 export type StackNavigatorParamList = {
   Onboard: undefined;
@@ -17,6 +18,7 @@ export type StackNavigatorParamList = {
   TribeCount: undefined;
   WhatyouWanndo: undefined;
   Profile: undefined;
+  WhatyouWann: undefined;
 };
 
 const Stack = createStackNavigator<StackNavigatorParamList>();
@@ -59,6 +61,11 @@ function Nav(): JSX.Element {
       <Stack.Screen
         name="WhatyouWanndo"
         component={WhatyouWanndo}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="WhatyouWann"
+        component={WhatyouWann}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

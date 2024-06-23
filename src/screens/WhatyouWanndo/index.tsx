@@ -11,8 +11,19 @@ const WhatyouWanndo = () => {
   const handleNav = () => {
     navigation.navigate('Profile');
   };
+
+  const ItemPress = item => {
+    navigation.navigate('WhatyouWann', {
+      title: item.title,
+    });
+  };
+
   const renderItem = ({item}) => (
-    <PostCard title={item.title} image={item.image} />
+    <PostCard
+      title={item.title}
+      image={item.image}
+      onPress={() => ItemPress(item)}
+    />
   );
 
   const ItemSeparator = () => <View style={styles.itemSeparator} />;

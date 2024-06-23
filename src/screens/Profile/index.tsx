@@ -94,7 +94,8 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     borderWidth: 2,
-    borderColor: '#fff',
+    resizeMode: 'cover',
+    alignSelf: 'center',
   },
   name: {
     fontSize: 20,
@@ -133,6 +134,9 @@ const styles = StyleSheet.create({
     position: 'relative',
     alignSelf: 'center',
     // marginTop: '40%',
-    // bottom: 30,
+    bottom: 30,
+    backgroundColor: '#fff',
+    borderRadius: 50,
+    borderWidth: 1,
   },
 });
