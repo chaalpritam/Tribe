@@ -4,8 +4,13 @@ import PrimaryButton from 'components/Button/PrimaryButton';
 import {Colors} from 'configs';
 import PostCard from 'components/PostCard';
 import {PostData} from 'data';
+import {useNavigation} from '@react-navigation/native';
 
 const WhatyouWanndo = () => {
+  const navigation = useNavigation();
+  const handleNav = () => {
+    navigation.navigate('Profile');
+  };
   const renderItem = ({item}) => (
     <PostCard title={item.title} image={item.image} />
   );
@@ -24,7 +29,11 @@ const WhatyouWanndo = () => {
         ItemSeparatorComponent={ItemSeparator}
         columnWrapperStyle={styles.columnWrapper}
       />
-      <PrimaryButton title="Check my profile" style={styles.btn} />
+      <PrimaryButton
+        title="Check my profile"
+        style={styles.btn}
+        onPress={handleNav}
+      />
     </SafeAreaView>
   );
 };

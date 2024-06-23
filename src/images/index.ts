@@ -13,4 +13,6 @@ export const IMAGE: any = {
   Event: require('images/Event.png'),
   trip: require('images/trip.png'),
   Others: require('images/Others.png'),
+  Bannerimg: require('images/bannerimg.png'),
+  ProfileImg: require('images/profileImg.png'),
 };
