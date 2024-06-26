@@ -15,4 +15,6 @@ export const IMAGE: any = {
   Others: require('images/Others.png'),
   Bannerimg: require('images/bannerimg.png'),
   ProfileImg: require('images/profileImg.png'),
+  Vector: require('images/Vector.png'),
+  Menu: require('images/menu.png'),
 };
