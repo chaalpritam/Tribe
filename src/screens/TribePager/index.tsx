@@ -15,6 +15,7 @@ import OnboardPage from 'components/OnBoard';
 import {ONBOARD} from 'data';
 import {Colors} from 'configs';
 import {IMAGE} from 'images';
+import SplashScreen from 'react-native-splash-screen';
 
 const TribePager = memo(() => {
   const pagerRef = useRef(null);
@@ -23,6 +24,16 @@ const TribePager = memo(() => {
   const navigation = useNavigation();
 
   const totalPages = ONBOARD.length;
+
+  useEffect(() => {
+    SplashScreen.show();
+
+    const timer = setTimeout(() => {
+      SplashScreen.hide();
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const setPage = (index: number) => {
     if (pagerRef.current) {
@@ -58,7 +69,7 @@ const TribePager = memo(() => {
 
   const handleNextPage = () => {
     if (currentPage === totalPages - 1) {
-      navigation.navigate('Neighbourhood'); // Replace 'Neighbourhood' with your screen name
+      navigation.navigate('Onboard'); // Replace 'Neighbourhood' with your screen name
     } else {
       setPage(currentPage + 1);
     }

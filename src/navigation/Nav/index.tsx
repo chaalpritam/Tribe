@@ -26,7 +26,7 @@ const Stack = createStackNavigator<StackNavigatorParamList>();
 function Nav(): JSX.Element {
   return (
     <Stack.Navigator
-      initialRouteName="Onboard"
+      initialRouteName="TribePager"
       screenOptions={{gestureEnabled: false, headerShown: true}}>
       <Stack.Screen
         name="Onboard"

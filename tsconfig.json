@@ -2,6 +2,7 @@
   "extends": "@react-native/typescript-config/tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "types": ["react-native", "react-native-dotenv"],
     "paths": {
       "*": ["src/*"],
       "@components": ["src/components/*"],
@@ -14,8 +15,10 @@
       ],
       "@data": [
         "src/data/index"
-      ]
-      // "@hooks": ["src/hooks/index"],
+      ],
+      "@utils": [
+        "src/utils"
+      ],
     },
   }
 }
