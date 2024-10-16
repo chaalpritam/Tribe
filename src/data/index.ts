@@ -63,3 +63,13 @@ export const PostData = [
     image: IMAGE.Others,
   },
 ];
+
+export const neighborhoods = [
+  {id: 'chennai', name: 'Chennai', img: IMAGE.chennai},
+  {id: 'bengaluru', name: 'Bangalore', img: IMAGE.bengalure},
+  {id: 'coimbatore', name: 'Coimbatore', img: IMAGE.coimbatore},
+  {id: 'delhi', name: 'Delhi', img: IMAGE.delhi},
+  {id: 'mumbai', name: 'Mumbai', img: IMAGE.mumbai},
+  {id: 'hyderabad', name: 'Hyderabad', img: IMAGE.hyderabad},
+  {id: 'pune', name: 'Pune', img: IMAGE.pune},
+];

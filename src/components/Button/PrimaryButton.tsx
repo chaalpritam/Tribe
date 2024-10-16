@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, ViewStyle} from 'react-native';
 import type {PropsWithChildren} from 'react';
+import {wp} from 'utils/ScreenDimensions';
 
 type Props = PropsWithChildren<{
   title: string;
@@ -27,6 +28,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     marginVertical: 16,
+    width: wp(35, true),
+    textAlign: 'center',
   },
 });
 

@@ -1,5 +1,6 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
 import React, {PropsWithChildren} from 'react';
+import {Colors} from 'configs';
 
 type Props = PropsWithChildren<{
   image: any;
@@ -23,5 +24,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 44,
     textAlign: 'center',
+    color: Colors.PrimaryColor,
   },
 });

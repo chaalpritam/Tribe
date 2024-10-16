@@ -1,6 +1,5 @@
 import {SafeAreaView, StyleSheet, Text, FlatList, View} from 'react-native';
 import React from 'react';
-import PrimaryButton from 'components/Button/PrimaryButton';
 import {Colors} from 'configs';
 import PostCard from 'components/PostCard';
 import {PostData} from 'data';
@@ -40,11 +39,6 @@ const WhatyouWanndo = () => {
         ItemSeparatorComponent={ItemSeparator}
         columnWrapperStyle={styles.columnWrapper}
       />
-      <PrimaryButton
-        title="Check my profile"
-        style={styles.btn}
-        onPress={handleNav}
-      />
     </SafeAreaView>
   );
 };
@@ -52,12 +46,6 @@ const WhatyouWanndo = () => {
 export default WhatyouWanndo;
 
 const styles = StyleSheet.create({
-  btn: {
-    position: 'absolute',
-    bottom: 30,
-    paddingHorizontal: '30%',
-    alignSelf: 'center',
-  },
   text: {
     color: Colors.PrimaryColor,
     textAlign: 'center',

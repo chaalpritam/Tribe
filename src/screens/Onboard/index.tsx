@@ -1,6 +1,5 @@
-import {StyleSheet, Text, View, SafeAreaView, Image} from 'react-native';
+import {StyleSheet, View, SafeAreaView, Image} from 'react-native';
 import React, {PropsWithChildren, useEffect, useState} from 'react';
-import SplashScreen from 'react-native-splash-screen';
 import {IMAGE} from 'images';
 import {Colors} from 'configs';
 import {PUBLIC_NEYNAR_API_KEY, PUBLIC_NEYNAR_CLIENT_ID} from '@env';
@@ -47,10 +46,10 @@ const Onboard = ({navigation}: Props) => {
     setSignerUuid(data.signer_uuid);
     AsyncStorage.setItem('fid', JSON.stringify(data.fid));
     AsyncStorage.setItem('signerUuid', data.signer_uuid);
-    // navigation.reset({
-    //   index: 0,
-    //   routes: [{name: 'MainNav'}],
-    // });
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Neighbourhood'}],
+    });
   };
 
   const options = {

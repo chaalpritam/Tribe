@@ -1,57 +1,49 @@
 import {Colors} from 'configs';
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  SafeAreaView,
-} from 'react-native';
+import {FlatList, StyleSheet, SafeAreaView, View} from 'react-native';
 import PrimaryButton from 'components/Button/PrimaryButton';
 import {useNavigation} from '@react-navigation/native';
-
-const neighborhoods = [
-  'HSR',
-  'Indira nagar',
-  'Koramangala',
-  'Madiwala',
-  'Brookfield',
-  'Electronic city',
-  'Marathali',
-];
+import {neighborhoods} from 'data';
+import TribeCard from 'components/TribeCard';
 
 const Neighbourhood = () => {
   const [selectedNeighborhood, setSelectedNeighborhood] = useState(null);
   const navigation = useNavigation();
 
   const handleNav = () => {
-    navigation.navigate('TribeWait');
+    navigation.navigate('TribeCount', {tribeId: selectedNeighborhood});
+  };
+
+  const handleSelectNeighborhood = id => {
+    setSelectedNeighborhood(id);
+    console.log(`Selected Neighborhood ID: ${id}`);
   };
 
   const renderItem = ({item}) => (
-    <TouchableOpacity
-      style={[
-        styles.item,
-        selectedNeighborhood === item && styles.selectedItem,
-      ]}
-      onPress={() => setSelectedNeighborhood(item)}>
-      <Text style={styles.itemText}>{item}</Text>
-    </TouchableOpacity>
+    <TribeCard
+      image={item.img}
+      title={item.name}
+      onPress={() => handleSelectNeighborhood(item.id)}
+      isSelected={item.id === selectedNeighborhood}
+    />
   );
-
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Select neighborhood</Text>
-      <View style={styles.listContainer}>
-        <FlatList
-          data={neighborhoods}
-          renderItem={renderItem}
-          keyExtractor={item => item}
-        />
-      </View>
+      <FlatList
+        numColumns={2}
+        data={neighborhoods}
+        renderItem={renderItem}
+        keyExtractor={item => item.id.toString()}
+        ItemSeparatorComponent={() => <View style={{height: 16}} />}
+        columnWrapperStyle={styles.flatlistWrapper}
+      />
+
       <PrimaryButton
-        title="Select Tribe"
+        title={
+          selectedNeighborhood
+            ? `Explore ${selectedNeighborhood}`
+            : 'Choose the Tribe'
+        }
         style={styles.btn}
         onPress={handleNav}
       />
@@ -62,8 +54,7 @@ const Neighbourhood = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // padding: 20,
-    margin: 16,
+    margin: 24,
   },
   title: {
     fontSize: 24,
@@ -97,8 +88,11 @@ const styles = StyleSheet.create({
   btn: {
     position: 'absolute',
     bottom: 30,
-    paddingHorizontal: '35%',
+    paddingHorizontal: '30%',
     alignSelf: 'center',
+  },
+  flatlistWrapper: {
+    justifyContent: 'space-between',
   },
 });
 

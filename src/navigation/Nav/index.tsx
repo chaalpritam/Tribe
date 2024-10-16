@@ -6,9 +6,9 @@ import TribePager from 'screens/TribePager';
 import Neighbourhood from 'screens/Neighbourhood';
 import TribeWait from 'screens/TribeWait';
 import TribeCount from 'screens/TribeCount';
-import WhatyouWanndo from 'screens/WhatyouWanndo';
 import Profile from 'screens/Profile';
 import WhatyouWann from 'screens/WhatyouWann';
+import BottomNavigator from 'navigation/BottomNavigator';
 
 export type StackNavigatorParamList = {
   Onboard: undefined;
@@ -19,6 +19,7 @@ export type StackNavigatorParamList = {
   WhatyouWanndo: undefined;
   Profile: undefined;
   WhatyouWann: undefined;
+  BottomNavigator: undefined;
 };
 
 const Stack = createStackNavigator<StackNavigatorParamList>();
@@ -54,13 +55,13 @@ function Nav(): JSX.Element {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="Profile"
-        component={Profile}
+        name="BottomNavigator"
+        component={BottomNavigator}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="WhatyouWanndo"
-        component={WhatyouWanndo}
+        name="Profile"
+        component={Profile}
         options={{headerShown: false}}
       />
       <Stack.Screen
