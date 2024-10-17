@@ -27,10 +27,7 @@ function App(): React.JSX.Element {
 
   return (
     <React.Fragment>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={MyTheme.colors.background}
-      />
+      <StatusBar />
       <NavigationContainer theme={MyTheme}>
         <Nav />
       </NavigationContainer>

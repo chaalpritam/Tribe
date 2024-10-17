@@ -30,6 +30,7 @@
     "react-native-splash-screen": "^3.3.0",
     "react-native-svg": "^15.7.1",
     "react-native-tab-view": "^3.5.2",
+    "react-native-vision-camera": "^4.5.3",
     "react-native-webview": "^13.12.3"
   },
   "devDependencies": {

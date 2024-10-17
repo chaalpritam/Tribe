@@ -115,4 +115,60 @@ export const ExploreData = [
     id: 5,
     name: 'Crowdfund',
   },
+  {
+    id: 6,
+    name: 'Poll',
+  },
+  {
+    id: 7,
+    name: 'Question',
+  },
+  {
+    id: 8,
+    name: 'Frames',
+  },
+];
+export const NFTData = [
+  {
+    id: 1,
+    img: IMAGE.nft10,
+    title: 'Venue name',
+    sol: '2.5',
+    token: 'ERC721',
+  },
+  {
+    id: 2,
+    img: IMAGE.img3,
+    title: 'Venue name',
+    sol: '2.5',
+    token: 'ERC721',
+  },
+  {
+    id: 3,
+    img: IMAGE.img4,
+    title: 'Venue name',
+    sol: '2.5',
+    token: 'ERC721',
+  },
+  {
+    id: 4,
+    img: IMAGE.nft8,
+    title: 'Venue name',
+    sol: '2.5',
+    token: 'ERC721',
+  },
+  {
+    id: 5,
+    img: IMAGE.nft9,
+    title: 'Venue name',
+    sol: '2.5',
+    token: 'ERC721',
+  },
+  {
+    id: 6,
+    img: IMAGE.img3,
+    title: 'Venue name',
+    sol: '2.5',
+    token: 'ERC721',
+  },
 ];

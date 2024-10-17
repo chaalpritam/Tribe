@@ -326,7 +326,7 @@ const Home = () => {
 
 const styles = StyleSheet.create({
   conntainer: {
-    marginHorizontal: 16,
+    margin: 16,
   },
   seprator: {
     height: 16,

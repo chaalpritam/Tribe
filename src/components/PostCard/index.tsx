@@ -39,14 +39,15 @@ const styles = StyleSheet.create({
     padding: 14,
   },
   disabledCard: {
-    backgroundColor: '#f0f0f0', // Set a disabled background color
-    opacity: 0.6, // Make it semi-transparent
+    backgroundColor: '#f0f0f0',
+    opacity: 0.6,
+    borderColor: '#BFBFBF',
   },
   txt: {
     color: Colors.PrimaryColor,
   },
   disabledText: {
-    color: '#a0a0a0', // Gray text for disabled cards
+    color: '#a0a0a0',
   },
   img: {
     marginVertical: 16,
