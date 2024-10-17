@@ -172,3 +172,26 @@ export const NFTData = [
     token: 'ERC721',
   },
 ];
+
+export const SizeBtnData = [
+  {
+    id: 1,
+    size: '1:1',
+  },
+  {
+    id: 2,
+    size: '4:5',
+  },
+  {
+    id: 3,
+    size: '3:4',
+  },
+  {
+    id: 4,
+    size: '9:16',
+  },
+  {
+    id: 5,
+    size: '16:16',
+  },
+];

@@ -11,6 +11,9 @@ import WhatyouWann from 'screens/WhatyouWann';
 import BottomNavigator from 'navigation/BottomNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import CameraScreen from 'components/Camera';
+import Crop from 'screens/Crop';
+import Mint from 'screens/Mint';
 
 export type StackNavigatorParamList = {
   Onboard: undefined;
@@ -22,6 +25,9 @@ export type StackNavigatorParamList = {
   Profile: undefined;
   WhatyouWann: undefined;
   BottomNavigator: undefined;
+  CameraScreen: undefined;
+  CropCamera: undefined;
+  Mint: undefined;
 };
 
 const Stack = createStackNavigator<StackNavigatorParamList>();
@@ -90,6 +96,21 @@ function Nav(): JSX.Element {
       <Stack.Screen
         name="WhatyouWann"
         component={WhatyouWann}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CameraScreen"
+        component={CameraScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CropCamera"
+        component={Crop}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Mint"
+        component={Mint}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -52,4 +52,9 @@ export const IMAGE = {
   nft10: require('images/Base4.png'),
   img3: require('images/eximg3.png'),
   img4: require('images/eximg4.png'),
+  cameraButton: require('images/icons/cameraButton/cameraButton.png'),
+  RotateCamera: require('images/icons/rotateCamera/RotateCamera.png'),
+  leftArrow: require('images/icons/leftArrow/LeftArrow.png'),
+  castArrow: require('images/icons/mint/mint.png'),
+  search: require('images/icons/search/search.png'),
 };

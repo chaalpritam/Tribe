@@ -11,7 +11,7 @@ import {
 import {RNCamera} from 'react-native-camera';
 import {IMAGE} from 'images';
 
-export function Camera({navigation}: {navigation: any}): JSX.Element {
+export function CameraScreen({navigation}: {navigation: any}): JSX.Element {
   const [imageUri, setImageUri] = useState<null | string>(null);
   const [cameraType, setCameraType] = useState(RNCamera.Constants.Type.back);
   const [flashMode, setFlashMode] = useState(RNCamera.Constants.FlashMode.off);
@@ -114,7 +114,7 @@ export function Camera({navigation}: {navigation: any}): JSX.Element {
                   onPress={() => takePicture(camera)}
                   style={styles.captureButton}>
                   {/* <FontAwesome name="camera" size={30} color="white" /> */}
-                  <Image source={IMAGE.capture} />
+                  <Image source={IMAGE.cameraButton} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -125,7 +125,7 @@ export function Camera({navigation}: {navigation: any}): JSX.Element {
   );
 }
 
-export default Camera;
+export default CameraScreen;
 
 const styles = StyleSheet.create({
   camera: {

@@ -9,7 +9,7 @@ const WhatyouWanndo = () => {
   const navigation = useNavigation();
 
   const ItemPress = item => {
-    navigation.navigate('WhatyouWann', {
+    navigation.navigate('CameraScreen', {
       title: item.title,
     });
   };
