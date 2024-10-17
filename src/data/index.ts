@@ -33,6 +33,11 @@ export const ONBOARD = [
 
 export const PostData = [
   {
+    id: 0,
+    title: 'Cast',
+    image: IMAGE.cast,
+  },
+  {
     id: 1,
     title: 'Photo',
     image: IMAGE.photo,
@@ -59,8 +64,23 @@ export const PostData = [
   },
   {
     id: 6,
-    title: 'Other',
+    title: 'Space',
     image: IMAGE.Others,
+  },
+  {
+    id: 7,
+    title: 'Crowdfund',
+    image: IMAGE.Crowdfund,
+  },
+  {
+    id: 8,
+    title: 'Frame',
+    image: IMAGE.Frame,
+  },
+  {
+    id: 9,
+    title: 'Sub-Channel',
+    image: IMAGE.SubChannel,
   },
 ];
 
@@ -72,4 +92,27 @@ export const neighborhoods = [
   {id: 'mumbai', name: 'Mumbai', img: IMAGE.mumbai},
   {id: 'hyderabad', name: 'Hyderabad', img: IMAGE.hyderabad},
   {id: 'pune', name: 'Pune', img: IMAGE.pune},
+];
+
+export const ExploreData = [
+  {
+    id: 1,
+    name: 'Photos',
+  },
+  {
+    id: 2,
+    name: 'Events',
+  },
+  {
+    id: 3,
+    name: 'Spaces',
+  },
+  {
+    id: 4,
+    name: 'Tip',
+  },
+  {
+    id: 5,
+    name: 'Crowdfund',
+  },
 ];

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import 'react-native-gesture-handler';
 import Onboard from 'screens/Onboard';
@@ -9,6 +9,8 @@ import TribeCount from 'screens/TribeCount';
 import Profile from 'screens/Profile';
 import WhatyouWann from 'screens/WhatyouWann';
 import BottomNavigator from 'navigation/BottomNavigator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 
 export type StackNavigatorParamList = {
   Onboard: undefined;
@@ -25,9 +27,30 @@ export type StackNavigatorParamList = {
 const Stack = createStackNavigator<StackNavigatorParamList>();
 
 function Nav(): JSX.Element {
+  const [initialRoute, setInitialRoute] = useState<
+    keyof StackNavigatorParamList | undefined
+  >(undefined);
+  useEffect(() => {
+    const checkFid = async () => {
+      const fidString = await AsyncStorage.getItem('fid');
+      setInitialRoute(fidString ? 'BottomNavigator' : 'TribePager');
+    };
+
+    checkFid();
+  }, []);
+
+  if (initialRoute === undefined) {
+    // Display a loading indicator while checking AsyncStorage
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
   return (
     <Stack.Navigator
-      initialRouteName="TribePager"
+      initialRouteName={initialRoute}
       screenOptions={{gestureEnabled: false, headerShown: true}}>
       <Stack.Screen
         name="Onboard"
@@ -73,3 +96,11 @@ function Nav(): JSX.Element {
   );
 }
 export default Nav;
+
+const styles = StyleSheet.create({
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

@@ -7,9 +7,6 @@ import {useNavigation} from '@react-navigation/native';
 
 const WhatyouWanndo = () => {
   const navigation = useNavigation();
-  const handleNav = () => {
-    navigation.navigate('Profile');
-  };
 
   const ItemPress = item => {
     navigation.navigate('WhatyouWann', {
@@ -17,11 +14,12 @@ const WhatyouWanndo = () => {
     });
   };
 
-  const renderItem = ({item}) => (
+  const renderItem = ({item, index}) => (
     <PostCard
       title={item.title}
       image={item.image}
-      onPress={() => ItemPress(item)}
+      onPress={index < 2 ? () => ItemPress(item) : null} // Only first two items are active
+      isDisabled={index >= 2} // Pass a prop to disable later cards
     />
   );
 
@@ -50,19 +48,15 @@ const styles = StyleSheet.create({
     color: Colors.PrimaryColor,
     textAlign: 'center',
     textDecorationLine: 'underline',
-    // marginVertical: 16,
   },
   listContent: {
-    marginTop: '10%',
-    // paddingBottom: 100, // to ensure button is not overlapped
+    marginVertical: '10%',
   },
   columnWrapper: {
     justifyContent: 'space-between',
-    // marginBottom: 16, // bottom margin for the row
+    marginBottom: 16, // bottom margin for the row
   },
-  itemSeparator: {
-    // height: 8, // row gap
-  },
+  itemSeparator: {},
   container: {
     flex: 1,
     margin: 16,

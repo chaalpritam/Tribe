@@ -21,7 +21,7 @@ function App(): React.JSX.Element {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      background: '#FEFEFE',
+      background: '#F4F4F4',
     },
   };
 

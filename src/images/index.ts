@@ -36,4 +36,8 @@ export const IMAGE = {
   disLike: require('images/icons/dislike/disLike.png'),
   repost: require('images/icons/repost/repost.png'),
   comment: require('images/icons/comment/comment.png'),
+  cast: require('images/cast.png'),
+  Crowdfund: require('images/Crowdfund.png'),
+  Frame: require('images/Frame.png'),
+  SubChannel: require('images/subChannel.png'),
 };

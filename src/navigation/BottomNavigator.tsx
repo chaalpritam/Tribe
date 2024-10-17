@@ -6,12 +6,9 @@ import Home from 'screens/Home';
 import {IMAGE} from 'images';
 import {hp} from 'utils/ScreenDimensions';
 import WhatyouWanndo from 'screens/WhatyouWanndo';
+import Explore from 'screens/Explore';
 
 const Bottom = createBottomTabNavigator();
-
-export const Explore = () => {
-  return <Text>Explore</Text>;
-};
 
 export const Notification = () => {
   return <Text>Notification</Text>;

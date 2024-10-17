@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {PUBLIC_NEYNAR_API_KEY} from '@env';
 import FeedLoader from 'components/Loader/FeedLoader';
 import {useNavigation} from '@react-navigation/native';
+import {TopBar} from 'components/TopBar';
 
 import BottomSheets from 'components/BottomSheet';
 
@@ -243,7 +244,8 @@ const Home = () => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.conntainer}>
+      <TopBar Title="Feed" />
       {isLoading ? (
         <FlatList
           style={{flexGrow: 1}}
@@ -266,63 +268,66 @@ const Home = () => {
           onRefresh={onRefresh}
         />
       )}
-      {isCommentVisible && (
-        <BottomSheets
-          isVisible={isCommentVisible}
-          setVisible={setCommentVisible}
-          onCastPress={ReplyPost}>
-          {selectedFeedItem?.imageSource ? (
-            <FeedCard
-              imageSource={selectedFeedItem?.imageSource}
-              location={selectedFeedItem?.location}
-              name={selectedFeedItem?.name}
-              description={selectedFeedItem?.description}
-              token={selectedFeedItem?.token}
-              time={selectedFeedItem?.time}
-              hash={selectedFeedItem?.id}
-              userName={selectedFeedItem?.userName}
-              replies={selectedFeedItem?.replies}
-              likes={selectedFeedItem?.likes}
-              channel={selectedFeedItem?.channel}
-              backgroundColor="#F4F4F4"
-            />
-          ) : (
-            <ChannelFeedCard
-              userName={selectedFeedItem?.userName}
-              location={selectedFeedItem?.location}
-              name={selectedFeedItem?.name}
-              description={selectedFeedItem?.description}
-              tag={selectedFeedItem?.token}
-              time={selectedFeedItem?.time}
-              hash={selectedFeedItem?.id}
-              replies={selectedFeedItem?.replies}
-              likes={selectedFeedItem?.likes}
-              channel={selectedFeedItem?.channel}
-              backgroundColor="#F4F4F4"
-            />
-          )}
-          <View style={styles.commentContent}>
-            {/* {pfpUrl && (
-              <Image source={{uri: pfpUrl}} style={styles.profileImage} />
-            )} */}
-            <Text style={styles.userTxt}>
-              Replying to @{selectedFeedItem?.userName}
-            </Text>
-          </View>
-          <TextInput
-            placeholder="What’s happening ??"
-            placeholderTextColor="#8F8F8F"
-            value={replyText}
-            onChangeText={setReplyText}
-            style={styles.txtInput}
-          />
-        </BottomSheets>
-      )}
     </SafeAreaView>
   );
 };
+// {isCommentVisible && (
+//   <BottomSheets
+//     isVisible={isCommentVisible}
+//     setVisible={setCommentVisible}
+//     onCastPress={ReplyPost}>
+//     {selectedFeedItem?.imageSource ? (
+//       <FeedCard
+//         imageSource={selectedFeedItem?.imageSource}
+//         location={selectedFeedItem?.location}
+//         name={selectedFeedItem?.name}
+//         description={selectedFeedItem?.description}
+//         token={selectedFeedItem?.token}
+//         time={selectedFeedItem?.time}
+//         hash={selectedFeedItem?.id}
+//         userName={selectedFeedItem?.userName}
+//         replies={selectedFeedItem?.replies}
+//         likes={selectedFeedItem?.likes}
+//         channel={selectedFeedItem?.channel}
+//         backgroundColor="#F4F4F4"
+//       />
+//     ) : (
+//       <ChannelFeedCard
+//         userName={selectedFeedItem?.userName}
+//         location={selectedFeedItem?.location}
+//         name={selectedFeedItem?.name}
+//         description={selectedFeedItem?.description}
+//         tag={selectedFeedItem?.token}
+//         time={selectedFeedItem?.time}
+//         hash={selectedFeedItem?.id}
+//         replies={selectedFeedItem?.replies}
+//         likes={selectedFeedItem?.likes}
+//         channel={selectedFeedItem?.channel}
+//         backgroundColor="#F4F4F4"
+//       />
+//     )}
+//     <View style={styles.commentContent}>
+//       {/* {pfpUrl && (
+//         <Image source={{uri: pfpUrl}} style={styles.profileImage} />
+//       )} */}
+//       <Text style={styles.userTxt}>
+//         Replying to @{selectedFeedItem?.userName}
+//       </Text>
+//     </View>
+//     <TextInput
+//       placeholder="What’s happening ??"
+//       placeholderTextColor="#8F8F8F"
+//       value={replyText}
+//       onChangeText={setReplyText}
+//       style={styles.txtInput}
+//     />
+//   </BottomSheets>
+// )}
 
 const styles = StyleSheet.create({
+  conntainer: {
+    marginHorizontal: 16,
+  },
   seprator: {
     height: 16,
   },
@@ -364,6 +369,3 @@ const styles = StyleSheet.create({
 });
 
 export default Home;
-function useSelector(arg0: (state: RootState) => any) {
-  throw new Error('Function not implemented.');
-}

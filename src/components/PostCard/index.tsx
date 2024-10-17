@@ -6,12 +6,19 @@ type Props = PropsWithChildren<{
   image: any;
   title: string;
   onPress?: () => void;
+  isDisabled?: boolean;
 }>;
 
-const PostCard = ({title, image, onPress}: Props) => {
+const PostCard = ({title, image, onPress, isDisabled = false}: Props) => {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress}>
-      <Text style={styles.txt}>{title}</Text>
+    <TouchableOpacity
+      style={[styles.card, isDisabled && styles.disabledCard]} // Apply disabled style
+      onPress={onPress}
+      disabled={isDisabled} // Disable interaction
+    >
+      <Text style={[styles.txt, isDisabled && styles.disabledText]}>
+        {title}
+      </Text>
       <Image style={styles.img} source={image} />
     </TouchableOpacity>
   );
@@ -31,8 +38,15 @@ const styles = StyleSheet.create({
     margin: 8,
     padding: 14,
   },
+  disabledCard: {
+    backgroundColor: '#f0f0f0', // Set a disabled background color
+    opacity: 0.6, // Make it semi-transparent
+  },
   txt: {
     color: Colors.PrimaryColor,
+  },
+  disabledText: {
+    color: '#a0a0a0', // Gray text for disabled cards
   },
   img: {
     marginVertical: 16,
