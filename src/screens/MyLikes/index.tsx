@@ -134,7 +134,7 @@ const MyLikes = ({navigation}: Props) => {
       {isHidden ? (
         <View style={styles.waringContent}>
           <Text style={styles.waringTxt}>
-            We don’t have any filter cast to show
+            We don’t have any Tribe cast to show
           </Text>
         </View>
       ) : (

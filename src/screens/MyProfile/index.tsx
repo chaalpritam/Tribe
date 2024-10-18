@@ -145,12 +145,14 @@ const MyProfile = ({navigation}: Props) => {
     {
       icon: IMAGE.wallet,
       title: 'Wallet',
-      onPress: () => navigation.navigate('Wallet'),
+      // onPress: () => navigation.navigate('Wallet'),
+      onPress: () => handleNftCardPress(),
     },
     {
       icon: IMAGE.wallet,
       title: 'Storage',
-      onPress: () => navigation.navigate('Storage'),
+      // onPress: () => navigation.navigate('Storage'),
+      onPress: () => handleNftCardPress(),
     },
     {
       icon: IMAGE.logout,

@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     flex: 1,
     // justifyContent: 'center',
     // alignItems: 'center',
-    marginHorizontal: 16,
+    // marginHorizontal: 16,
   },
   imageContainer: {
     justifyContent: 'center',
@@ -126,7 +126,8 @@ const styles = StyleSheet.create({
   img: {},
   btn: {
     // paddingHorizontal: '30%',
-    width: wp(85),
+    width: wp(90),
+    borderRadius: 16,
   },
   text: {
     color: Colors.white,

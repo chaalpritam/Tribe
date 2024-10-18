@@ -19,6 +19,7 @@ import Conversation from 'screens/Conversation';
 import MyCast from 'screens/MyCast';
 import MyLikes from 'screens/MyLikes';
 import MyNfts from 'screens/MyNfts';
+import Followers from 'screens/Followers';
 
 export type StackNavigatorParamList = {
   Onboard: undefined;
@@ -38,6 +39,7 @@ export type StackNavigatorParamList = {
   MyCast: undefined;
   MyLikes: undefined;
   MyNfts: undefined;
+  Followers: undefined;
 };
 
 const Stack = createStackNavigator<StackNavigatorParamList>();
@@ -146,6 +148,11 @@ function Nav(): JSX.Element {
       <Stack.Screen
         name="MyNfts"
         component={MyNfts}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Followers"
+        component={Followers}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
