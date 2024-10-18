@@ -115,7 +115,7 @@ const MyProfile = ({navigation}: Props) => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.clear();
-      navigation.navigate('Splash');
+      navigation.navigate('TribePager');
     } catch (error) {
       console.error('Error during logout:', error);
     }

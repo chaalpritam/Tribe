@@ -16,6 +16,9 @@ import Crop from 'screens/Crop';
 import Mint from 'screens/Mint';
 import Casting from 'screens/Cast';
 import Conversation from 'screens/Conversation';
+import MyCast from 'screens/MyCast';
+import MyLikes from 'screens/MyLikes';
+import MyNfts from 'screens/MyNfts';
 
 export type StackNavigatorParamList = {
   Onboard: undefined;
@@ -32,6 +35,9 @@ export type StackNavigatorParamList = {
   Mint: undefined;
   Casting: undefined;
   Conversation: undefined;
+  MyCast: undefined;
+  MyLikes: undefined;
+  MyNfts: undefined;
 };
 
 const Stack = createStackNavigator<StackNavigatorParamList>();
@@ -125,6 +131,21 @@ function Nav(): JSX.Element {
       <Stack.Screen
         name="Conversation"
         component={Conversation}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MyCast"
+        component={MyCast}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MyLikes"
+        component={MyLikes}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MyNfts"
+        component={MyNfts}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
