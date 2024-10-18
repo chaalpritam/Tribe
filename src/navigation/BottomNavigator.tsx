@@ -7,14 +7,12 @@ import {IMAGE} from 'images';
 import {hp} from 'utils/ScreenDimensions';
 import WhatyouWanndo from 'screens/WhatyouWanndo';
 import Explore from 'screens/Explore';
+import MyProfile from 'screens/MyProfile';
 
 const Bottom = createBottomTabNavigator();
 
 export const Notification = () => {
   return <Text>Notification</Text>;
-};
-export const MyProfile = () => {
-  return <Text>MyProfile</Text>;
 };
 
 function BottomNavigator(): JSX.Element {

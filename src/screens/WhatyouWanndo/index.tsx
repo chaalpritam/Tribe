@@ -9,7 +9,7 @@ const WhatyouWanndo = () => {
   const navigation = useNavigation();
 
   const ItemPress = item => {
-    navigation.navigate('CameraScreen', {
+    navigation.navigate(item.route, {
       title: item.title,
     });
   };
@@ -18,8 +18,8 @@ const WhatyouWanndo = () => {
     <PostCard
       title={item.title}
       image={item.image}
-      onPress={index < 2 ? () => ItemPress(item) : null} // Only first two items are active
-      isDisabled={index >= 2} // Pass a prop to disable later cards
+      onPress={index < 2 ? () => ItemPress(item) : null}
+      isDisabled={index >= 2}
     />
   );
 

@@ -14,6 +14,8 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import CameraScreen from 'components/Camera';
 import Crop from 'screens/Crop';
 import Mint from 'screens/Mint';
+import Casting from 'screens/Cast';
+import Conversation from 'screens/Conversation';
 
 export type StackNavigatorParamList = {
   Onboard: undefined;
@@ -28,6 +30,8 @@ export type StackNavigatorParamList = {
   CameraScreen: undefined;
   CropCamera: undefined;
   Mint: undefined;
+  Casting: undefined;
+  Conversation: undefined;
 };
 
 const Stack = createStackNavigator<StackNavigatorParamList>();
@@ -111,6 +115,16 @@ function Nav(): JSX.Element {
       <Stack.Screen
         name="Mint"
         component={Mint}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Casting"
+        component={Casting}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Conversation"
+        component={Conversation}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -36,11 +36,13 @@ export const PostData = [
     id: 0,
     title: 'Cast',
     image: IMAGE.cast,
+    route: 'Casting',
   },
   {
     id: 1,
     title: 'Photo',
     image: IMAGE.photo,
+    route: 'CameraScreen',
   },
   {
     id: 2,

@@ -1,6 +1,7 @@
 import React, {PropsWithChildren, ReactNode, useEffect, useRef} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
+import {hp} from 'utils/ScreenDimensions';
 
 type Props = PropsWithChildren<{
   children: ReactNode;
@@ -16,28 +17,29 @@ const BottomSheets = ({
   onCastPress,
 }: Props) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = ['50%', '100%'];
 
   // Handle BottomSheet visibility
   useEffect(() => {
     if (isVisible) {
-      bottomSheetRef.current?.snapToIndex(0); // Open the sheet when isVisible is true
-    } else {
-      bottomSheetRef.current?.close(); // Close the sheet when isVisible is false
+      bottomSheetRef.current?.snapToIndex(0);
+      bottomSheetRef.current?.close();
     }
   }, [isVisible]);
 
   const handleCastPress = () => {
     if (onCastPress) {
-      onCastPress(); // Call the provided onCastPress function
+      onCastPress();
     }
-    setVisible(false); // Close the bottom sheet
+    setVisible(false);
   };
 
   return (
     <BottomSheet
       ref={bottomSheetRef}
       index={isVisible ? 0 : -1}
-      snapPoints={['100%']}
+      snapPoints={snapPoints}
+      enablePanDownToClose={true}
       backgroundStyle={styles.bg}
       style={styles.content}
       handleComponent={null}
@@ -66,6 +68,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F4F4F4',
   },
   content: {
+    // flex: 1,
     // padding: 16,
   },
   child: {

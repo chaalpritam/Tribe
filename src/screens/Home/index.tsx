@@ -28,6 +28,7 @@ const Home = () => {
   const [selectedFeedItem, setSelectedFeedItem] = useState(null);
   const [replyText, setReplyText] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+
   // const [feedDataWithMedia, setFeedDataWithMedia] = useState([]);
   // const [feedDataWithoutMedia, setFeedDataWithoutMedia] = useState([]);
 
@@ -268,65 +269,66 @@ const Home = () => {
           onRefresh={onRefresh}
         />
       )}
+      {isCommentVisible && (
+        <BottomSheets
+          isVisible={isCommentVisible}
+          setVisible={setCommentVisible}
+          onCastPress={ReplyPost}>
+          {selectedFeedItem?.imageSource ? (
+            <FeedCard
+              imageSource={selectedFeedItem?.imageSource}
+              location={selectedFeedItem?.location}
+              name={selectedFeedItem?.name}
+              description={selectedFeedItem?.description}
+              token={selectedFeedItem?.token}
+              time={selectedFeedItem?.time}
+              hash={selectedFeedItem?.id}
+              userName={selectedFeedItem?.userName}
+              replies={selectedFeedItem?.replies}
+              likes={selectedFeedItem?.likes}
+              channel={selectedFeedItem?.channel}
+              backgroundColor="#F4F4F4"
+            />
+          ) : (
+            <ChannelFeedCard
+              userName={selectedFeedItem?.userName}
+              location={selectedFeedItem?.location}
+              name={selectedFeedItem?.name}
+              description={selectedFeedItem?.description}
+              tag={selectedFeedItem?.token}
+              time={selectedFeedItem?.time}
+              hash={selectedFeedItem?.id}
+              replies={selectedFeedItem?.replies}
+              likes={selectedFeedItem?.likes}
+              channel={selectedFeedItem?.channel}
+              backgroundColor="#F4F4F4"
+            />
+          )}
+          <View style={styles.commentContent}>
+            {/* {pfpUrl && (
+        <Image source={{uri: pfpUrl}} style={styles.profileImage} />
+      )} */}
+            <Text style={styles.userTxt}>
+              Replying to @{selectedFeedItem?.userName}
+            </Text>
+          </View>
+          <TextInput
+            placeholder="What’s happening ??"
+            placeholderTextColor="#8F8F8F"
+            value={replyText}
+            onChangeText={setReplyText}
+            style={styles.txtInput}
+          />
+        </BottomSheets>
+      )}
     </SafeAreaView>
   );
 };
-// {isCommentVisible && (
-//   <BottomSheets
-//     isVisible={isCommentVisible}
-//     setVisible={setCommentVisible}
-//     onCastPress={ReplyPost}>
-//     {selectedFeedItem?.imageSource ? (
-//       <FeedCard
-//         imageSource={selectedFeedItem?.imageSource}
-//         location={selectedFeedItem?.location}
-//         name={selectedFeedItem?.name}
-//         description={selectedFeedItem?.description}
-//         token={selectedFeedItem?.token}
-//         time={selectedFeedItem?.time}
-//         hash={selectedFeedItem?.id}
-//         userName={selectedFeedItem?.userName}
-//         replies={selectedFeedItem?.replies}
-//         likes={selectedFeedItem?.likes}
-//         channel={selectedFeedItem?.channel}
-//         backgroundColor="#F4F4F4"
-//       />
-//     ) : (
-//       <ChannelFeedCard
-//         userName={selectedFeedItem?.userName}
-//         location={selectedFeedItem?.location}
-//         name={selectedFeedItem?.name}
-//         description={selectedFeedItem?.description}
-//         tag={selectedFeedItem?.token}
-//         time={selectedFeedItem?.time}
-//         hash={selectedFeedItem?.id}
-//         replies={selectedFeedItem?.replies}
-//         likes={selectedFeedItem?.likes}
-//         channel={selectedFeedItem?.channel}
-//         backgroundColor="#F4F4F4"
-//       />
-//     )}
-//     <View style={styles.commentContent}>
-//       {/* {pfpUrl && (
-//         <Image source={{uri: pfpUrl}} style={styles.profileImage} />
-//       )} */}
-//       <Text style={styles.userTxt}>
-//         Replying to @{selectedFeedItem?.userName}
-//       </Text>
-//     </View>
-//     <TextInput
-//       placeholder="What’s happening ??"
-//       placeholderTextColor="#8F8F8F"
-//       value={replyText}
-//       onChangeText={setReplyText}
-//       style={styles.txtInput}
-//     />
-//   </BottomSheets>
-// )}
 
 const styles = StyleSheet.create({
   conntainer: {
     margin: 16,
+    flex: 1,
   },
   seprator: {
     height: 16,

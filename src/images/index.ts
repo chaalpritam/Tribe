@@ -57,4 +57,11 @@ export const IMAGE = {
   leftArrow: require('images/icons/leftArrow/LeftArrow.png'),
   castArrow: require('images/icons/mint/mint.png'),
   search: require('images/icons/search/search.png'),
+  bio: require('images/icons/bio/Bio.png'),
+  favourits: require('images/icons/like/like.png'),
+  invite: require('images/icons/invite/Invite.png'),
+  logout: require('images/icons/logout/Logout.png'),
+  wallet: require('images/icons/wallet/Wallet.png'),
+  camera: require('images/icons/camera/camera.png'),
+  rightArrow: require('images/RightArrow.png'),
 };
