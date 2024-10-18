@@ -1,10 +1,12 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import type {PropsWithChildren} from 'react';
 import {IMAGE} from 'images';
 import axios from 'axios';
 import {PUBLIC_NEYNAR_API_KEY} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {wp} from 'utils/ScreenDimensions';
 
 type Props = PropsWithChildren<{
   imageSource?: string | null;
@@ -50,11 +52,26 @@ export function FeedCard({
   const [isTruncated, setIsTruncated] = useState(true);
   const [isLiked, setIsLiked] = useState(false);
   const [isRecast, setRecasted] = useState(false);
+  const [pfpUrl, setPfpUrl] = useState<string | null>(null);
   const toggleTruncation = () => {
     setIsTruncated(!isTruncated);
   };
 
-  // console.log(hash, 'Hash');
+  useEffect(() => {
+    const fetchProfileDetails = async () => {
+      try {
+        const profileDetail = await AsyncStorage.getItem('profileDetail');
+        if (profileDetail) {
+          const profileImg = JSON.parse(profileDetail);
+          setPfpUrl(profileImg?.user?.pfp_url || null);
+        }
+      } catch (error) {
+        console.error('Error fetching profile details:', error);
+      }
+    };
+
+    fetchProfileDetails();
+  }, []);
 
   const toggleLike = async () => {
     // Immediately update the state to change the image
@@ -163,9 +180,9 @@ export function FeedCard({
     } else if (diffInDays >= 1) {
       return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
     } else if (diffInHours >= 1) {
-      return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+      return `${diffInHours} hr${diffInHours > 1 ? 's' : ''} ago`;
     } else if (diffInMinutes >= 1) {
-      return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
+      return `${diffInMinutes} min${diffInMinutes > 1 ? 's' : ''} ago`;
     } else {
       return 'Just now';
     }
@@ -177,7 +194,7 @@ export function FeedCard({
       <View style={[styles.card, {backgroundColor}]}>
         <View style={styles.cardContent}>
           <TouchableOpacity style={styles.imageContent} onPress={onPress}>
-            {imageSource ? (
+            {imageSource && (
               <Image
                 source={
                   typeof imageSource === 'string' ? {uri: imageSource} : null
@@ -185,53 +202,26 @@ export function FeedCard({
                 style={styles.image}
                 resizeMode="cover"
               />
-            ) : // <FastImage
-
-            //   style={styles.image}x
-            //   source={{
-            //     uri: imageSource,
-            //     priority: FastImage.priority.normal,
-            //   }}
-            //   resizeMode={FastImage.resizeMode.cover}
-            //   // onError={() => {
-            //   //   console.error('Failed to load image:', imageSource);
-            //   // }}
-            // />
-            // <View style={styles.placeholder}>
-            //   <Text style={styles.placeholderText}>No Image</Text>
-            // </View>
-            null}
+            )}
             <View style={styles.locationBtn}>
               <Text style={styles.locationtxt}>{location}</Text>
             </View>
           </TouchableOpacity>
-          <View style={styles.icons}>
-            <View style={styles.iconsright}>
-              <TouchableOpacity onPress={toggleLike}>
-                <Image
-                  source={isLiked ? IMAGE.disLike : IMAGE.like}
-                  style={styles.icon}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={recast}>
-                <Image source={IMAGE.repost} style={[styles.shareIcon]} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={commentPress}>
-                <Image source={IMAGE.comment} style={[styles.shareIcon]} />
-              </TouchableOpacity>
-            </View>
-            {/* <View>
-              <Image source={IMAGE.save} style={styles.icon} />
-            </View> */}
-          </View>
+
           <View style={styles.textContent}>
             {/* <TouchableOpacity onPress={toggleTruncation}> */}
             <View style={styles.userNameAndTimeContent}>
-              <Text style={styles.name}>
-                {name}
-                <Text style={styles.spacing}> </Text>
-                <Text style={styles.usrName}>@{userName}</Text>
-              </Text>
+              <View style={styles.profileContainer}>
+                {pfpUrl && (
+                  <Image source={{uri: pfpUrl}} style={styles.profileImage} />
+                )}
+                <Text style={styles.name}>
+                  {name}
+                  <Text style={styles.spacing}> </Text>
+                  <Text style={styles.usrName}>@{userName}</Text>
+                </Text>
+              </View>
+
               <Text style={styles.txt}>{getTimeDifference(time)}</Text>
             </View>
             <Text style={styles.description}>{description}</Text>
@@ -242,10 +232,28 @@ export function FeedCard({
       </TouchableOpacity>
     )} */}
           </View>
+          <View style={styles.icons}>
+            <View style={styles.iconsright}>
+              <TouchableOpacity onPress={toggleLike} style={styles.icon}>
+                {isLiked ? (
+                  <Icon name="heart" size={24} color="#000" />
+                ) : (
+                  <Icon name="heart-outline" size={24} color="#000" />
+                )}
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={recast}
+                style={[styles.icon, styles.shareIcon]}>
+                <Icon name="repeat" size={24} color="#000" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={commentPress}
+                style={[styles.icon, styles.shareIcon]}>
+                <Icon name="chatbubbles-outline" size={24} color="#000" />
+              </TouchableOpacity>
+            </View>
+          </View>
           <View style={styles.cardBottom}>
-            {/* <Text style={styles.txt}>{token}</Text> */}
-            {/* <Text style={styles.txt}>{time}</Text> */}
-
             <View style={styles.iconsright}>
               <Text style={styles.reply} onPress={repliesPress}>
                 {replies}
@@ -271,6 +279,15 @@ export function FeedCard({
 }
 
 const styles = StyleSheet.create({
+  profileContainer: {
+    flexDirection: 'row',
+  },
+  profileImage: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    marginRight: 12,
+  },
   line: {
     borderWidth: 0.5,
     borderBottomColor: '#4A4A4A',
@@ -349,8 +366,8 @@ const styles = StyleSheet.create({
     borderRadius: 24,
   },
   image: {
-    width: '100%',
-    height: 311,
+    width: wp(87, true),
+    aspectRatio: 1,
     borderRadius: 24,
   },
   locationBtn: {
@@ -382,7 +399,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     // tintColor: '#000', // Use tintColor for Image components
-    marginHorizontal: 8,
+    marginRight: 8,
     marginVertical: 4,
   },
   spacing: {

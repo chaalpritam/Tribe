@@ -6,6 +6,7 @@ import axios from 'axios';
 import {PUBLIC_NEYNAR_API_KEY} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {wp} from 'utils/ScreenDimensions';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 type Props = PropsWithChildren<{
   // imageSource?: any;
@@ -203,23 +204,22 @@ export function ChannelFeedCard({
         </View> */}
         <View style={styles.icons}>
           <View style={styles.iconsright}>
-            <TouchableOpacity onPress={toggleLike}>
-              <Image
-                source={isLiked ? IMAGE.disLike : IMAGE.like}
-                style={styles.icon}
-              />
+            <TouchableOpacity onPress={toggleLike} style={styles.icon}>
+              {isLiked ? (
+                <Icon name="heart" size={24} color="#000" />
+              ) : (
+                <Icon name="heart-outline" size={24} color="#000" />
+              )}
             </TouchableOpacity>
-            <TouchableOpacity onPress={recast}>
-              <Image
-                source={IMAGE.repost}
-                style={[styles.icon, styles.shareIcon]}
-              />
+            <TouchableOpacity
+              onPress={recast}
+              style={[styles.icon, styles.shareIcon]}>
+              <Icon name="repeat" size={24} color="#000" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={commentPress}>
-              <Image
-                source={IMAGE.comment}
-                style={[styles.icon, styles.shareIcon]}
-              />
+            <TouchableOpacity
+              onPress={commentPress}
+              style={[styles.icon, styles.shareIcon]}>
+              <Icon name="chatbubbles-outline" size={24} color="#000" />
             </TouchableOpacity>
           </View>
           {/* <View>
@@ -380,8 +380,9 @@ const styles = StyleSheet.create({
   },
   icon: {
     // tintColor: '#000', // Use tintColor for Image components
-    marginHorizontal: 8,
+    marginRight: 8,
     marginVertical: 4,
+    // backgroundColor: 'red',
   },
   mint: {
     color: '#202020',

@@ -6,6 +6,7 @@ import axios from 'axios';
 import {PUBLIC_NEYNAR_API_KEY} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {wp} from 'utils/ScreenDimensions';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 type Props = PropsWithChildren<{
   // imageSource?: any;

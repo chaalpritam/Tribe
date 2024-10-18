@@ -5,8 +5,8 @@ import {IMAGE} from 'images';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {PUBLIC_NEYNAR_API_KEY} from '@env';
-import {FeedCard} from 'components/Card/FeedCard';
-import {ChannelFeedCard} from 'components/Card/ChannelFeedCard';
+import {FeedCard} from 'components/FeedCards/FeedCard';
+import {ChannelFeedCard} from 'components/FeedCards/ChannelFeedCard';
 
 type Props = PropsWithChildren<{
   navigation: any;

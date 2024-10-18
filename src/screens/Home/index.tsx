@@ -156,48 +156,26 @@ const Home = () => {
     };
   };
   const renderItem = ({item}) => {
-    if (item.imageSource) {
-      return (
-        <FeedCard
-          imageSource={item.imageSource ? item.imageSource : ''}
-          location={item.location}
-          name={item.name}
-          description={item.description}
-          token={item.token}
-          time={item.time}
-          hash={item.id}
-          userName={item.userName}
-          replies={item.replies}
-          likes={item.likes}
-          channel={item.channel}
-          commentPress={() => handleCommentPress(item)}
-          onPress={handleNav(item)}
-          likePress={handleNavtoLikes(item)}
-          repliesPress={handleNav(item)}
-          channelOnPress={handleChannelNav(item.channel)}
-        />
-      );
-    } else {
-      return (
-        <ChannelFeedCard
-          userName={item.location}
-          location={item.location}
-          name={item.name}
-          description={item.description}
-          tag={item.token}
-          time={item.time}
-          hash={item.id}
-          replies={item.replies}
-          likes={item.likes}
-          channel={item.channel}
-          commentPress={() => handleCommentPress(item)}
-          onPress={handleNav(item)}
-          likePress={handleNavtoLikes(item)}
-          repliesPress={handleNav(item)}
-          channelOnPress={handleChannelNav(item.channel)}
-        />
-      );
-    }
+    return (
+      <FeedCard
+        imageSource={item.imageSource ? item.imageSource : undefined} // Use undefined if imageSource is not present
+        location={item.location}
+        name={item.name}
+        description={item.description}
+        token={item.token}
+        time={item.time}
+        hash={item.id}
+        userName={item.userName}
+        replies={item.replies}
+        likes={item.likes}
+        channel={item.channel}
+        commentPress={() => handleCommentPress(item)}
+        onPress={handleNav(item)}
+        likePress={handleNavtoLikes(item)}
+        repliesPress={handleNav(item)}
+        channelOnPress={handleChannelNav(item.channel)}
+      />
+    );
   };
 
   const ReplyPost = async () => {

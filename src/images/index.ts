@@ -64,4 +64,5 @@ export const IMAGE = {
   wallet: require('images/icons/wallet/Wallet.png'),
   camera: require('images/icons/camera/camera.png'),
   rightArrow: require('images/RightArrow.png'),
+  imageAdd: require('images/icons/imageAdd/ImageAdd.png'),
 };
