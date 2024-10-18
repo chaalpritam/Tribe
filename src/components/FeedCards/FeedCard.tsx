@@ -27,6 +27,7 @@ type Props = PropsWithChildren<{
   repliesPress?: () => void;
   channelOnPress?: () => void;
   line?: boolean;
+  pfpUrl?: string;
 }>;
 
 export function FeedCard({
@@ -48,30 +49,31 @@ export function FeedCard({
   repliesPress,
   line,
   channelOnPress,
+  pfpUrl,
 }: Props): JSX.Element {
   const [isTruncated, setIsTruncated] = useState(true);
   const [isLiked, setIsLiked] = useState(false);
   const [isRecast, setRecasted] = useState(false);
-  const [pfpUrl, setPfpUrl] = useState<string | null>(null);
+
   const toggleTruncation = () => {
     setIsTruncated(!isTruncated);
   };
 
-  useEffect(() => {
-    const fetchProfileDetails = async () => {
-      try {
-        const profileDetail = await AsyncStorage.getItem('profileDetail');
-        if (profileDetail) {
-          const profileImg = JSON.parse(profileDetail);
-          setPfpUrl(profileImg?.user?.pfp_url || null);
-        }
-      } catch (error) {
-        console.error('Error fetching profile details:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchProfileDetails = async () => {
+  //     try {
+  //       const profileDetail = await AsyncStorage.getItem('profileDetail');
+  //       if (profileDetail) {
+  //         const profileImg = JSON.parse(profileDetail);
+  //         setPfpUrl(profileImg?.user?.pfp_url || null);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching profile details:', error);
+  //     }
+  //   };
 
-    fetchProfileDetails();
-  }, []);
+  //   fetchProfileDetails();
+  // }, []);
 
   const toggleLike = async () => {
     // Immediately update the state to change the image
@@ -224,13 +226,9 @@ export function FeedCard({
 
               <Text style={styles.txt}>{getTimeDifference(time)}</Text>
             </View>
-            <Text style={styles.description}>{description}</Text>
-            {/* </TouchableOpacity> */}
-            {/* {isTruncated && (
-      <TouchableOpacity onPress={toggleTruncation}>
-        <Text style={styles.readMore}>More</Text>
-      </TouchableOpacity>
-    )} */}
+            <Text style={styles.description} onPress={onPress}>
+              {description}
+            </Text>
           </View>
           <View style={styles.icons}>
             <View style={styles.iconsright}>
@@ -355,6 +353,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 12,
     marginTop: 8,
+    // backgroundColor: 'red',
     // paddingLeft: 10,
   },
   card: {

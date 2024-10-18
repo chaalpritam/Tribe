@@ -11,8 +11,7 @@ import React, {PropsWithChildren, useEffect, useState} from 'react';
 import {TopBar} from 'components/TopBar';
 import {IMAGE} from 'images';
 import {useRoute} from '@react-navigation/native';
-import {FeedCard} from 'components/Card/FeedCard';
-import {ChannelFeedCard} from 'components/Card/ChannelFeedCard';
+import {FeedCard} from 'components/FeedCards/FeedCard';
 import {PUBLIC_NEYNAR_API_KEY} from '@env';
 import axios from 'axios';
 import ReplyCard from 'components/Replycard';
@@ -160,38 +159,21 @@ const Conversation = ({navigation}: Props) => {
         renderItem={renderItem}
         keyExtractor={item => item.id}
         ListHeaderComponent={
-          feedItem?.imageSource ? (
-            <FeedCard
-              imageSource={feedItem?.imageSource}
-              location={feedItem?.location}
-              name={feedItem?.name}
-              description={feedItem?.description}
-              token={feedItem?.token}
-              time={feedItem?.time}
-              hash={feedItem?.id}
-              userName={feedItem?.userName}
-              replies={feedItem?.replies}
-              likes={feedItem?.likes}
-              channel={feedItem?.channel}
-              backgroundColor="#F4F4F4"
-              line={true}
-            />
-          ) : (
-            <ChannelFeedCard
-              userName={feedItem?.userName}
-              location={feedItem?.location}
-              name={feedItem?.name}
-              description={feedItem?.description}
-              tag={feedItem?.token}
-              time={feedItem?.time}
-              hash={feedItem?.id}
-              replies={feedItem?.replies}
-              likes={feedItem?.likes}
-              channel={feedItem?.channel}
-              backgroundColor="#F4F4F4"
-              line={true}
-            />
-          )
+          <FeedCard
+            imageSource={feedItem?.imageSource}
+            location={feedItem?.location}
+            name={feedItem?.name}
+            description={feedItem?.description}
+            token={feedItem?.token}
+            time={feedItem?.time}
+            hash={feedItem?.id}
+            userName={feedItem?.userName}
+            replies={feedItem?.replies}
+            likes={feedItem?.likes}
+            channel={feedItem?.channel}
+            backgroundColor="#F4F4F4"
+            line={true}
+          />
         }
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}

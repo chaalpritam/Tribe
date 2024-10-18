@@ -14,6 +14,8 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {IMAGE} from 'images';
 import {hp, wp} from 'utils/ScreenDimensions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { PinataJWT, PUBLIC_NEYNAR_API_KEY } from '@env';
 // import Icon from 'react-native-vector-icons/Ionicons'; 
 
 type Props = PropsWithChildren<{
@@ -24,6 +26,9 @@ const Casting = ({navigation}: Props) => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [text, setText] = useState('');
   const [pfpUrl, setPfpUrl] = useState<string | null>(null);
+  const [imageUrl, setimageUrl] = useState('')
+  const [loading, setLoading] = useState(false);
+  const GATEWAY = 'beige-grateful-cow-442.mypinata.cloud';
 
   useEffect(() => {
     const fetchProfileDetails = async () => {
@@ -53,7 +58,103 @@ const Casting = ({navigation}: Props) => {
     });
   };
 
-console.log(selectedImages, 'selectedImages')
+  const ImageUpload = async () => {
+    if (selectedImages.length === 0) {
+      console.warn('No images selected for upload');
+      return;
+    }
+    setLoading(true);
+  
+    try {
+      const formData = new FormData();
+      formData.append('file', {
+        uri: selectedImages[0]?.uri,
+        type: selectedImages[0]?.type || 'image/jpeg', // Provide a default type if not available
+        name: selectedImages[0]?.fileName || 'uploaded_image.jpg', // Use fileName or a default name
+      });
+  
+      const metadata = JSON.stringify({
+        name: 'File name',
+      });
+  
+      formData.append('pinataMetadata', metadata);
+  
+      // Make the POST request to Pinata
+      const res = await axios.post(
+        'https://api.pinata.cloud/pinning/pinFileToIPFS',
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${PinataJWT}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+  
+      const resData = res.data;
+      const url = `https://${GATEWAY}/ipfs/${resData.IpfsHash}`;
+      setimageUrl(url);
+      console.log('Image uploaded successfully, IPFS URL:', url);
+      const signerUuid = await AsyncStorage.getItem('signerUuid');
+      const channelId = await AsyncStorage.getItem('channelID');
+      if (!signerUuid) {
+        throw new Error('signerUuid is missing');
+      }
+
+      if (!url) {
+        throw new Error('imageURL is missing');
+      }
+
+      const options = {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+          api_key: PUBLIC_NEYNAR_API_KEY,
+          'content-type': 'application/json',
+        },
+        data: {
+          embeds: [
+            {
+              url: url,
+            },
+          ],
+          text: text,
+          channel_id: channelId,
+          signer_uuid: signerUuid.trim(),
+        },
+      };
+
+      const response = await axios.post(
+        'https://api.neynar.com/v2/farcaster/cast',
+        options.data,
+        {headers: options.headers},
+      );
+
+      const castSuccess = response.data?.success;
+
+      if (castSuccess) {
+        // dispatch(setCastStatus(true));
+        navigation.navigate('Home');
+      } else {
+        console.error('Failed to cast');
+      }
+    } catch (error: any) {
+      console.error('Error uploading image:', error.message);
+      if (error.response) {
+        console.error('Response data:', error.response.data);
+        console.error('Response status:', error.response.status);
+        console.error('Response headers:', error.response.headers);
+      } else if (error.request) {
+        console.error('Request:', error.request);
+      } else {
+        console.error('Error message:', error.message);
+      }
+    } finally {
+      setLoading(false); 
+    }
+  };
+  
+
   const renderImageItem = ({item}) => (
     <Image source={{uri: item.uri}} style={styles.selectedImage} />
   );
@@ -68,7 +169,7 @@ console.log(selectedImages, 'selectedImages')
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={styles.cancelText}>Cancel</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={ImageUpload}>
           <View style={styles.btnActive}>
             <Text style={styles.btnTxtActive}>Cast</Text>
           </View>

@@ -65,7 +65,7 @@ const Home = () => {
           (cast: {
             embeds: any[];
             hash: any;
-            author: {username: any; display_name: any};
+            author: {username: any; display_name: any; pfp_url: any};
             text: any;
             token: any;
             timestamp: string | number | Date;
@@ -99,6 +99,7 @@ const Home = () => {
               replies: cast.replies.count,
               likes: cast.reactions.likes_count,
               channel: cast.channel ? cast.channel.id : null,
+              pfpUrl: cast.author?.pfp_url,
             };
 
             // if (imageUrl) {
@@ -174,6 +175,7 @@ const Home = () => {
         likePress={handleNavtoLikes(item)}
         repliesPress={handleNav(item)}
         channelOnPress={handleChannelNav(item.channel)}
+        pfpUrl={item.pfpUrl}
       />
     );
   };
