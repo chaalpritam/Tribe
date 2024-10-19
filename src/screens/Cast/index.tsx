@@ -9,14 +9,15 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {IMAGE} from 'images';
 import {hp, wp} from 'utils/ScreenDimensions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { PinataJWT, PUBLIC_NEYNAR_API_KEY } from '@env';
-// import Icon from 'react-native-vector-icons/Ionicons'; 
+import {PinataJWT, PUBLIC_NEYNAR_API_KEY} from '@env';
+// import Icon from 'react-native-vector-icons/Ionicons';
 
 type Props = PropsWithChildren<{
   navigation: any;
@@ -26,7 +27,7 @@ const Casting = ({navigation}: Props) => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [text, setText] = useState('');
   const [pfpUrl, setPfpUrl] = useState<string | null>(null);
-  const [imageUrl, setimageUrl] = useState('')
+  const [imageUrl, setimageUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const GATEWAY = 'beige-grateful-cow-442.mypinata.cloud';
 
@@ -64,7 +65,7 @@ const Casting = ({navigation}: Props) => {
       return;
     }
     setLoading(true);
-  
+
     try {
       const formData = new FormData();
       formData.append('file', {
@@ -72,13 +73,13 @@ const Casting = ({navigation}: Props) => {
         type: selectedImages[0]?.type || 'image/jpeg', // Provide a default type if not available
         name: selectedImages[0]?.fileName || 'uploaded_image.jpg', // Use fileName or a default name
       });
-  
+
       const metadata = JSON.stringify({
         name: 'File name',
       });
-  
+
       formData.append('pinataMetadata', metadata);
-  
+
       // Make the POST request to Pinata
       const res = await axios.post(
         'https://api.pinata.cloud/pinning/pinFileToIPFS',
@@ -88,9 +89,9 @@ const Casting = ({navigation}: Props) => {
             Authorization: `Bearer ${PinataJWT}`,
             'Content-Type': 'multipart/form-data',
           },
-        }
+        },
       );
-  
+
       const resData = res.data;
       const url = `https://${GATEWAY}/ipfs/${resData.IpfsHash}`;
       setimageUrl(url);
@@ -150,10 +151,9 @@ const Casting = ({navigation}: Props) => {
         console.error('Error message:', error.message);
       }
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
-  
 
   const renderImageItem = ({item}) => (
     <Image source={{uri: item.uri}} style={styles.selectedImage} />
@@ -169,9 +169,13 @@ const Casting = ({navigation}: Props) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={styles.cancelText}>Cancel</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={ImageUpload}>
-          <View style={styles.btnActive}>
-            <Text style={styles.btnTxtActive}>Cast</Text>
+        <TouchableOpacity onPress={ImageUpload} disabled={loading}>
+          <View style={[styles.btnActive, loading && styles.btnDisabled]}>
+            {loading ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <Text style={styles.btnTxtActive}>Cast</Text>
+            )}
           </View>
         </TouchableOpacity>
       </View>
@@ -203,7 +207,6 @@ const Casting = ({navigation}: Props) => {
       </View>
       {/* <Icon name="star-outline" size={30} color="#000" />
       <Icon name="star"  size={30} color="#000" /> */}
-      
     </KeyboardAvoidingView>
   );
 };
@@ -216,6 +219,9 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '600',
     fontSize: 18,
+  },
+  btnDisabled: {
+    backgroundColor: '#555',
   },
   btnActive: {
     backgroundColor: '#121212',
