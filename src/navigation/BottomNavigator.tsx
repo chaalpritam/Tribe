@@ -8,6 +8,7 @@ import {hp} from 'utils/ScreenDimensions';
 import WhatyouWanndo from 'screens/WhatyouWanndo';
 import Explore from 'screens/Explore';
 import MyProfile from 'screens/MyProfile';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Bottom = createBottomTabNavigator();
 
@@ -37,9 +38,14 @@ function BottomNavigator(): JSX.Element {
         component={Home}
         options={{
           tabBarIcon: ({focused}) => (
-            <Image
-              source={IMAGE.home1}
-              style={focused ? styles.activeImg : styles.normalImg}
+            // <Image
+            //   source={IMAGE.home1}
+            //   style={focused ? styles.activeImg : styles.normalImg}
+            // />
+            <Icon
+              name="filter"
+              size={32}
+              color={focused ? '#fff' : '#8F8F8F'}
             />
           ),
         }}
@@ -49,9 +55,10 @@ function BottomNavigator(): JSX.Element {
         component={Explore}
         options={{
           tabBarIcon: ({focused}) => (
-            <Image
-              source={IMAGE.explore}
-              style={focused ? styles.activeImg : styles.normalImg}
+            <Icon
+              name="compass-outline"
+              size={32}
+              color={focused ? '#fff' : '#8F8F8F'}
             />
           ),
         }}
@@ -61,9 +68,11 @@ function BottomNavigator(): JSX.Element {
         component={WhatyouWanndo}
         options={{
           tabBarIcon: ({focused}) => (
-            <View style={styles.iconbg}>
-              <Image source={focused ? IMAGE.plusIcon : IMAGE.plusIcon} />
-            </View>
+            <Icon
+              name="add-circle"
+              size={40}
+              color={focused ? '#fff' : '#8F8F8F'}
+            />
           ),
         }}
       />
@@ -72,34 +81,24 @@ function BottomNavigator(): JSX.Element {
         component={Notification}
         options={{
           tabBarIcon: ({focused}) => (
-            <Image
-              source={focused ? IMAGE.marketplace1 : IMAGE.marketplace1}
-              style={focused ? styles.activeImg : styles.normalImg}
+            <Icon
+              name="layers"
+              size={32}
+              color={focused ? '#fff' : '#8F8F8F'}
             />
           ),
         }}
       />
-      {/* <Bottom.Screen
-        name="DirectCast"
-        component={DirectCast}
-        options={{
-          tabBarIcon: ({focused}) => (
-            <Image
-              source={focused ? IMAGE.marketplace1 : IMAGE.marketplace1}
-              style={focused ? styles.activeImg : styles.normalImg}
-            />
-          ),
-        }}
-      /> */}
 
       <Bottom.Screen
         name="MyProfile"
         component={MyProfile}
         options={{
           tabBarIcon: ({focused}) => (
-            <Image
-              source={IMAGE.profile1}
-              style={focused ? styles.activeImg : styles.normalImg}
+            <Icon
+              name="person-circle-outline"
+              size={32}
+              color={focused ? '#fff' : '#8F8F8F'}
             />
           ),
         }}
@@ -142,10 +141,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   activeImg: {
-    tintColor: '#fff',
+    color: '#fff',
   },
   normalImg: {
-    tintColor: '#FFFFFF',
+    color: '#FFFFFF',
     opacity: 0.5,
   },
 });
