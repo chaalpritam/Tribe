@@ -254,36 +254,21 @@ const Home = () => {
           isVisible={isCommentVisible}
           setVisible={setCommentVisible}
           onCastPress={ReplyPost}>
-          {selectedFeedItem?.imageSource ? (
-            <FeedCard
-              imageSource={selectedFeedItem?.imageSource}
-              location={selectedFeedItem?.location}
-              name={selectedFeedItem?.name}
-              description={selectedFeedItem?.description}
-              token={selectedFeedItem?.token}
-              time={selectedFeedItem?.time}
-              hash={selectedFeedItem?.id}
-              userName={selectedFeedItem?.userName}
-              replies={selectedFeedItem?.replies}
-              likes={selectedFeedItem?.likes}
-              channel={selectedFeedItem?.channel}
-              backgroundColor="#F4F4F4"
-            />
-          ) : (
-            <ChannelFeedCard
-              userName={selectedFeedItem?.userName}
-              location={selectedFeedItem?.location}
-              name={selectedFeedItem?.name}
-              description={selectedFeedItem?.description}
-              tag={selectedFeedItem?.token}
-              time={selectedFeedItem?.time}
-              hash={selectedFeedItem?.id}
-              replies={selectedFeedItem?.replies}
-              likes={selectedFeedItem?.likes}
-              channel={selectedFeedItem?.channel}
-              backgroundColor="#F4F4F4"
-            />
-          )}
+          <FeedCard
+            imageSource={selectedFeedItem?.imageSource}
+            location={selectedFeedItem?.location}
+            name={selectedFeedItem?.name}
+            description={selectedFeedItem?.description}
+            token={selectedFeedItem?.token}
+            time={selectedFeedItem?.time}
+            hash={selectedFeedItem?.id}
+            userName={selectedFeedItem?.userName}
+            replies={selectedFeedItem?.replies}
+            likes={selectedFeedItem?.likes}
+            channel={selectedFeedItem?.channel}
+            backgroundColor="#F4F4F4"
+          />
+
           <View style={styles.commentContent}>
             {/* {pfpUrl && (
         <Image source={{uri: pfpUrl}} style={styles.profileImage} />

@@ -36,6 +36,7 @@ const WhatyouWanndo = () => {
         contentContainerStyle={styles.listContent}
         ItemSeparatorComponent={ItemSeparator}
         columnWrapperStyle={styles.columnWrapper}
+        showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>
   );

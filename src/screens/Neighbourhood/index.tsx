@@ -36,6 +36,7 @@ const Neighbourhood = () => {
         keyExtractor={item => item.id.toString()}
         ItemSeparatorComponent={() => <View style={{height: 16}} />}
         columnWrapperStyle={styles.flatlistWrapper}
+        showsVerticalScrollIndicator={false}
       />
 
       <PrimaryButton

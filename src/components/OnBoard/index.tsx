@@ -55,7 +55,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: '50%',
-    // alignSelf: 'center',
+    alignSelf: 'center',
+    // backgroundColor: 'red',
     // You can add image specific styles here if needed
   },
   title: {
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: '700',
     // textAlign: 'center',
-    // marginTop: 16,
+    marginTop: '10%',
   },
   desc: {
     color: '#8F98B3',
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     // textAlign: 'center',
-    marginTop: 4,
+    marginTop: '5%',
     lineHeight: 22,
   },
   isFirstItem: {},

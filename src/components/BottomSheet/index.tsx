@@ -17,12 +17,12 @@ const BottomSheets = ({
   onCastPress,
 }: Props) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = ['50%', '100%'];
+  const snapPoints = ['100%'];
 
   // Handle BottomSheet visibility
   useEffect(() => {
     if (isVisible) {
-      bottomSheetRef.current?.snapToIndex(0);
+      bottomSheetRef.current?.expand();
       bottomSheetRef.current?.close();
     }
   }, [isVisible]);
@@ -54,7 +54,9 @@ const BottomSheets = ({
           <Text style={styles.buttonText}>Cast</Text>
         </TouchableOpacity>
       </View>
-      <BottomSheetScrollView style={styles.child}>
+      <BottomSheetScrollView
+        style={styles.child}
+        showsVerticalScrollIndicator={false}>
         {children}
       </BottomSheetScrollView>
     </BottomSheet>
@@ -68,11 +70,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#F4F4F4',
   },
   content: {
-    // flex: 1,
+    flex: 1,
     // padding: 16,
   },
   child: {
-    margin: 16,
+    // margin: 16,
   },
   header: {
     flexDirection: 'row',

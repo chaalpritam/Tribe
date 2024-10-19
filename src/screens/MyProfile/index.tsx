@@ -210,6 +210,7 @@ const MyProfile = ({navigation}: Props) => {
           ItemSeparatorComponent={Separator}
           refreshing={refreshing}
           onRefresh={handleRefresh}
+          showsVerticalScrollIndicator={false}
         />
       </SafeAreaView>
       <Modal
