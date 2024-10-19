@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   disabledCard: {
     backgroundColor: '#f0f0f0',
-    opacity: 0.6,
+    opacity: 0.8,
     borderColor: '#BFBFBF',
   },
   txt: {

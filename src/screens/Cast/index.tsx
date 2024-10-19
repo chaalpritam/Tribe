@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {PinataJWT, PUBLIC_NEYNAR_API_KEY} from '@env';
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
+import Icon from 'react-native-vector-icons/Ionicons';
 
 type Props = PropsWithChildren<{
   navigation: any;
@@ -215,14 +216,18 @@ const Casting = ({navigation}: Props) => {
   const renderImageItem = ({item}) => (
     <TouchableOpacity onPress={() => selectPhoto(item)}>
       <Image source={{uri: item.uri}} style={styles.selectedImage} />
+      
     </TouchableOpacity>
   );
 
 
   const selectedImageItem = ({item}) => (
-    <TouchableOpacity onPress={() => deselectImage(item.uri)}>
-<Image source={{uri: item.uri}} style={selectedImages.length === 1 ? styles.selectImageSingle : styles.selectImageDouble} />
+    <View>
+    <Image source={{uri: item.uri}} style={selectedImages.length === 1 ? styles.selectImageSingle : styles.selectImageDouble} />
+    <TouchableOpacity style={styles.iconContainer} onPress={() => deselectImage(item.uri)}>
+      <Icon name="close-circle" size={20} color="#fff" />
     </TouchableOpacity>
+    </View>
     
   );
 
@@ -293,8 +298,19 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 8,
   },
+  imageContainer: {
+    position: 'relative', 
+  },
+  iconContainer: {
+    position: 'absolute',
+    top: 8,   
+    right: 8, 
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+    borderRadius: 10,
+    padding: 2,      
+  },
   selectImageSingle: {
-    width: wp(87), // Full width for single image
+    width: wp(87), 
     aspectRatio: 1,
     borderRadius: 8,
     marginBottom: 16,

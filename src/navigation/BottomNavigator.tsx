@@ -70,7 +70,7 @@ function BottomNavigator(): JSX.Element {
           tabBarIcon: ({focused}) => (
             <Icon
               name="add-circle"
-              size={40}
+              size={56}
               color={focused ? '#fff' : '#8F8F8F'}
             />
           ),
