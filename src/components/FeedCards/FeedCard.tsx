@@ -232,13 +232,21 @@ export function FeedCard({
           </View>
           <View style={styles.icons}>
             <View style={styles.iconsright}>
-              <TouchableOpacity onPress={toggleLike} style={styles.icon}>
-                {isLiked ? (
-                  <Icon name="heart" size={24} color="#000" />
-                ) : (
-                  <Icon name="heart-outline" size={24} color="#000" />
+              <View style={styles.iconCotent}>
+                <TouchableOpacity onPress={toggleLike} style={styles.icon}>
+                  {isLiked ? (
+                    <Icon name="heart" size={24} color="#000" />
+                  ) : (
+                    <Icon name="heart-outline" size={24} color="#000" />
+                  )}
+                </TouchableOpacity>
+                {likes !== 0 && (
+                  <Text style={styles.like} onPress={likePress}>
+                    {likes} {/* Display the count of likes */}
+                  </Text>
                 )}
-              </TouchableOpacity>
+              </View>
+
               <TouchableOpacity
                 onPress={recast}
                 style={[styles.icon, styles.shareIcon]}>
@@ -248,26 +256,13 @@ export function FeedCard({
                 onPress={commentPress}
                 style={[styles.icon, styles.shareIcon]}>
                 <Icon name="chatbubbles-outline" size={24} color="#000" />
+                {replies !== 0 && (
+                  <Text style={styles.reply} onPress={repliesPress}>
+                    {replies}
+                  </Text>
+                )}
               </TouchableOpacity>
             </View>
-          </View>
-          <View style={styles.cardBottom}>
-            <View style={styles.iconsright}>
-              <Text style={styles.reply} onPress={repliesPress}>
-                {replies}
-                <Text style={styles.spacing}> </Text>
-                <Text style={styles.replyTxt}>replies</Text>
-              </Text>
-              <Text style={styles.like} onPress={likePress}>
-                {likes}
-                <Text style={styles.spacing}> </Text>
-                <Text style={styles.likeTxt}>likes</Text>
-              </Text>
-              <Text onPress={channelOnPress}>
-                {channel ? `/${channel}` : ''}
-              </Text>
-            </View>
-            <View>{/* <Text style={styles.mint}>Base Mint</Text> */}</View>
           </View>
         </View>
         {line ? <View style={styles.line} /> : null}
@@ -300,11 +295,14 @@ const styles = StyleSheet.create({
   shareIcon: {
     marginHorizontal: 16,
     marginTop: 4,
+    flexDirection: 'row',
   },
   reply: {
     color: '#000',
     fontWeight: '600',
     fontSize: 14,
+    marginTop: 4,
+    marginHorizontal: 8,
     // lineHeight: 20,
   },
   replyTxt: {
@@ -316,7 +314,8 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: '600',
     fontSize: 14,
-    marginHorizontal: 8,
+    marginTop: 8,
+    marginHorizontal: 4,
     // lineHeight: 20,
   },
   likeTxt: {
@@ -432,5 +431,8 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     fontSize: 10,
     fontWeight: '600',
+  },
+  iconCotent: {
+    flexDirection: 'row',
   },
 });
