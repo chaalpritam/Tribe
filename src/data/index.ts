@@ -197,3 +197,78 @@ export const SizeBtnData = [
     size: '16:16',
   },
 ];
+export const SpacesData = [
+  {
+    id: 1,
+    name: 'All',
+  },
+  {
+    id: 2,
+    name: 'Sports',
+  },
+  {
+    id: 3,
+    name: 'Music',
+  },
+  {
+    id: 4,
+    name: 'Science',
+  },
+  {
+    id: 5,
+    name: 'Entertainment',
+  },
+  {
+    id: 6,
+    name: 'Arts & culture',
+  },
+  {
+    id: 7,
+    name: 'Travel',
+  },
+  {
+    id: 8,
+    name: 'Tech',
+  },
+  {
+    id: 9,
+    name: 'Food',
+  },
+  {
+    id: 10,
+    name: 'Fitness',
+  },
+  {
+    id: 11,
+    name: 'Fashion & Beauty',
+  },
+  {
+    id: 12,
+    name: 'Business & finance',
+  },
+  {
+    id: 13,
+    name: 'Gaming',
+  },
+];
+
+export const SpaceCardData = [
+  {
+    id: 0,
+    hostId: 'rish',
+    spaceTitle: 'building with neynar',
+    joinName: 'Chaal',
+    tokenGated: 'Token Gated',
+    joingCount: '200',
+    joinImg: [IMAGE.nft10, IMAGE.nft4, IMAGE.img3, IMAGE.nft8],
+  },
+  {
+    id: 1,
+    hostId: 'dwr',
+    spaceTitle: 'what next with farcaster protocol and proposals ',
+    eventDate: 'Tomorrow',
+    joinImg: [IMAGE.nft10, IMAGE.nft4, IMAGE.img3, IMAGE.nft8],
+    joingCount: '100',
+    joinName: 'sathish',
+  },
+];

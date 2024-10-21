@@ -9,6 +9,7 @@ import WhatyouWanndo from 'screens/WhatyouWanndo';
 import Explore from 'screens/Explore';
 import MyProfile from 'screens/MyProfile';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Spaces from 'screens/Spaces';
 
 const Bottom = createBottomTabNavigator();
 
@@ -77,8 +78,8 @@ function BottomNavigator(): JSX.Element {
         }}
       />
       <Bottom.Screen
-        name="Notification"
-        component={Notification}
+        name="Spaces"
+        component={Spaces}
         options={{
           tabBarIcon: ({focused}) => (
             <Icon

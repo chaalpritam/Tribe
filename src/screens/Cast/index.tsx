@@ -18,7 +18,7 @@ import {hp, wp} from 'utils/ScreenDimensions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {PinataJWT, PUBLIC_NEYNAR_API_KEY} from '@env';
-import { CameraRoll } from "@react-native-camera-roll/camera-roll";
+import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 type Props = PropsWithChildren<{
@@ -81,9 +81,9 @@ const Casting = ({navigation}: Props) => {
     try {
       const photos = await CameraRoll.getPhotos({
         first: 20,
-        assetType: 'All', 
+        assetType: 'All',
       });
-      setPhotos(photos.edges.map(edge => edge.node.image)); 
+      setPhotos(photos.edges.map(edge => edge.node.image));
     } catch (err) {
       console.error('Error loading images:', err);
     }
@@ -103,17 +103,19 @@ const Casting = ({navigation}: Props) => {
       }
     });
   };
-  const selectPhoto = (photo) => {
+  const selectPhoto = photo => {
     setSelectedImages(prevImages => {
       // Avoid duplicates
-      const isAlreadySelected = prevImages.some(image => image.uri === photo.uri);
+      const isAlreadySelected = prevImages.some(
+        image => image.uri === photo.uri,
+      );
       if (!isAlreadySelected) {
         return [...prevImages, photo];
       }
       return prevImages;
     });
   };
-  const deselectImage = (imageUri) => {
+  const deselectImage = imageUri => {
     setSelectedImages(prevImages =>
       prevImages.filter(image => image.uri !== imageUri),
     );
@@ -216,19 +218,25 @@ const Casting = ({navigation}: Props) => {
   const renderImageItem = ({item}) => (
     <TouchableOpacity onPress={() => selectPhoto(item)}>
       <Image source={{uri: item.uri}} style={styles.selectedImage} />
-      
     </TouchableOpacity>
   );
 
-
   const selectedImageItem = ({item}) => (
     <View>
-    <Image source={{uri: item.uri}} style={selectedImages.length === 1 ? styles.selectImageSingle : styles.selectImageDouble} />
-    <TouchableOpacity style={styles.iconContainer} onPress={() => deselectImage(item.uri)}>
-      <Icon name="close-circle" size={20} color="#fff" />
-    </TouchableOpacity>
+      <Image
+        source={{uri: item.uri}}
+        style={
+          selectedImages.length === 1
+            ? styles.selectImageSingle
+            : styles.selectImageDouble
+        }
+      />
+      <TouchableOpacity
+        style={styles.iconContainer}
+        onPress={() => deselectImage(item.uri)}>
+        <Icon name="close-circle" size={20} color="#fff" />
+      </TouchableOpacity>
     </View>
-    
   );
 
   return (
@@ -252,17 +260,23 @@ const Casting = ({navigation}: Props) => {
       </View>
       <View style={styles.inputContainer}>
         <FlatList
-         key={selectedImages.length === 1 ? 'one-column' : 'two-columns'}
+          key={selectedImages.length === 1 ? 'one-column' : 'two-columns'}
           numColumns={selectedImages.length === 1 ? 1 : 2}
           data={selectedImages}
           renderItem={selectedImageItem}
           keyExtractor={item => item.uri}
           style={styles.imageList}
-          ItemSeparatorComponent={() => <View style={{ height: 16 }} />} // Adjust height for row spacing
-          columnWrapperStyle={selectedImages.length !== 1 ? { justifyContent: 'space-between' } : null} // Apply space-between for two-column layout
+          ItemSeparatorComponent={() => <View style={{height: 16}} />}
+          columnWrapperStyle={
+            selectedImages.length !== 1
+              ? {justifyContent: 'space-between'}
+              : null
+          } // Apply space-between for two-column layout
         />
         <View style={styles.inputContent}>
-          {pfpUrl && <Image source={{uri: pfpUrl}} style={styles.profileImage} />}
+          {pfpUrl && (
+            <Image source={{uri: pfpUrl}} style={styles.profileImage} />
+          )}
           <TextInput
             value={text}
             onChangeText={setText}
@@ -275,7 +289,10 @@ const Casting = ({navigation}: Props) => {
       </View>
 
       <View style={styles.imagePickerContainer}>
-        <TouchableOpacity onPress={pickImage} style={styles.imagePickerButton} disabled={selectedImages.length >= 2}>
+        <TouchableOpacity
+          onPress={pickImage}
+          style={styles.imagePickerButton}
+          disabled={selectedImages.length >= 2}>
           <Image source={IMAGE.imageAdd} />
         </TouchableOpacity>
         <FlatList
@@ -299,18 +316,18 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   imageContainer: {
-    position: 'relative', 
+    position: 'relative',
   },
   iconContainer: {
     position: 'absolute',
-    top: 8,   
-    right: 8, 
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+    top: 8,
+    right: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: 10,
-    padding: 2,      
+    padding: 2,
   },
   selectImageSingle: {
-    width: wp(87), 
+    width: wp(87),
     aspectRatio: 1,
     borderRadius: 8,
     marginBottom: 16,
@@ -395,7 +412,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     justifyContent: 'center',
-    alignContent: 'center'
+    alignContent: 'center',
   },
   imagePickerText: {
     color: '#fff',
@@ -404,8 +421,6 @@ const styles = StyleSheet.create({
   imageList: {
     flexGrow: 0,
     // marginTop: 8,
-    
-
   },
   selectedImage: {
     width: 70,
