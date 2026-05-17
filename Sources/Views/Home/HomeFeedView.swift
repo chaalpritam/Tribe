@@ -11,7 +11,11 @@ struct HomeFeedView: View {
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 16) {
-                HomeFeedItemsView(store: store, emptySubtitle: emptySubtitle)
+                HomeFeedItemsView(
+                    store: store,
+                    emptySubtitle: emptySubtitle,
+                    onLoadMore: channelId == nil ? { Task { await store.loadMore() } } : nil
+                )
             }
             .padding(.horizontal, 16)
             .padding(.top, 12)
