@@ -174,12 +174,12 @@ Deliverable: `PLAN.md` reviewed and approved. No code yet.
 - [x] PhotosPicker for image input; `URLSessionWebSocketTask` already set up for WS.
 
 ### Phase 10 — Polish
-- [ ] On-chain settlement for events/polls/tasks/crowdfunds (Anchor client integration — likely via Solana.swift or a thin wrapper around web3 endpoints).
-- [ ] ER follow flow: optimistic via ER server, L1 settlement watching.
-- [ ] Image lazy-load + cache (`UserAvatarCache` pattern, extended).
-- [ ] Pagination on all infinite lists.
-- [ ] Error toasts + retry flows.
-- [ ] Performance pass (memory, image decoding, scroll perf).
+- [x] On-chain settlement for events/polls/tasks/crowdfunds — hub-mediated envelopes + `HubSettlementBadge` on cards (matches tribe-ios; direct Anchor client deferred).
+- [x] ER follow flow: `FollowButton` reads ER link status, polls while `pending_follow` / `pending_unfollow`, explainer sheet; `ActivityView` surfaces follow settlement rows.
+- [x] Image lazy-load + cache: `ImageCache`, `CachedAsyncImage`, URL cache at launch; avatars, tweet media, profile grid.
+- [x] Pagination on city home feed (`fetchFeedPage` cursor + load-more in `HomeFeedStore`).
+- [x] Error toasts + retry flows: `ToastCenter`, `EmptyStateView` with retry on feed/follow lists/activity.
+- [x] Performance pass: NSCache image decode, `LazyVStack` feed, bounded URL cache.
 
 ---
 
