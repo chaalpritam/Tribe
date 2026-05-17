@@ -19,4 +19,19 @@ enum Theme {
     static let cardShadow = Color.black.opacity(0.08)
     static let cardShadowRadius: CGFloat = 8
     static let cardShadowY: CGFloat = 4
+
+    static let brandGradient = LinearGradient(
+        colors: [primary, Color(red: 0.95, green: 0.36, blue: 0.65)],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+
+    static let softBrandBackground = LinearGradient(
+        colors: [
+            Color(.systemBackground),
+            primary.opacity(0.06),
+        ],
+        startPoint: .top,
+        endPoint: .bottom
+    )
 }
