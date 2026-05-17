@@ -34,4 +34,10 @@ enum Theme {
         startPoint: .top,
         endPoint: .bottom
     )
+
+    static let navPillBackground = Color.black
+    static let navPillInactive = Color.white.opacity(0.6)
+    static let navPillActiveBackground = Color.white
+    static let navPillCornerRadius: CGFloat = 32
+    static let shellBottomInset: CGFloat = 100
 }
