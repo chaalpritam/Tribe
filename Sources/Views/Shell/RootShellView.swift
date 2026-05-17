@@ -69,7 +69,8 @@ struct RootShellView: View {
     private var tabContent: some View {
         switch selectedTab {
         case .home:
-            HomeTabPlaceholder()
+            HomeFeedView()
+                .environmentObject(app.interactions)
         case .explore:
             ExploreTabPlaceholder()
         case .map:
