@@ -15,7 +15,7 @@ struct RootView: View {
             case .city:
                 CityPickerView()
             case .ready:
-                ReadyPlaceholderView()
+                RootShellView()
             }
         }
         .tint(Theme.primary)
