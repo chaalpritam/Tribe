@@ -49,6 +49,9 @@ final class AppState: ObservableObject {
         didSet { persistJoinedChannelIds() }
     }
 
+    /// Full-screen overlay while changing cities (matches tribeapp.wtf shell).
+    @Published var isSwitchingCity = false
+
     private(set) var api: HubClient
     private(set) var er: ERClient
     let interactions: InteractionCache
@@ -123,6 +126,16 @@ final class AppState: ObservableObject {
     func selectCity(_ channel: Channel) {
         currentCity = channel
         recomputePhase()
+    }
+
+    /// Animate a city change from the in-app switcher (header overlay).
+    func switchCity(to channel: Channel) async {
+        guard channel.id != currentCity?.id else { return }
+        isSwitchingCity = true
+        defer { isSwitchingCity = false }
+        try? await Task.sleep(nanoseconds: 650_000_000)
+        currentCity = channel
+        await interactions.refresh()
     }
 
     func signOut() {
