@@ -6,9 +6,14 @@
 //
 
 import SwiftUI
+import TribeCore
 
 @main
 struct TribeApp: App {
+    init() {
+        Blake3.selfTest()
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
