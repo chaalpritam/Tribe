@@ -12,13 +12,10 @@ struct UserAvatarView: View {
     var body: some View {
         Group {
             if let url = app.userAvatars.pfpUrl(for: tid) {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image.resizable().scaledToFill()
-                    default:
-                        AvatarInitial(seed: seed ?? initial, size: size)
-                    }
+                CachedAsyncImage(url: url) { image in
+                    image.resizable().scaledToFill()
+                } placeholder: {
+                    AvatarInitial(seed: seed ?? initial, size: size)
                 }
             } else {
                 AvatarInitial(seed: seed ?? initial, size: size)
