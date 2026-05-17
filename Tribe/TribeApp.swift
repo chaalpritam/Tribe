@@ -2,21 +2,20 @@
 //  TribeApp.swift
 //  Tribe
 //
-//  Created by chaalpritam on 17/05/26.
-//
 
 import SwiftUI
-import TribeCore
 
 @main
 struct TribeApp: App {
-    init() {
-        Blake3.selfTest()
-    }
+    @StateObject private var appState = AppState()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(appState)
+                .environmentObject(appState.interactions)
+                .environmentObject(appState.tipStats)
+                .environmentObject(appState.userAvatars)
         }
     }
 }
