@@ -20,6 +20,28 @@ public struct Channel: Decodable, Identifiable, Hashable {
 
     public var isCity: Bool { kind == 2 }
 
+    public init(
+        id: String,
+        name: String?,
+        description: String? = nil,
+        kind: Int? = nil,
+        latitude: Double? = nil,
+        longitude: Double? = nil,
+        tweetCount: Int = 0,
+        memberCount: Int = 0,
+        lastTweetAt: Date? = nil
+    ) {
+        self.id = id
+        self.name = name
+        self.description = description
+        self.kind = kind
+        self.latitude = latitude
+        self.longitude = longitude
+        self.tweetCount = tweetCount
+        self.memberCount = memberCount
+        self.lastTweetAt = lastTweetAt
+    }
+
     enum CodingKeys: String, CodingKey {
         case id, name, description, kind, latitude, longitude
         case tweetCount = "tweet_count"
