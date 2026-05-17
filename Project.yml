@@ -1,0 +1,68 @@
+name: Tribe
+options:
+  bundleIdPrefix: app.tribe
+  deploymentTarget:
+    iOS: "17.0"
+  developmentLanguage: en
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+packages:
+  TribeCore:
+    path: ../tribe-core-swift
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    GENERATE_INFOPLIST_FILE: NO
+
+targets:
+  Tribe:
+    type: application
+    platform: iOS
+    sources:
+      - path: Tribe
+      - path: Sources
+    dependencies:
+      - package: TribeCore
+        product: TribeCore
+    settings:
+      base:
+        PRODUCT_NAME: Tribe
+        PRODUCT_BUNDLE_IDENTIFIER: app.tribe.app
+        INFOPLIST_FILE: Tribe/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        SDKROOT: iphoneos
+        SUPPORTED_PLATFORMS: "iphoneos iphonesimulator"
+        TARGETED_DEVICE_FAMILY: "1"
+        SUPPORTS_MACCATALYST: NO
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
+        SWIFT_EMIT_LOC_STRINGS: YES
+        ENABLE_PREVIEWS: YES
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "Apple Development"
+        DEVELOPMENT_TEAM: ""
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+
+schemes:
+  Tribe:
+    build:
+      targets:
+        Tribe: all
+    run:
+      config: Debug
+      commandLineArguments: {}
+      environmentVariables: {}
+    test:
+      config: Debug
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
