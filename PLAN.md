@@ -2,6 +2,12 @@
 
 Native SwiftUI iOS app that ports the full feature set of the `tribeapp.wtf` web client (Next.js) into the `tribe/` submodule. Reuses `tribe-core-swift` (crypto) and lifts models/API/state patterns from `tribe-ios` (the existing Twitter-shaped client).
 
+## Status
+
+All ten phases shipped. App boots, onboards (connect + city), runs the full shell, and exercises every feature surface (home feed, tribes, explore, map, chat, profile, wallet, notifications, create). Polish — settlement badges, ER follow status, image cache, pagination, toasts, empty states — is in.
+
+Next priorities live in **[What's next](#whats-next)** below.
+
 ## Goals
 
 - Hyperlocal social app, city-first, on the Tribe protocol.
@@ -112,41 +118,41 @@ Each phase is a self-contained landing — review-ready at the end.
 Deliverable: `PLAN.md` reviewed and approved. No code yet.
 
 ### Phase 1 — Project skeleton
-- [ ] Replace `Tribe.xcodeproj` with `Project.yml` + xcodegen. Add Makefile-or-shell entry to regen.
-- [ ] Add `tribe-core-swift` as local SPM dependency.
-- [ ] Move existing files into `Sources/` layout. `TribeApp.swift` stays in `Tribe/` (app target entry).
-- [ ] Create empty `Theme/`, `Models/`, `API/`, `State/`, `Views/` dirs with index .swift files.
-- [ ] Confirm `xcodegen generate && xcodebuild -scheme Tribe build` succeeds.
+- [x] Replace `Tribe.xcodeproj` with `Project.yml` + xcodegen. Add Makefile-or-shell entry to regen. (`Project.yml` + `Makefile`; pbxproj kept committed so fresh clones open without xcodegen.)
+- [x] Add `tribe-core-swift` as local SPM dependency.
+- [x] Move existing files into `Sources/` layout. `TribeApp.swift` stays in `Tribe/` (app target entry).
+- [x] Create empty `Theme/`, `Models/`, `API/`, `State/`, `Views/` dirs with index .swift files.
+- [x] Confirm `xcodegen generate && xcodebuild -scheme Tribe build` succeeds.
 
 ### Phase 2 — Foundation: models, API, state
-- [ ] Copy all 13 model files from `tribe-ios/Sources/Models/` → `tribe/Sources/Models/`.
-- [ ] Copy all 5 API files from `tribe-ios/Sources/API/` → `tribe/Sources/API/`.
-- [ ] Copy and adapt `AppState`: same Phase enum + base fields, add `currentCity: Channel?`, `joinedChannels: [Channel]`.
-- [ ] Copy 3 caches (`InteractionCache`, `OnchainTipStatsCache`, `UserAvatarCache`) — rewire to new AppState.
-- [ ] Build `Theme/` (colors from Assets.xcassets + Swift `Theme` namespace).
-- [ ] App builds; AppState init from Keychain works; can hit a localhost hub and decode `/v1/feed`.
+- [x] Copy all 13 model files from `tribe-ios/Sources/Models/` → `tribe/Sources/Models/` (12 shipped + `Karma.swift` added).
+- [x] Copy all 5 API files from `tribe-ios/Sources/API/` → `tribe/Sources/API/` (plus `HubRealtime.swift`, `SolanaRPCClient.swift`).
+- [x] Copy and adapt `AppState`: 4-case `Phase` enum (`.unloaded`, `.connect`, `.city`, `.ready`), `currentCity`, `joinedChannels`.
+- [x] Copy 3 caches (`InteractionCache`, `OnchainTipStatsCache`, `UserAvatarCache`) — rewired to new AppState.
+- [x] Build `Theme/` (colors from Assets.xcassets + Swift `Theme` namespace).
+- [x] App builds; AppState init from Keychain works; can hit a localhost hub and decode `/v1/feed`.
 
 ### Phase 3 — Onboarding (connect + city)
-- [ ] Connect screen: in-app keypair flow (generate or restore from 12-word mnemonic via `BIP39` + `SolanaHD`).
-- [ ] Generate/load `AppKey` and `DMKey` via TribeCore Keychain.
-- [ ] Publish initial profile + register DM key (`HubClient.Publish.registerDMKey()`).
-- [ ] City picker: load city channels via `Endpoints.fetchChannels()` filtered to `kind=2`. Static fallback list.
-- [ ] Persist `currentCity` (UserDefaults) + hydrate AppState on app launch.
-- [ ] Phase transitions: `.unloaded → .connect → .city → .ready`.
+- [x] Connect screen: in-app keypair flow (generate via `CreateAppKeyView` / restore via `SeedPhraseConnectView` + `ImportIdentityView`).
+- [x] Generate/load `AppKey` and `DMKey` via TribeCore Keychain.
+- [x] Publish initial profile + register DM key (`HubClient.Publish.registerDMKey()`).
+- [x] City picker: load city channels via `Endpoints.fetchChannels()` filtered to `kind=2`. Static fallback via `CityCatalog`.
+- [x] Persist `currentCity` (UserDefaults) + hydrate AppState on app launch.
+- [x] Phase transitions: `.unloaded → .connect → .city → .ready`.
 
 ### Phase 4 — Shell (bottom-nav pill + tab containers)
-- [ ] Build `BottomPillNav` view: 6 tabs around a center +Create button. Active-tab styling matches web (white pill on dark bg).
-- [ ] `RootShellView` switches on selected tab. Each tab gets a placeholder view.
-- [ ] City switcher overlay ("Traveling… Syncing local pulse" spinner) when `currentCity` changes.
-- [ ] Common `AppHeader` (sticky title + optional back + optional right actions).
+- [x] Build `BottomPillNav` view: 6 tabs around a center +Create button. Active-tab styling matches web (white pill on dark bg).
+- [x] `RootShellView` switches on selected tab. Each tab gets a placeholder view (then real views as phases landed).
+- [x] City switcher overlay ("Traveling… Syncing local pulse" spinner) via `CitySwitchOverlay` + `CitySwitcherSheet`.
+- [x] Common `AppHeader` (sticky title + optional back + optional right actions).
 
 ### Phase 5 — Home feed (mixed)
-- [ ] Build 5 cards: Tweet, Event, Poll, Task, Crowdfund. Match web's rounded-card aesthetic.
-- [ ] Mixed feed view interleaves them (2 tweets → 1 event/poll/task/crowdfund → repeat).
-- [ ] Use `Endpoints.fetchChannelFeed()` for current city's tweets.
-- [ ] Wire reactions (`likeTweet`/`unlikeTweet`/`bookmark`/`retweet`) via `InteractionCache`.
-- [ ] Poll/event/task/crowdfund: stub with hub data first, on-chain queries in Phase 10 polish.
-- [ ] Real-time: connect to `/v1/ws` and merge new tweets at top.
+- [x] Build 5 cards: Tweet, Event, Poll, Task, Crowdfund. Match web's rounded-card aesthetic.
+- [x] Mixed feed view interleaves them (2 tweets → 1 event/poll/task/crowdfund → repeat) via `HomeFeedItemsView`.
+- [x] Use `Endpoints.fetchChannelFeed()` for current city's tweets.
+- [x] Wire reactions (`likeTweet`/`unlikeTweet`/`bookmark`/`retweet`) via `InteractionCache`.
+- [x] Poll/event/task/crowdfund: hub data, on-chain queries deferred to Phase 10 polish (settled via `HubSettlementBadge`).
+- [x] Real-time: connect to `/v1/ws` (via `HubRealtime`) and merge new tweets at top.
 
 ### Phase 6 — Tribes / channels
 - [x] Directory page: city channels grid (3-col) + interest channels list ("Your Tribes" / "Discover").
@@ -183,6 +189,38 @@ Deliverable: `PLAN.md` reviewed and approved. No code yet.
 
 ---
 
+## What's next
+
+Phases 1–10 landed the feature surface. The list below is what stands between "works on dev hub" and "shippable beta." Roughly ordered by leverage; nothing here is started.
+
+### Production readiness
+- [ ] **Tests**. No `Tests/` target yet. Start with model decode (`HubDecode`, all 12 model types' JSON fixtures), then `MessageSigner` envelope round-trip, then a couple of `HomeFeedStore` async paths. Wire to scheme so `make test` works.
+- [ ] **App icon + launch screen**. Currently default Xcode placeholder. Ship marks before TestFlight.
+- [ ] **Info.plist permission strings** — verify usage descriptions for Photos (compose), Location (map / city), Camera if image capture is added. Missing strings = App Store rejection.
+- [ ] **Crash + analytics hookup**. Light-touch (Sentry or os_log + Console export) so beta crashes are debuggable.
+- [ ] **TestFlight pipeline**. Marketing/build version bumps, App Store Connect record, signing certs, screenshots.
+
+### Deferred features (from initial non-goals)
+- [ ] **Single-tweet thread detail screen**. Web doesn't have one either, but iOS users expect a tap-into-thread surface. Reuse `TweetCardView` + a replies list scoped to the parent envelope id.
+- [ ] **On-chain settlement directly from device** (Solana.swift). Today events/polls/tasks/crowdfunds rely on hub-mediated settlement (matches tribe-ios). Direct Anchor submission would close the trust loop for power users.
+- [ ] **External wallet linking** (Phantom mobile deeplink or WalletConnect). Lets users custody outside the app's Keychain.
+- [ ] **Places / reviews data plane**. Map currently shows event pins + dummy place/review cards. Needs a real `places` envelope type on the hub before we can populate.
+- [ ] **Tribe slug-conflict UX**. Compose-time check + suggestion list when a slug is taken.
+
+### Module hygiene
+- [ ] **Lift API + Models to TribeCore (Phase 4.2 of tribe-core-swift)**. Currently duplicated between `tribe-ios/Sources/` and `tribe/Sources/`. Blocked on `tribe-core-swift` shipping the API layer.
+- [ ] **Parent repo CLAUDE.md** — entry for `tribe/` still describes it as the CLI submodule. Update to "Native SwiftUI iOS app — hyperlocal flavor; port of tribeapp.wtf."
+- [ ] **README.md in `tribe/`** — once an icon and screenshots exist, mirror `tribe-ios` README structure (screenshots grid + quickstart).
+
+### Polish backlog
+- [ ] Skeleton loaders on cold feed (current empty-state is text-only).
+- [ ] Pull-to-refresh haptics on `HomeFeedView`.
+- [ ] Notification deep-linking (tap a follow → profile, tap a reaction → tweet).
+- [ ] Background WS reconnection on app foreground.
+- [ ] Push notifications (APNs) once a hub endpoint exists.
+
+---
+
 ## Open decisions
 
 1. **On-chain client library on iOS** — tribe-ios doesn't yet write to Solana programs directly (envelopes go through hub; on-chain settlement is hub-mediated). For events/polls/tasks/crowdfunds, do we (a) wait for hub-mediated settlement (lowest effort, matches current iOS), or (b) use `Solana.swift` to sign + submit Anchor instructions client-side? Decision punted to Phase 10; for now follow tribe-ios pattern (hub-mediated).
@@ -194,8 +232,9 @@ Deliverable: `PLAN.md` reviewed and approved. No code yet.
 
 ## Status notes
 
-- `tribe/` was scaffolded by Xcode (single-file `ContentView`); CLAUDE.md in the parent repo still describes it as the CLI submodule, which is stale. Update the parent's CLAUDE.md when this app starts shipping.
-- `tribe-core-swift` Phase 4.1 (crypto) is the only fully-shipped layer; API + Models still live in `tribe-ios` and will move to TribeCore in Phase 4.2 per its MIGRATION.md.
+- Parent `CLAUDE.md` still describes the `tribe/` submodule as a CLI — stale. Update when this app cuts its first beta build (tracked in [What's next](#whats-next)).
+- `tribe-core-swift` Phase 4.1 (crypto) remains the only shipped layer. API + Models still duplicated between `tribe-ios` and `tribe/`; will collapse onto TribeCore once 4.2 ships per its `MIGRATION.md`.
+- `Tribe.xcodeproj` is committed alongside `Project.yml`. Source of truth is the YAML — re-run `make generate` after edits. Generated pbxproj is kept so cloners without xcodegen can still open in Xcode (matches `.gitignore` comment).
 
 ---
 
