@@ -6,6 +6,9 @@ final class HomeFeedStore: ObservableObject {
     @Published private(set) var isLoading = false
     @Published var errorMessage: String?
 
+    /// When set, loads a single channel feed instead of the current city home mix.
+    var feedChannelId: String?
+
     private var realtimeToken: UUID?
     private weak var app: AppState?
 
@@ -29,7 +32,48 @@ final class HomeFeedStore: ObservableObject {
     }
 
     func refresh() async {
-        guard let app, let city = app.currentCity else {
+        if let channelId = feedChannelId {
+            await refresh(channelId: channelId)
+        } else {
+            await refresh(cityScope: app?.currentCity?.id)
+        }
+    }
+
+    func refresh(channelId: String) async {
+        guard let app else { return }
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false }
+        do {
+            async let tweetsTask = app.api.fetchChannelFeed(channelId)
+            async let eventsTask = app.api.fetchEvents(upcomingOnly: true)
+            async let pollsTask = app.api.fetchPolls()
+            async let tasksTask = app.api.fetchTasks()
+            async let fundsTask = app.api.fetchCrowdfunds()
+
+            let tweets = try await tweetsTask
+            let events = try await eventsTask
+            let polls = try await pollsTask
+            let tasks = try await tasksTask
+            let funds = try await fundsTask
+
+            let matches = { (id: String?) in id == channelId }
+            let tweetItems = tweets.map { FeedItem.tweet($0) }
+            let other = FeedMixer.mergeOther(
+                events: events.filter { matches($0.channelId) },
+                polls: polls.filter { matches($0.channelId) },
+                tasks: tasks.filter { matches($0.channelId) },
+                crowdfunds: funds.filter { matches($0.channelId) }
+            )
+            items = FeedMixer.interleave(tweets: tweetItems, other: other)
+            await app.interactions.ensureLoaded()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    private func refresh(cityScope cityId: String?) async {
+        guard let app, let cityId else {
             items = []
             errorMessage = "No city selected."
             return
@@ -37,8 +81,6 @@ final class HomeFeedStore: ObservableObject {
         isLoading = true
         errorMessage = nil
         defer { isLoading = false }
-
-        let cityId = city.id
         do {
             async let tweetsTask = app.api.fetchChannelFeed(cityId)
             async let eventsTask = app.api.fetchEvents(upcomingOnly: true)
@@ -70,12 +112,18 @@ final class HomeFeedStore: ObservableObject {
 
     private func handleRealtime(_ event: HubRealtime.Event) async {
         guard event.name == "new_message" else { return }
-        guard let app, let cityId = app.currentCity?.id else { return }
+        guard let app else { return }
         guard let type = jsonInt(event.data["type"]), type == 1 else { return }
         guard let hash = event.data["hash"] as? String else { return }
         do {
             let tweet = try await app.api.fetchTweet(hash: hash)
-            guard ChannelScope.matches(cityId: cityId, channelId: tweet.channelId) else { return }
+            if let channelId = feedChannelId {
+                guard tweet.channelId == channelId || tweet.channelId == nil else { return }
+            } else if let cityId = app.currentCity?.id {
+                guard ChannelScope.matches(cityId: cityId, channelId: tweet.channelId) else { return }
+            } else {
+                return
+            }
             prependTweet(tweet)
         } catch {
             await refresh()
