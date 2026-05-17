@@ -58,8 +58,10 @@ final class AppState: ObservableObject {
     let tipStats: OnchainTipStatsCache
     let userAvatars: UserAvatarCache
     let notifications: NotificationsStore
+    let toasts = ToastCenter()
 
     init() {
+        ImageCache.configureURLCache()
         Blake3.selfTest()
         NaClBox.selfTest()
 

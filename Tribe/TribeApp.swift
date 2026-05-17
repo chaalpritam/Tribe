@@ -16,6 +16,8 @@ struct TribeApp: App {
                 .environmentObject(appState.interactions)
                 .environmentObject(appState.tipStats)
                 .environmentObject(appState.userAvatars)
+                .environmentObject(appState.toasts)
+                .overlay { ToastOverlay() }
         }
     }
 }

@@ -3,6 +3,7 @@ import SwiftUI
 struct TweetCardView: View {
     @EnvironmentObject private var app: AppState
     @EnvironmentObject private var interactions: InteractionCache
+    @EnvironmentObject private var toasts: ToastCenter
 
     let tweet: Tweet
 
@@ -27,7 +28,12 @@ struct TweetCardView: View {
         FeedCardChrome {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(alignment: .top, spacing: 12) {
-                    AvatarInitial(seed: tweet.username ?? tweet.tid)
+                    UserAvatarView(
+                        tid: tweet.tid,
+                        initial: String((tweet.username ?? tweet.tid).prefix(1)),
+                        size: 44,
+                        seed: tweet.username ?? tweet.tid
+                    )
                     VStack(alignment: .leading, spacing: 4) {
                         HStack(spacing: 4) {
                             Text(displayName)
@@ -48,6 +54,7 @@ struct TweetCardView: View {
                         }
                     }
                 }
+                TweetMediaPreview(tweet: tweet)
                 if let actionError {
                     Text(actionError)
                         .font(.caption)
@@ -117,6 +124,7 @@ struct TweetCardView: View {
         } catch {
             interactions.setLiked(was, hash: tweet.hash)
             actionError = error.localizedDescription
+            toasts.show(error.localizedDescription)
         }
     }
 
@@ -136,6 +144,7 @@ struct TweetCardView: View {
         } catch {
             interactions.setRetweeted(was, hash: tweet.hash)
             actionError = error.localizedDescription
+            toasts.show(error.localizedDescription)
         }
     }
 
@@ -151,6 +160,7 @@ struct TweetCardView: View {
         } catch {
             interactions.setBookmarked(was, hash: tweet.hash)
             actionError = error.localizedDescription
+            toasts.show(error.localizedDescription)
         }
     }
 }
