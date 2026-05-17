@@ -57,6 +57,7 @@ final class AppState: ObservableObject {
     let interactions: InteractionCache
     let tipStats: OnchainTipStatsCache
     let userAvatars: UserAvatarCache
+    let notifications: NotificationsStore
 
     init() {
         Blake3.selfTest()
@@ -87,9 +88,11 @@ final class AppState: ObservableObject {
         self.interactions = InteractionCache()
         self.tipStats = OnchainTipStatsCache()
         self.userAvatars = UserAvatarCache()
+        self.notifications = NotificationsStore()
         self.interactions.attach(to: self)
         self.tipStats.attach(to: self)
         self.userAvatars.attach(to: self)
+        self.notifications.attach(to: self)
 
         Task { [weak self] in await self?.finishBootstrap() }
     }
@@ -99,6 +102,7 @@ final class AppState: ObservableObject {
             await refreshIdentityMetadata(tid: tid)
         }
         await hydrateChannelState()
+        await notifications.refreshUnread()
         recomputePhase()
     }
 
@@ -171,7 +175,8 @@ final class AppState: ObservableObject {
         interactions.clear()
         tipStats.clear()
         userAvatars.clear()
-        phase = .connect
+        notifications.clear()
+        recomputePhase()
     }
 
     @discardableResult
