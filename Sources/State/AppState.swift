@@ -6,11 +6,13 @@ import TribeCore
 @MainActor
 final class AppState: ObservableObject {
     enum Phase: Equatable {
-        case onboarding
+        case unloaded
+        case connect
+        case city
         case ready
     }
 
-    @Published var phase: Phase
+    @Published var phase: Phase = .unloaded
 
     @Published var hubBaseURL: URL {
         didSet {
@@ -39,12 +41,10 @@ final class AppState: ObservableObject {
     @Published var myUsername: String?
     @Published var walletAddress: String?
 
-    /// Selected city channel (kind == 2). Drives feed scoping in later phases.
     @Published var currentCity: Channel? {
-        didSet { persistCurrentCity() }
+        didSet { persistCurrentCity(); recomputePhase() }
     }
 
-    /// Channels this TID has joined (interest + city).
     @Published var joinedChannels: [Channel] = [] {
         didSet { persistJoinedChannelIds() }
     }
@@ -80,7 +80,6 @@ final class AppState: ObservableObject {
         self.api = HubClient(baseURL: storedURL)
         self.er = ERClient(baseURL: storedERURL)
         self.appKey = restoredKey
-        self.phase = (storedTID != nil && restoredKey != nil) ? .ready : .onboarding
 
         self.interactions = InteractionCache()
         self.tipStats = OnchainTipStatsCache()
@@ -89,10 +88,25 @@ final class AppState: ObservableObject {
         self.tipStats.attach(to: self)
         self.userAvatars.attach(to: self)
 
-        if let tid = storedTID {
-            Task { [weak self] in await self?.refreshIdentityMetadata(tid: tid) }
+        Task { [weak self] in await self?.finishBootstrap() }
+    }
+
+    private func finishBootstrap() async {
+        if let tid = myTID {
+            await refreshIdentityMetadata(tid: tid)
         }
-        Task { [weak self] in await self?.hydrateChannelState() }
+        await hydrateChannelState()
+        recomputePhase()
+    }
+
+    /// Persist identity, register DM key, publish a minimal profile, route to city picker.
+    func completeConnect(tid: String, appKey: AppKey, walletAddress: String? = nil) async throws {
+        try adopt(tid: tid, appKey: appKey)
+        if let walletAddress {
+            self.walletAddress = walletAddress
+        }
+        try await provisionIdentityOnHub()
+        recomputePhase()
     }
 
     func adopt(tid: String, appKey: AppKey) throws {
@@ -102,8 +116,13 @@ final class AppState: ObservableObject {
         Task { [weak self] in
             await self?.refreshIdentityMetadata(tid: tid)
             await self?.interactions.refresh()
-            await self?.hydrateChannelState()
         }
+    }
+
+    /// User picked a city — persist and enter the main app shell.
+    func selectCity(_ channel: Channel) {
+        currentCity = channel
+        recomputePhase()
     }
 
     func signOut() {
@@ -121,13 +140,14 @@ final class AppState: ObservableObject {
         interactions.clear()
         tipStats.clear()
         userAvatars.clear()
+        phase = .connect
     }
 
     @discardableResult
     func ensureDMKey() async throws -> DMKey {
         if let dm = dmKey { return dm }
         let key = try DMKey.loadOrCreate()
-        await MainActor.run { self.dmKey = key }
+        self.dmKey = key
         if let appKey, let myTID {
             _ = try? await api.registerDMKey(
                 publicKey: key.publicKey,
@@ -143,16 +163,16 @@ final class AppState: ObservableObject {
         await refreshIdentityMetadata(tid: tid)
     }
 
-    /// Restore `currentCity` and `joinedChannels` from UserDefaults, then
-    /// reconcile against the hub channel list when reachable.
     func hydrateChannelState() async {
         let storedCityId = UserDefaults.standard.string(forKey: Keys.currentCityId)
         let storedJoinedIds = UserDefaults.standard.stringArray(forKey: Keys.joinedChannelIds) ?? []
 
         do {
             let allChannels = try await api.fetchChannels()
+            let cityChannels = allChannels.filter(\.isCity)
             if let cityId = storedCityId {
-                currentCity = allChannels.first { $0.id == cityId && $0.isCity }
+                currentCity = cityChannels.first { $0.id == cityId }
+                    ?? allChannels.first { $0.id == cityId && $0.isCity }
             }
             if !storedJoinedIds.isEmpty {
                 let joined = allChannels.filter { storedJoinedIds.contains($0.id) }
@@ -168,7 +188,51 @@ final class AppState: ObservableObject {
                 }
             }
         } catch {
-            // Hub offline — keep persisted ids only; city object may stay nil.
+            if let cityId = storedCityId,
+               let entry = CityCatalog.fallback.first(where: { $0.id == cityId }) {
+                currentCity = entry.channel
+            }
+        }
+    }
+
+    /// City channels from hub, or static catalog when hub is empty/unreachable.
+    func loadCityOptions() async -> (cities: [Channel], usedFallback: Bool, error: String?) {
+        do {
+            let hubCities = try await api.fetchChannels().filter(\.isCity)
+            if !hubCities.isEmpty {
+                return (hubCities, false, nil)
+            }
+            return (CityCatalog.fallback.map(\.channel), true, nil)
+        } catch {
+            return (CityCatalog.fallback.map(\.channel), true, error.localizedDescription)
+        }
+    }
+
+    private func provisionIdentityOnHub() async throws {
+        guard let appKey, let tid = myTID else { return }
+        _ = try await ensureDMKey()
+        do {
+            let user = try await api.fetchUser(tid)
+            myUsername = user.username
+            walletAddress = user.custodyAddress.isEmpty ? walletAddress : user.custodyAddress
+            let display = user.profile?.displayName?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            if display.isEmpty {
+                let fallback = user.username.map { "\($0).tribe" } ?? "TID #\(tid)"
+                _ = try? await api.updateProfile(
+                    field: "displayName",
+                    value: fallback,
+                    as: appKey,
+                    tid: tid
+                )
+            }
+        } catch {
+            let fallback = "TID #\(tid)"
+            _ = try? await api.updateProfile(
+                field: "displayName",
+                value: fallback,
+                as: appKey,
+                tid: tid
+            )
         }
     }
 
@@ -176,7 +240,9 @@ final class AppState: ObservableObject {
         do {
             let user = try await api.fetchUser(tid)
             self.myUsername = user.username
-            self.walletAddress = user.custodyAddress
+            if !user.custodyAddress.isEmpty {
+                self.walletAddress = user.custodyAddress
+            }
         } catch {}
     }
 
@@ -202,7 +268,15 @@ final class AppState: ObservableObject {
     }
 
     private func recomputePhase() {
-        phase = (myTID != nil && appKey != nil) ? .ready : .onboarding
+        guard myTID != nil, appKey != nil else {
+            phase = .connect
+            return
+        }
+        guard currentCity != nil else {
+            phase = .city
+            return
+        }
+        phase = .ready
     }
 
     func lastNotificationsReadAt(tid: String) -> Date? {
