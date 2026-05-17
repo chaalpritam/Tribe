@@ -22,18 +22,19 @@ struct FollowListView: View {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if let error, users.isEmpty {
-                VStack(spacing: 8) {
-                    Text("Couldn't load \(mode.rawValue.lowercased())")
-                        .font(.headline)
-                    Text(error)
-                        .font(.footnote)
-                        .foregroundStyle(Theme.textSecondary)
-                }
-                .padding()
+                EmptyStateView(
+                    symbol: "wifi.exclamationmark",
+                    title: "Couldn't load \(mode.rawValue.lowercased())",
+                    message: error,
+                    retryTitle: "Retry",
+                    onRetry: { Task { await refresh() } }
+                )
             } else if users.isEmpty {
-                Text(mode == .followers ? "No followers yet" : "Not following anyone yet")
-                    .foregroundStyle(Theme.textSecondary)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                EmptyStateView(
+                    symbol: "person.2",
+                    title: mode == .followers ? "No followers yet" : "Not following anyone yet",
+                    message: nil
+                )
             } else {
                 List(users) { user in
                     followRow(user)
@@ -57,6 +58,8 @@ struct FollowListView: View {
                     .font(.caption)
                     .foregroundStyle(Theme.textSecondary)
             }
+            Spacer(minLength: 0)
+            FollowButton(targetTID: user.tid)
         }
         .padding(.vertical, 4)
     }

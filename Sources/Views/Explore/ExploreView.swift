@@ -162,6 +162,7 @@ struct ExploreView: View {
                                     .foregroundStyle(Theme.textSecondary)
                             }
                             Spacer()
+                            FollowButton(targetTID: user.tid)
                         }
                         .padding(12)
                         .background(Color.white)

@@ -57,6 +57,7 @@ public struct ERLinkStatus: Decodable {
 
     public var isFollowing: Bool { exists && status == "active" }
     public var isPending: Bool { exists && status == "pending_follow" }
+    public var isPendingUnfollow: Bool { exists && status == "pending_unfollow" }
 }
 
 public struct ERProfile: Decodable {
