@@ -12,6 +12,7 @@ struct ProfileView: View {
     @State private var showKarma = false
     @State private var followListMode: FollowListView.Mode?
     @State private var showWallet = false
+    @State private var showActivity = false
     @State private var copiedWallet = false
 
     enum ProfileTab: String, CaseIterable {
@@ -85,6 +86,10 @@ struct ProfileView: View {
             WalletView()
                 .environmentObject(app)
         }
+        .navigationDestination(isPresented: $showActivity) {
+            ActivityView()
+                .environmentObject(app)
+        }
     }
 
     private var heroCard: some View {
@@ -141,6 +146,8 @@ struct ProfileView: View {
                 Button("Edit profile") { showEditor = true }
                     .buttonStyle(ProfilePillButtonStyle(fill: Color.black, foreground: .white))
                 Button("Wallet") { showWallet = true }
+                    .buttonStyle(ProfilePillButtonStyle(fill: Color(white: 0.96), foreground: Theme.textPrimary))
+                Button("Activity") { showActivity = true }
                     .buttonStyle(ProfilePillButtonStyle(fill: Color(white: 0.96), foreground: Theme.textPrimary))
             }
         }
@@ -244,13 +251,10 @@ struct ProfileView: View {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 6) {
                     ForEach(mediaTweets) { tweet in
                         if let url = tweet.firstMediaURL(resolver: app.api.resolveMediaURL) {
-                            AsyncImage(url: url) { phase in
-                                switch phase {
-                                case .success(let image):
-                                    image.resizable().scaledToFill()
-                                default:
-                                    Color(white: 0.92)
-                                }
+                            CachedAsyncImage(url: url) { image in
+                                image.resizable().scaledToFill()
+                            } placeholder: {
+                                Color(white: 0.92)
                             }
                             .aspectRatio(1, contentMode: .fill)
                             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
