@@ -1,12 +1,22 @@
 import SwiftUI
 
-/// Design tokens for tribeapp.wtf parity (see PLAN.md).
+/// Design tokens mapped from tribeapp.wtf (see PLAN.md).
 enum Theme {
     static let primary = Color("Primary")
-    static let success = Color(red: 16 / 255, green: 185 / 255, blue: 129 / 255)
-    static let warning = Color(red: 245 / 255, green: 158 / 255, blue: 11 / 255)
-    static let error = Color(red: 239 / 255, green: 68 / 255, blue: 68 / 255)
+    static let success = Color("Success")
+    static let warning = Color("Warning")
+    static let error = Color("Error")
+
+    static let surface = Color(.secondarySystemGroupedBackground)
+    static let pageBackground = Color(.systemGroupedBackground)
+    static let textPrimary = Color(.label)
+    static let textSecondary = Color(.secondaryLabel)
 
     static let cardCornerRadius: CGFloat = 20
+    static let modalCornerRadius: CGFloat = 36
     static let sheetCornerRadius: CGFloat = 36
+
+    static let cardShadow = Color.black.opacity(0.08)
+    static let cardShadowRadius: CGFloat = 8
+    static let cardShadowY: CGFloat = 4
 }
