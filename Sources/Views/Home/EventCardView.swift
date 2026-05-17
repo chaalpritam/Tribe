@@ -37,6 +37,7 @@ struct EventCardView: View {
                 .buttonStyle(.borderedProminent)
                 .tint(.primary)
                 .disabled(working || rsvped || app.appKey == nil)
+                HubSettlementBadge()
             }
         }
     }

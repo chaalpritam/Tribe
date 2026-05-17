@@ -30,6 +30,7 @@ struct CrowdfundCardView: View {
                         .font(.caption2)
                         .foregroundStyle(Theme.textSecondary)
                 }
+                HubSettlementBadge()
             }
         }
     }

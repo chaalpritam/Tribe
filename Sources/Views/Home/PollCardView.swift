@@ -43,6 +43,7 @@ struct PollCardView: View {
                         .font(.caption.weight(.bold))
                         .foregroundStyle(Theme.textSecondary)
                 }
+                HubSettlementBadge()
             }
         }
     }

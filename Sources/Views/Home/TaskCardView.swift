@@ -42,6 +42,7 @@ struct TaskCardView: View {
                 .buttonStyle(.borderedProminent)
                 .tint(Theme.warning)
                 .disabled(working || claimed || task.claimedByTid != nil || app.appKey == nil)
+                HubSettlementBadge()
             }
         }
         .onAppear {
