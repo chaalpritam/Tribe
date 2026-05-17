@@ -138,6 +138,24 @@ final class AppState: ObservableObject {
         await interactions.refresh()
     }
 
+    func isJoined(channelId: String) -> Bool {
+        joinedChannels.contains { $0.id == channelId }
+    }
+
+    func joinChannel(_ channel: Channel) async throws {
+        guard let appKey, let tid = myTID else { return }
+        try await api.joinChannel(channel.id, as: appKey, tid: tid)
+        if !joinedChannels.contains(where: { $0.id == channel.id }) {
+            joinedChannels.append(channel)
+        }
+    }
+
+    func leaveChannel(_ channel: Channel) async throws {
+        guard let appKey, let tid = myTID else { return }
+        try await api.leaveChannel(channel.id, as: appKey, tid: tid)
+        joinedChannels.removeAll { $0.id == channel.id }
+    }
+
     func signOut() {
         try? KeychainStore.delete(.appKeySeed)
         DMKey.clearKeychain()

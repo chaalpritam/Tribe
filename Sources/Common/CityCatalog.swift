@@ -13,6 +13,10 @@ struct CityCatalogEntry: Identifiable, Hashable {
 }
 
 enum CityCatalog {
+    static func entry(for channelId: String) -> CityCatalogEntry? {
+        fallback.first { $0.id == channelId }
+    }
+
     static let fallback: [CityCatalogEntry] = [
         CityCatalogEntry(id: "bangalore", name: "Bangalore", country: "India"),
         CityCatalogEntry(id: "bengaluru", name: "Bengaluru", country: "India"),
