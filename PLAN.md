@@ -149,9 +149,9 @@ Deliverable: `PLAN.md` reviewed and approved. No code yet.
 - [ ] Real-time: connect to `/v1/ws` and merge new tweets at top.
 
 ### Phase 6 — Tribes / channels
-- [ ] Directory page: city channels grid (3-col) + interest channels list ("Your Tribes" / "Discover").
-- [ ] Join/leave (channel-registry envelope).
-- [ ] Single tribe view: feed scoped to that channel id (reuse Home feed views with channel param).
+- [x] Directory page: city channels grid (3-col) + interest channels list ("Your Tribes" / "Discover").
+- [x] Join/leave (channel-registry envelope).
+- [x] Single tribe view: feed scoped to that channel id (reuse Home feed views with channel param).
 
 ### Phase 7 — Profile, wallet, notifications
 - [ ] **Profile**: hero card (avatar + name + handle + bio + badges), karma card, tabs (Posts / Media / Stats), follow lists modal, edit sheet.

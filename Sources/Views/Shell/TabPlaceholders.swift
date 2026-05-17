@@ -20,16 +20,6 @@ struct MapTabPlaceholder: View {
     }
 }
 
-struct TribesTabPlaceholder: View {
-    var body: some View {
-        ShellPlaceholderScreen(
-            icon: "person.3",
-            title: "Tribes",
-            subtitle: "Channel directory and joins land in Phase 6."
-        )
-    }
-}
-
 struct ChatTabPlaceholder: View {
     var body: some View {
         ShellPlaceholderScreen(

@@ -4,6 +4,7 @@ struct RootShellView: View {
     @EnvironmentObject private var app: AppState
 
     @State private var selectedTab: ShellTab = .home
+    @State private var tribesPath: [TribesDestination] = []
     @State private var showCreate = false
     @State private var showCitySwitcher = false
     @State private var showNotifications = false
@@ -13,7 +14,9 @@ struct RootShellView: View {
             VStack(spacing: 0) {
                 AppHeader(
                     title: headerTitle,
-                    onChangeCity: { showCitySwitcher = true },
+                    showBackButton: showTribesBack,
+                    onBack: { tribesPath.removeLast() },
+                    onChangeCity: selectedTab == .home ? { showCitySwitcher = true } : nil,
                     onNotifications: { showNotifications = true }
                 )
                 tabContent
@@ -60,9 +63,18 @@ struct RootShellView: View {
         switch selectedTab {
         case .home:
             return app.currentCity?.displayName ?? "Home"
+        case .tribes:
+            if case .tribe(let channel) = tribesPath.last {
+                return channel.displayName
+            }
+            return "Tribes"
         default:
             return selectedTab.title
         }
+    }
+
+    private var showTribesBack: Bool {
+        selectedTab == .tribes && !tribesPath.isEmpty
     }
 
     @ViewBuilder
@@ -76,7 +88,19 @@ struct RootShellView: View {
         case .map:
             MapTabPlaceholder()
         case .tribes:
-            TribesTabPlaceholder()
+            NavigationStack(path: $tribesPath) {
+                TribesDirectoryView(
+                    path: $tribesPath,
+                    onJumpToCity: { selectedTab = .home }
+                )
+                .navigationDestination(for: TribesDestination.self) { destination in
+                    if case .tribe(let channel) = destination {
+                        TribeDetailView(channel: channel)
+                            .environmentObject(app.interactions)
+                    }
+                }
+            }
+            .navigationBarHidden(true)
         case .chat:
             ChatTabPlaceholder()
         case .profile:
