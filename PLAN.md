@@ -154,10 +154,10 @@ Deliverable: `PLAN.md` reviewed and approved. No code yet.
 - [x] Single tribe view: feed scoped to that channel id (reuse Home feed views with channel param).
 
 ### Phase 7 — Profile, wallet, notifications
-- [ ] **Profile**: hero card (avatar + name + handle + bio + badges), karma card, tabs (Posts / Media / Stats), follow lists modal, edit sheet.
+- [x] **Profile**: hero card (avatar + name + handle + bio + badges), karma card, tabs (Posts / Media / Stats), follow lists modal, edit sheet.
   - `fetchUser`, `fetchFollowers`, `fetchFollowing`, on-chain karma via `karma-registry`.
-- [ ] **Wallet**: balance via Solana RPC `getBalance`, tip ledger via `fetchTipsSent` + `fetchTipsReceived` + `fetchOnchainTips`, disconnect button (clears Keychain + AppState → `.unloaded`).
-- [ ] **Notifications**: `fetchNotifications` + count badge in shell. Each notification type renders with appropriate icon/verb.
+- [x] **Wallet**: balance via Solana RPC `getBalance`, tip ledger via `fetchTipsSent` + `fetchTipsReceived` + `fetchOnchainTips`, disconnect button (clears Keychain + AppState → `.unloaded`).
+- [x] **Notifications**: `fetchNotifications` + count badge in shell. Each notification type renders with appropriate icon/verb.
 
 ### Phase 8 — Explore, map, chat (DMs)
 - [ ] **Explore**: search bar (`/v1/search?q=`), channel grid, interleaved discovery content scoped to city.

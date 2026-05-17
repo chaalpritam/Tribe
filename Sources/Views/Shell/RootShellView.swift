@@ -17,7 +17,8 @@ struct RootShellView: View {
                     showBackButton: showTribesBack,
                     onBack: { tribesPath.removeLast() },
                     onChangeCity: selectedTab == .home ? { showCitySwitcher = true } : nil,
-                    onNotifications: { showNotifications = true }
+                    onNotifications: { showNotifications = true },
+                    notificationUnreadCount: app.notifications.unreadCount
                 )
                 tabContent
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -40,22 +41,30 @@ struct RootShellView: View {
         .sheet(isPresented: $showCitySwitcher) {
             CitySwitcherSheet()
         }
-        .sheet(isPresented: $showNotifications) {
-            NavigationStack {
-                ShellPlaceholderScreen(
-                    icon: "bell",
-                    title: "Notifications",
-                    subtitle: "Notification list lands in Phase 7."
-                )
-                .navigationTitle("Notifications")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("Done") { showNotifications = false }
-                    }
-                }
+        .sheet(isPresented: $showNotifications, onDismiss: {
+            if let tid = app.myTID {
+                app.markNotificationsRead(tid: tid)
             }
+            Task { await app.notifications.refreshUnread() }
+        }) {
+            NavigationStack {
+                NotificationsListView()
+                    .navigationTitle("Notifications")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") { showNotifications = false }
+                        }
+                    }
+            }
+            .environmentObject(app)
             .presentationCornerRadius(Theme.sheetCornerRadius)
+        }
+        .task {
+            await app.notifications.refreshUnread()
+        }
+        .onChange(of: selectedTab) { _, _ in
+            Task { await app.notifications.refreshUnread() }
         }
     }
 
@@ -104,7 +113,11 @@ struct RootShellView: View {
         case .chat:
             ChatTabPlaceholder()
         case .profile:
-            ProfileTabPlaceholder()
+            NavigationStack {
+                ProfileView()
+                    .environmentObject(app.interactions)
+            }
+            .navigationBarHidden(true)
         }
     }
 }

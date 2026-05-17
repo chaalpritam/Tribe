@@ -30,25 +30,6 @@ struct ChatTabPlaceholder: View {
     }
 }
 
-struct ProfileTabPlaceholder: View {
-    @EnvironmentObject private var app: AppState
-
-    var body: some View {
-        ZStack(alignment: .bottom) {
-            ShellPlaceholderScreen(
-                icon: "person.crop.circle",
-                title: "Profile",
-                subtitle: "Profile hero, karma, and edits land in Phase 7."
-            )
-            Button("Sign out", role: .destructive) {
-                app.signOut()
-            }
-            .font(.footnote.weight(.semibold))
-            .padding(.bottom, 24)
-        }
-    }
-}
-
 struct CreatePlaceholderSheet: View {
     @Environment(\.dismiss) private var dismiss
 
