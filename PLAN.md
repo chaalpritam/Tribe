@@ -166,12 +166,12 @@ Deliverable: `PLAN.md` reviewed and approved. No code yet.
 - [x] **Chat thread**: `fetchDMMessages` (read), NaCl-box decrypt via DMKey + peer pubkey. Send: encrypt + `sendDM`.
 
 ### Phase 9 — Create (6 composers)
-- [ ] Create mode selector (6 cards in 2-col grid: Tweet, Event, Poll, Task, Fund, Tribe).
-- [ ] Composers — each writes via existing `Publish` paths:
+- [x] Create mode selector (6 cards in 2-col grid: Tweet, Event, Poll, Task, Fund, Tribe).
+- [x] Composers — each writes via existing `Publish` paths:
   - **Tweet**: text + image upload (`uploadMedia` → BLAKE3 hash → embed) + channel select.
   - **Event/Poll/Task/Crowdfund**: hub envelope first, on-chain settlement deferred (Phase 10).
   - **Tribe (channel)**: claim slug, register on-chain via channel-registry program.
-- [ ] PhotosPicker for image input; `URLSessionWebSocketTask` already set up for WS.
+- [x] PhotosPicker for image input; `URLSessionWebSocketTask` already set up for WS.
 
 ### Phase 10 — Polish
 - [ ] On-chain settlement for events/polls/tasks/crowdfunds (Anchor client integration — likely via Solana.swift or a thin wrapper around web3 endpoints).

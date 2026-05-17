@@ -40,7 +40,9 @@ struct RootShellView: View {
                 .padding(.bottom, 8)
         }
         .sheet(isPresented: $showCreate) {
-            CreatePlaceholderSheet()
+            CreateHubView()
+                .environmentObject(app)
+                .presentationCornerRadius(Theme.sheetCornerRadius)
         }
         .sheet(isPresented: $showCitySwitcher) {
             CitySwitcherSheet()

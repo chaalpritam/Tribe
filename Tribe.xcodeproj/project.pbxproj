@@ -16,14 +16,18 @@
 		150DB5A5E1896AEFA0F22475 /* PollCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2572C9B793C493031A1AC7 /* PollCardView.swift */; };
 		1519FCB148C30F831F555542 /* OnchainTipStatsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D5FFEDC78531A2E9116928 /* OnchainTipStatsCache.swift */; };
 		18BD77F211271C5FB7EC502B /* FollowListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD367A684EDD86C88B3AF742 /* FollowListView.swift */; };
+		18F046D8A78918758995D7D0 /* CreatePollComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836F3F62D1D1612D4FD735B1 /* CreatePollComposer.swift */; };
 		1B3F3869869F783ECBD2F35E /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B9B6AA3EF18C34D538C2A4 /* Config.swift */; };
 		1F2BB97E54B4048F39DC7671 /* FormatCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B86BD45D2414FE1DFEA647 /* FormatCount.swift */; };
+		2B34A5F10607AFDCFA2145D6 /* Slug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA8FD7C67A4F087BE9CF2AE /* Slug.swift */; };
 		3734B65DE5C0ED03B84FB1C3 /* ShellPlaceholderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7740838B52095456DD8F44AF /* ShellPlaceholderScreen.swift */; };
 		39BD620D6465DA6D7729BD18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B8C035E8A14D8829B7F2D4DA /* Assets.xcassets */; };
 		3BB65894B6E8BA95FF88A8D9 /* ShellTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155F8E1275747FF09B2BF696 /* ShellTab.swift */; };
 		3C2BBC66FD482834E3735324 /* HomeFeedItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F95C3328A83629F9C0A2C2AE /* HomeFeedItemsView.swift */; };
+		3EBDAF4B583F4CFA8DFD9E40 /* ComposeTweetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FEC6D41B8E9F010F0B371D /* ComposeTweetView.swift */; };
 		42DCF84E579837013BF0F355 /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2888D6CC9EEAD336982C0E17 /* Poll.swift */; };
 		43A52D8849DD837B517F0E21 /* MapDummyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D75324EF5DECA23A2EEAC636 /* MapDummyData.swift */; };
+		455F21F1D3B7E2AA8CAC207D /* CreateHubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57DB2940906876772C47FF0A /* CreateHubView.swift */; };
 		4845680FC094A13CAD991EE8 /* ERClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26074694C874B32FB1504E70 /* ERClient.swift */; };
 		577E9302C52778067B4396DF /* InteractionCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D9E8E58C4081E671EDFC4B /* InteractionCache.swift */; };
 		57CB3DA69CE6CD53A76E77CE /* InteractionReads.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF4F69FB1072F88B8847523E /* InteractionReads.swift */; };
@@ -36,19 +40,21 @@
 		68B543E1B915D40702CEFBA2 /* Publish.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44AB328E70DE54E82193354 /* Publish.swift */; };
 		6BE6FDC0B42DEAE2950DE77F /* TribeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA368F61910EB298748F73E /* TribeDetailView.swift */; };
 		6C3CD0F3B38B56C36812AAF7 /* AppHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1F63C33A661A1B5345DDE43 /* AppHeader.swift */; };
-		6CEFE893E897FAA388562209 /* TabPlaceholders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135B28EF1232387B08F1CDE0 /* TabPlaceholders.swift */; };
 		6EC65981830DC529D0D8CDDE /* TweetCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFF58CB923DF415352F0B30 /* TweetCardView.swift */; };
 		75E7751C51B607A9F1C1FF48 /* CitySwitchOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395D0A57F7AA1A56EC735900 /* CitySwitchOverlay.swift */; };
 		7CF7010A5417D698CBDA0C2C /* TaskCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C338D9EA6F3121AF9B4BD8F /* TaskCardView.swift */; };
 		7D93DFBA2CEFB4221191DA00 /* Crowdfund.swift in Sources */ = {isa = PBXBuildFile; fileRef = C846A798957F0FD033C6947A /* Crowdfund.swift */; };
 		7DBE11C993C58C1F6813E11A /* CreateAppKeyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC973E64D11E112ADBFDCC2 /* CreateAppKeyView.swift */; };
+		81B991697484240B64D00D34 /* LocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5640137601A514F0EA537475 /* LocationProvider.swift */; };
 		835258D036CAA9E6F9C6FB8D /* CitySwitcherSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED4139EAF4EA7022FFB919A /* CitySwitcherSheet.swift */; };
 		8609BC81D4B83810919D67E7 /* TaskItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F316E31ADD4D6EB42BDFE5 /* TaskItem.swift */; };
 		8B052CB7A674B21ED4CD7726 /* TribesNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F09D75A7CE5DEC2848DC210 /* TribesNavigation.swift */; };
 		8B504839414AB5413F7C56AD /* ProfileEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067E8CE767B11F85B26D08FD /* ProfileEditorView.swift */; };
+		8C327003D1D2C8E7B395C998 /* CreateMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8DB7207CE01C9CFB3F308F /* CreateMode.swift */; };
 		8F6141C598D157F3241C3849 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796ECC5DA3081DD93E34E78A /* Event.swift */; };
 		907B03368177D07E3C6E16EC /* TweetMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A05E0148AA93495FF7C158 /* TweetMedia.swift */; };
 		91FC38CAC5E6B5AFF7CB77A4 /* DMThreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69E50D7DAC091CAA594671A /* DMThreadView.swift */; };
+		956F7E90178FC455E4641F1B /* CreateTribeComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B067C6CC263D477F4CF8FD3 /* CreateTribeComposer.swift */; };
 		95D14E4A7F49052EE8593716 /* FeedCardChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0E7A6A0657186A97975BD4 /* FeedCardChrome.swift */; };
 		999710ECCF2BC462DEC8530D /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58AEEC6020652595A0E48CD /* Activity.swift */; };
 		99FA759B731D5D2E8E9EEEF9 /* HubRealtime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADD23F8C47237C6B6740BC2 /* HubRealtime.swift */; };
@@ -56,14 +62,17 @@
 		9BD996FB8E48D51C24C3D579 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D461CD15BF8F037599D855 /* Channel.swift */; };
 		9EA19A786E6EF4CFD4C5FC25 /* NotificationsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DC87039824F071B18B782FC /* NotificationsListView.swift */; };
 		9FC781848D28FF3079127BFC /* Tweet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FB218F73AC2171014CC229 /* Tweet.swift */; };
+		A1AAD762DEFCF0A66B03054B /* CreateEventComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AC3D30F95FBE7101AFDE97 /* CreateEventComposer.swift */; };
 		A5B712A18C22BCE125FC6B4B /* Tip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C59DD4D305886A04B76BFA9 /* Tip.swift */; };
 		AA8DA8B8412F1B25DFF500FB /* WalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8821680E790D119FC1F997 /* WalletView.swift */; };
 		AC7D4638E687EB32DFD79605 /* FeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA90E59C1D793FB735DFF3B5 /* FeedItem.swift */; };
 		ACB6FAF7935E7E0DB6E7EE18 /* UserAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6840B61630C0F8967634C27 /* UserAvatarView.swift */; };
+		ACC13B2416708C3A6CA5FE91 /* ChannelPickerField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85F9A78E9F3618BF7B1AD4 /* ChannelPickerField.swift */; };
 		ADA25B37B0AACF7ACD5CDF5B /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324E12B7B1C9A62710D911D9 /* ProfileView.swift */; };
 		B4465A5B2A3B555B0E9CDA3F /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942A2D92AA5AE19ED4682E66 /* Theme.swift */; };
 		B77A6F357CC7F61D3313113B /* SeedPhraseConnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B7D76F713B555018D8909F /* SeedPhraseConnectView.swift */; };
 		B8FB544630F096C62E6082AA /* CityPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6A4AF1C7F7022E109914CB /* CityPickerView.swift */; };
+		BA92FFDA34FD9770E34B7E17 /* CreateCrowdfundComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647235A3767BE0AD3C944792 /* CreateCrowdfundComposer.swift */; };
 		BD0B5F39F09CCDEAC008EC26 /* HomeFeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EBC89C6CCE1686D565DEC9 /* HomeFeedStore.swift */; };
 		C3097687B2FE45784A4D81E2 /* CrowdfundCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B402BDAF2716EB3513029FB2 /* CrowdfundCardView.swift */; };
 		C4FAC6691C7EEB139CE52CB3 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D1036BD275800BB629E522 /* AppState.swift */; };
@@ -79,13 +88,14 @@
 		EDD1FFDCD6959E6A944CD35C /* HubClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 400407BB1BBE8FDD246EC6A3 /* HubClient.swift */; };
 		EE899113D3150B26FB8FEC77 /* EventCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B6A0773DFA446B06618A29 /* EventCardView.swift */; };
 		F10B4DD2E0D67424A7C94CF8 /* TribeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F263511F6D54A1411DBB62B /* TribeApp.swift */; };
+		F2C7511BFF594B4131451A35 /* CreateTaskComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE5D5668924DE49710E4C344 /* CreateTaskComposer.swift */; };
 		F30B2AEA17C9354657559DEA /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80004276DE270CEAB42DA27A /* MapView.swift */; };
 		FF3662099FB3C2F3B4C43D51 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E890785885D116D49AA9EA /* RootView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		067E8CE767B11F85B26D08FD /* ProfileEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditorView.swift; sourceTree = "<group>"; };
-		135B28EF1232387B08F1CDE0 /* TabPlaceholders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabPlaceholders.swift; sourceTree = "<group>"; };
+		0B067C6CC263D477F4CF8FD3 /* CreateTribeComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTribeComposer.swift; sourceTree = "<group>"; };
 		13EB0054A730624F09E26DE9 /* tribe-core-swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tribe-core-swift"; path = "../tribe-core-swift"; sourceTree = SOURCE_ROOT; };
 		155F8E1275747FF09B2BF696 /* ShellTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellTab.swift; sourceTree = "<group>"; };
 		1563E079D1D417DD80853935 /* Karma.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Karma.swift; sourceTree = "<group>"; };
@@ -100,15 +110,20 @@
 		395D0A57F7AA1A56EC735900 /* CitySwitchOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitySwitchOverlay.swift; sourceTree = "<group>"; };
 		39B9B6AA3EF18C34D538C2A4 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		3ADD23F8C47237C6B6740BC2 /* HubRealtime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HubRealtime.swift; sourceTree = "<group>"; };
+		3B8DB7207CE01C9CFB3F308F /* CreateMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMode.swift; sourceTree = "<group>"; };
 		3F8821680E790D119FC1F997 /* WalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletView.swift; sourceTree = "<group>"; };
 		400407BB1BBE8FDD246EC6A3 /* HubClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HubClient.swift; sourceTree = "<group>"; };
 		44B86BD45D2414FE1DFEA647 /* FormatCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormatCount.swift; sourceTree = "<group>"; };
 		4574EEDEC4BB8FC28300AB90 /* NotificationsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsStore.swift; sourceTree = "<group>"; };
 		4EEEB51F07EA129D77CC2E88 /* HomeFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedView.swift; sourceTree = "<group>"; };
 		4F263511F6D54A1411DBB62B /* TribeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TribeApp.swift; sourceTree = "<group>"; };
+		5640137601A514F0EA537475 /* LocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProvider.swift; sourceTree = "<group>"; };
 		57D461CD15BF8F037599D855 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
+		57DB2940906876772C47FF0A /* CreateHubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHubView.swift; sourceTree = "<group>"; };
 		5C59DD4D305886A04B76BFA9 /* Tip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tip.swift; sourceTree = "<group>"; };
 		5C64AE38FA22EF52A3C9B412 /* SolanaRPCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolanaRPCClient.swift; sourceTree = "<group>"; };
+		5FA8FD7C67A4F087BE9CF2AE /* Slug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slug.swift; sourceTree = "<group>"; };
+		647235A3767BE0AD3C944792 /* CreateCrowdfundComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCrowdfundComposer.swift; sourceTree = "<group>"; };
 		6ED4139EAF4EA7022FFB919A /* CitySwitcherSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitySwitcherSheet.swift; sourceTree = "<group>"; };
 		7740838B52095456DD8F44AF /* ShellPlaceholderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellPlaceholderScreen.swift; sourceTree = "<group>"; };
 		789B3F447649F4BB4585AE07 /* TribesDirectoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TribesDirectoryView.swift; sourceTree = "<group>"; };
@@ -117,11 +132,14 @@
 		7E0339D1BC6661D15675D8FF /* DM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DM.swift; sourceTree = "<group>"; };
 		80004276DE270CEAB42DA27A /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		82EBC89C6CCE1686D565DEC9 /* HomeFeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedStore.swift; sourceTree = "<group>"; };
+		836F3F62D1D1612D4FD735B1 /* CreatePollComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePollComposer.swift; sourceTree = "<group>"; };
 		84B7D76F713B555018D8909F /* SeedPhraseConnectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedPhraseConnectView.swift; sourceTree = "<group>"; };
 		883F07DCE90D564F8344AC20 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		88AC3D30F95FBE7101AFDE97 /* CreateEventComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEventComposer.swift; sourceTree = "<group>"; };
 		8C338D9EA6F3121AF9B4BD8F /* TaskCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCardView.swift; sourceTree = "<group>"; };
 		8F09D75A7CE5DEC2848DC210 /* TribesNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TribesNavigation.swift; sourceTree = "<group>"; };
 		942A2D92AA5AE19ED4682E66 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		96FEC6D41B8E9F010F0B371D /* ComposeTweetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeTweetView.swift; sourceTree = "<group>"; };
 		973962C0952FADD5234D56D7 /* RootShellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootShellView.swift; sourceTree = "<group>"; };
 		A303A5C9C0E1F914313853FE /* HubDecode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HubDecode.swift; sourceTree = "<group>"; };
 		A4D9E8E58C4081E671EDFC4B /* InteractionCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionCache.swift; sourceTree = "<group>"; };
@@ -132,6 +150,7 @@
 		B8C035E8A14D8829B7F2D4DA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BAA6E7D7EA6F1F95306CBCB1 /* ExploreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreView.swift; sourceTree = "<group>"; };
 		BBC973E64D11E112ADBFDCC2 /* CreateAppKeyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAppKeyView.swift; sourceTree = "<group>"; };
+		BE5D5668924DE49710E4C344 /* CreateTaskComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTaskComposer.swift; sourceTree = "<group>"; };
 		BF5DEDA0434C7CEEC965C951 /* ImportIdentityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportIdentityView.swift; sourceTree = "<group>"; };
 		C44AB328E70DE54E82193354 /* Publish.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Publish.swift; sourceTree = "<group>"; };
 		C4F316E31ADD4D6EB42BDFE5 /* TaskItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskItem.swift; sourceTree = "<group>"; };
@@ -141,6 +160,7 @@
 		C846A798957F0FD033C6947A /* Crowdfund.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crowdfund.swift; sourceTree = "<group>"; };
 		CA90E59C1D793FB735DFF3B5 /* FeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItem.swift; sourceTree = "<group>"; };
 		CD367A684EDD86C88B3AF742 /* FollowListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowListView.swift; sourceTree = "<group>"; };
+		CD85F9A78E9F3618BF7B1AD4 /* ChannelPickerField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelPickerField.swift; sourceTree = "<group>"; };
 		CE6A4AF1C7F7022E109914CB /* CityPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityPickerView.swift; sourceTree = "<group>"; };
 		D69E50D7DAC091CAA594671A /* DMThreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMThreadView.swift; sourceTree = "<group>"; };
 		D75324EF5DECA23A2EEAC636 /* MapDummyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapDummyData.swift; sourceTree = "<group>"; };
@@ -174,6 +194,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E0A76AAA30F98A7240B1A03 /* Create */ = {
+			isa = PBXGroup;
+			children = (
+				CD85F9A78E9F3618BF7B1AD4 /* ChannelPickerField.swift */,
+				96FEC6D41B8E9F010F0B371D /* ComposeTweetView.swift */,
+				647235A3767BE0AD3C944792 /* CreateCrowdfundComposer.swift */,
+				88AC3D30F95FBE7101AFDE97 /* CreateEventComposer.swift */,
+				57DB2940906876772C47FF0A /* CreateHubView.swift */,
+				3B8DB7207CE01C9CFB3F308F /* CreateMode.swift */,
+				836F3F62D1D1612D4FD735B1 /* CreatePollComposer.swift */,
+				BE5D5668924DE49710E4C344 /* CreateTaskComposer.swift */,
+				0B067C6CC263D477F4CF8FD3 /* CreateTribeComposer.swift */,
+			);
+			path = Create;
+			sourceTree = "<group>";
+		};
 		167EB161A7E30DC366F92486 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -218,6 +254,7 @@
 			children = (
 				2E8CB9A58985D02536E8F68C /* Chat */,
 				7191663CA3AACC932449E8FC /* Common */,
+				0E0A76AAA30F98A7240B1A03 /* Create */,
 				EC7C7FB180658AB1E6BB1DAE /* Explore */,
 				78C5751CFEB056E066C34DD7 /* Home */,
 				515EE6B4D2AC78D8D6342EF0 /* Map */,
@@ -237,7 +274,9 @@
 				7BAE50FF86DB593BE0565EFA /* CityCatalog.swift */,
 				44B86BD45D2414FE1DFEA647 /* FormatCount.swift */,
 				A303A5C9C0E1F914313853FE /* HubDecode.swift */,
+				5640137601A514F0EA537475 /* LocationProvider.swift */,
 				FD97737CA90A0857F0BE5F55 /* RelativeTime.swift */,
+				5FA8FD7C67A4F087BE9CF2AE /* Slug.swift */,
 				A7A05E0148AA93495FF7C158 /* TweetMedia.swift */,
 			);
 			path = Common;
@@ -349,7 +388,6 @@
 				22E890785885D116D49AA9EA /* RootView.swift */,
 				7740838B52095456DD8F44AF /* ShellPlaceholderScreen.swift */,
 				155F8E1275747FF09B2BF696 /* ShellTab.swift */,
-				135B28EF1232387B08F1CDE0 /* TabPlaceholders.swift */,
 			);
 			path = Shell;
 			sourceTree = "<group>";
@@ -513,14 +551,23 @@
 				C4FAC6691C7EEB139CE52CB3 /* AppState.swift in Sources */,
 				E3F18D3A15B0FABAE57DF442 /* BottomPillNav.swift in Sources */,
 				9BD996FB8E48D51C24C3D579 /* Channel.swift in Sources */,
+				ACC13B2416708C3A6CA5FE91 /* ChannelPickerField.swift in Sources */,
 				667FA0EE942405B2E90FBB88 /* ChatListView.swift in Sources */,
 				629C4FA8D0FC44DEA14E2B5A /* CityCatalog.swift in Sources */,
 				B8FB544630F096C62E6082AA /* CityPickerView.swift in Sources */,
 				75E7751C51B607A9F1C1FF48 /* CitySwitchOverlay.swift in Sources */,
 				835258D036CAA9E6F9C6FB8D /* CitySwitcherSheet.swift in Sources */,
+				3EBDAF4B583F4CFA8DFD9E40 /* ComposeTweetView.swift in Sources */,
 				1B3F3869869F783ECBD2F35E /* Config.swift in Sources */,
 				1340CA6225FB391A75663CCF /* ConnectFlow.swift in Sources */,
 				7DBE11C993C58C1F6813E11A /* CreateAppKeyView.swift in Sources */,
+				BA92FFDA34FD9770E34B7E17 /* CreateCrowdfundComposer.swift in Sources */,
+				A1AAD762DEFCF0A66B03054B /* CreateEventComposer.swift in Sources */,
+				455F21F1D3B7E2AA8CAC207D /* CreateHubView.swift in Sources */,
+				8C327003D1D2C8E7B395C998 /* CreateMode.swift in Sources */,
+				18F046D8A78918758995D7D0 /* CreatePollComposer.swift in Sources */,
+				F2C7511BFF594B4131451A35 /* CreateTaskComposer.swift in Sources */,
+				956F7E90178FC455E4641F1B /* CreateTribeComposer.swift in Sources */,
 				7D93DFBA2CEFB4221191DA00 /* Crowdfund.swift in Sources */,
 				C3097687B2FE45784A4D81E2 /* CrowdfundCardView.swift in Sources */,
 				C8A0EA7530428356D2B46BD1 /* DM.swift in Sources */,
@@ -545,6 +592,7 @@
 				57CB3DA69CE6CD53A76E77CE /* InteractionReads.swift in Sources */,
 				DBEA3679F5837AC3092FC422 /* Karma.swift in Sources */,
 				5B7FEC9D5BEA71D477C42C86 /* KarmaSheet.swift in Sources */,
+				81B991697484240B64D00D34 /* LocationProvider.swift in Sources */,
 				43A52D8849DD837B517F0E21 /* MapDummyData.swift in Sources */,
 				F30B2AEA17C9354657559DEA /* MapView.swift in Sources */,
 				0C6A8A693B8FF4C23060E78A /* NewDMSheet.swift in Sources */,
@@ -563,8 +611,8 @@
 				B77A6F357CC7F61D3313113B /* SeedPhraseConnectView.swift in Sources */,
 				3734B65DE5C0ED03B84FB1C3 /* ShellPlaceholderScreen.swift in Sources */,
 				3BB65894B6E8BA95FF88A8D9 /* ShellTab.swift in Sources */,
+				2B34A5F10607AFDCFA2145D6 /* Slug.swift in Sources */,
 				63C8FCBE2FA0E45688A09226 /* SolanaRPCClient.swift in Sources */,
-				6CEFE893E897FAA388562209 /* TabPlaceholders.swift in Sources */,
 				7CF7010A5417D698CBDA0C2C /* TaskCardView.swift in Sources */,
 				8609BC81D4B83810919D67E7 /* TaskItem.swift in Sources */,
 				B4465A5B2A3B555B0E9CDA3F /* Theme.swift in Sources */,
