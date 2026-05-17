@@ -160,10 +160,10 @@ Deliverable: `PLAN.md` reviewed and approved. No code yet.
 - [x] **Notifications**: `fetchNotifications` + count badge in shell. Each notification type renders with appropriate icon/verb.
 
 ### Phase 8 — Explore, map, chat (DMs)
-- [ ] **Explore**: search bar (`/v1/search?q=`), channel grid, interleaved discovery content scoped to city.
-- [ ] **Map**: MapKit-backed view at minimum (real pins for events with coordinates). Filter pills (All/People/Places/Events/Reviews). Place/review sections may show dummy data initially to match web.
-- [ ] **Chat list**: `fetchDMConversations` + `fetchGroupConversations`.
-- [ ] **Chat thread**: `fetchDMMessages` (read), NaCl-box decrypt via DMKey + peer pubkey. Send: encrypt + `sendDM`.
+- [x] **Explore**: search bar (`/v1/search?q=`), channel grid, interleaved discovery content scoped to city.
+- [x] **Map**: MapKit-backed view at minimum (real pins for events with coordinates). Filter pills (All/People/Places/Events/Reviews). Place/review sections may show dummy data initially to match web.
+- [x] **Chat list**: `fetchDMConversations` + `fetchGroupConversations`.
+- [x] **Chat thread**: `fetchDMMessages` (read), NaCl-box decrypt via DMKey + peer pubkey. Send: encrypt + `sendDM`.
 
 ### Phase 9 — Create (6 composers)
 - [ ] Create mode selector (6 cards in 2-col grid: Tweet, Event, Poll, Task, Fund, Tribe).

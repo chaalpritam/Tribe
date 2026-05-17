@@ -5,6 +5,7 @@ struct RootShellView: View {
 
     @State private var selectedTab: ShellTab = .home
     @State private var tribesPath: [TribesDestination] = []
+    @State private var chatPath: [DMTarget] = []
     @State private var showCreate = false
     @State private var showCitySwitcher = false
     @State private var showNotifications = false
@@ -14,8 +15,11 @@ struct RootShellView: View {
             VStack(spacing: 0) {
                 AppHeader(
                     title: headerTitle,
-                    showBackButton: showTribesBack,
-                    onBack: { tribesPath.removeLast() },
+                    showBackButton: showShellBack,
+                    onBack: {
+                        if selectedTab == .tribes { tribesPath.removeLast() }
+                        if selectedTab == .chat { chatPath.removeLast() }
+                    },
                     onChangeCity: selectedTab == .home ? { showCitySwitcher = true } : nil,
                     onNotifications: { showNotifications = true },
                     notificationUnreadCount: app.notifications.unreadCount
@@ -77,13 +81,19 @@ struct RootShellView: View {
                 return channel.displayName
             }
             return "Tribes"
+        case .chat:
+            if let last = chatPath.last {
+                return last.displayTitle
+            }
+            return "Chat"
         default:
             return selectedTab.title
         }
     }
 
-    private var showTribesBack: Bool {
-        selectedTab == .tribes && !tribesPath.isEmpty
+    private var showShellBack: Bool {
+        (selectedTab == .tribes && !tribesPath.isEmpty)
+            || (selectedTab == .chat && !chatPath.isEmpty)
     }
 
     @ViewBuilder
@@ -93,9 +103,9 @@ struct RootShellView: View {
             HomeFeedView()
                 .environmentObject(app.interactions)
         case .explore:
-            ExploreTabPlaceholder()
+            ExploreView()
         case .map:
-            MapTabPlaceholder()
+            MapView()
         case .tribes:
             NavigationStack(path: $tribesPath) {
                 TribesDirectoryView(
@@ -111,7 +121,14 @@ struct RootShellView: View {
             }
             .navigationBarHidden(true)
         case .chat:
-            ChatTabPlaceholder()
+            NavigationStack(path: $chatPath) {
+                ChatListView(path: $chatPath)
+                    .navigationDestination(for: DMTarget.self) { target in
+                        DMThreadView(target: target)
+                            .environmentObject(app)
+                    }
+            }
+            .navigationBarHidden(true)
         case .profile:
             NavigationStack {
                 ProfileView()
