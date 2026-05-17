@@ -11,7 +11,7 @@ struct TribeApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
                 .environmentObject(appState)
                 .environmentObject(appState.interactions)
                 .environmentObject(appState.tipStats)
