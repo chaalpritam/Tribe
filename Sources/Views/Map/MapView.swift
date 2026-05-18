@@ -89,10 +89,10 @@ struct MapView: View {
         VStack(spacing: 0) {
             mapSection
             filterPills
-            searchField
             listSection
         }
-        .background(Color(red: 0.99, green: 0.99, blue: 0.99))
+        .background(Theme.pageBackground)
+        .searchable(text: $searchText, prompt: "Search map")
         .task { await refresh() }
         .refreshable { await refresh() }
     }
@@ -140,42 +140,31 @@ struct MapView: View {
         .clipShape(RoundedRectangle(cornerRadius: 0))
     }
 
+    @ViewBuilder
+    private func filterChip(_ f: MapFilter) -> some View {
+        let label = Label(f.label, systemImage: f.symbol)
+            .font(.subheadline.weight(.medium))
+        if filter == f {
+            Button { filter = f } label: { label }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.small)
+        } else {
+            Button { filter = f } label: { label }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
+        }
+    }
+
     private var filterPills: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 ForEach(MapFilter.allCases) { f in
-                    Button {
-                        filter = f
-                    } label: {
-                        Label(f.label, systemImage: f.symbol)
-                            .font(.caption.weight(.bold))
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 8)
-                            .background(filter == f ? Color.black : Color.white)
-                            .foregroundStyle(filter == f ? .white : Theme.textPrimary)
-                            .clipShape(Capsule())
-                            .overlay(Capsule().strokeBorder(Color.black.opacity(0.08), lineWidth: filter == f ? 0 : 1))
-                    }
-                    .buttonStyle(.plain)
+                    filterChip(f)
                 }
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
         }
-    }
-
-    private var searchField: some View {
-        HStack {
-            Image(systemName: "magnifyingglass")
-                .foregroundStyle(Theme.textSecondary)
-            TextField("Search map…", text: $searchText)
-        }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 10)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .padding(.horizontal, 16)
-        .padding(.bottom, 8)
     }
 
     @ViewBuilder
@@ -220,8 +209,8 @@ struct MapView: View {
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(14)
-                            .background(Color.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                            .background(Color(.secondarySystemGroupedBackground))
+                            .clipShape(RoundedRectangle(cornerRadius: Theme.cardCornerRadius, style: .continuous))
                         }
                     }
                 }
@@ -258,8 +247,8 @@ struct MapView: View {
             }
         }
         .padding(14)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .background(Color(.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: Theme.cardCornerRadius, style: .continuous))
     }
 
     private func pinCard(_ pin: MapPin) -> some View {
