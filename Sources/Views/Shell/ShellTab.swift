@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Main shell tabs flanking the center Create button (tribeapp.wtf bottom nav).
+/// Main tab bar destinations.
 enum ShellTab: String, CaseIterable, Identifiable {
     case home
     case explore
@@ -13,7 +13,7 @@ enum ShellTab: String, CaseIterable, Identifiable {
         switch self {
         case .home: return "house.fill"
         case .explore: return "map.fill"
-        case .chat: return "message.fill"
+        case .chat: return "bubble.left.and.bubble.right.fill"
         case .profile: return "person.crop.circle.fill"
         }
     }
@@ -22,11 +22,8 @@ enum ShellTab: String, CaseIterable, Identifiable {
         switch self {
         case .home: return "Home"
         case .explore: return "Explore"
-        case .chat: return "Chat"
+        case .chat: return "Messages"
         case .profile: return "Profile"
         }
     }
-
-    static let leftTabs: [ShellTab] = [.home, .explore]
-    static let rightTabs: [ShellTab] = [.chat, .profile]
 }

@@ -37,7 +37,7 @@ struct NotificationsListView: View {
                 }
             }
         }
-        .background(Color(red: 0.99, green: 0.99, blue: 0.99))
+        .background(Theme.pageBackground)
         .safeAreaInset(edge: .top) {
             if app.notifications.unreadCount > 0 {
                 HStack {

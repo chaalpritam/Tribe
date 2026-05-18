@@ -5,52 +5,34 @@ struct CreateHubView: View {
 
     @State private var selectedMode: CreateMode?
 
-    private let columns = [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)]
-
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: 12) {
-                    ForEach(CreateMode.allCases) { mode in
-                        Button {
-                            selectedMode = mode
-                        } label: {
-                            VStack(alignment: .leading, spacing: 10) {
-                                Image(systemName: mode.symbol)
-                                    .font(.title2.weight(.semibold))
-                                    .foregroundStyle(mode.accent)
-                                    .frame(width: 44, height: 44)
-                                    .background(mode.accent.opacity(0.12))
-                                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            List {
+                ForEach(CreateMode.allCases) { mode in
+                    Button {
+                        selectedMode = mode
+                    } label: {
+                        Label {
+                            VStack(alignment: .leading, spacing: 2) {
                                 Text(mode.title)
-                                    .font(.headline.weight(.bold))
-                                    .foregroundStyle(Theme.textPrimary)
+                                    .font(.headline)
                                 Text(mode.subtitle)
                                     .font(.caption)
                                     .foregroundStyle(Theme.textSecondary)
-                                    .multilineTextAlignment(.leading)
-                                    .lineLimit(2)
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(16)
-                            .background(Color.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 24, style: .continuous)
-                                    .strokeBorder(Color.black.opacity(0.06), lineWidth: 1)
-                            )
+                        } icon: {
+                            Image(systemName: mode.symbol)
+                                .foregroundStyle(mode.accent)
                         }
-                        .buttonStyle(.plain)
                     }
                 }
-                .padding(16)
             }
-            .background(Color(red: 0.99, green: 0.99, blue: 0.99))
+            .listStyle(.insetGrouped)
             .navigationTitle("Create")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Close") { dismiss() }
                 }
             }
             .navigationDestination(item: $selectedMode) { mode in

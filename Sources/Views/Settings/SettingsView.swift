@@ -58,7 +58,6 @@ struct SettingsView: View {
             AppKeySheet()
                 .environmentObject(app)
                 .presentationDetents([.medium])
-                .presentationCornerRadius(Theme.sheetCornerRadius)
         }
         .confirmationDialog(
             "Sign out of Tribe?",

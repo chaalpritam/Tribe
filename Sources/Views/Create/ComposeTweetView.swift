@@ -94,7 +94,7 @@ struct ComposeTweetView: View {
             .padding(.horizontal, 16)
             .padding(.bottom, 12)
         }
-        .background(Color(red: 0.99, green: 0.99, blue: 0.99))
+        .background(Theme.pageBackground)
         .navigationTitle("New tweet")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

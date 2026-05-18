@@ -42,12 +42,12 @@ struct CitySwitcherSheet: View {
                         }
                         .disabled(workingId != nil)
                     }
-                    .listStyle(.plain)
+                    .listStyle(.insetGrouped)
                 }
             }
             .searchable(text: $search, prompt: "Search cities")
             .navigationTitle("Choose your city")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Close") { dismiss() }
@@ -56,7 +56,6 @@ struct CitySwitcherSheet: View {
             .task { await load() }
         }
         .presentationDetents([.large])
-        .presentationCornerRadius(Theme.sheetCornerRadius)
     }
 
     private var filteredCities: [Channel] {

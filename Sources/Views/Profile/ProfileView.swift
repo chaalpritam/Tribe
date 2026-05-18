@@ -38,7 +38,7 @@ struct ProfileView: View {
             .padding(.top, 12)
             .padding(.bottom, 24)
         }
-        .background(Color(red: 0.99, green: 0.99, blue: 0.99))
+        .background(Theme.pageBackground)
         .refreshable { await refresh() }
         .task { await refresh() }
         .sheet(isPresented: $showEditor) {
@@ -51,7 +51,6 @@ struct ProfileView: View {
                     }
             }
             .environmentObject(app)
-            .presentationCornerRadius(Theme.sheetCornerRadius)
         }
         .sheet(isPresented: $showKarma) {
             if let karma {
@@ -66,7 +65,6 @@ struct ProfileView: View {
                         }
                 }
                 .presentationDetents([.medium, .large])
-                .presentationCornerRadius(Theme.sheetCornerRadius)
             }
         }
         .sheet(item: $followListMode) { mode in
@@ -81,7 +79,6 @@ struct ProfileView: View {
                 }
             }
             .environmentObject(app)
-            .presentationCornerRadius(Theme.sheetCornerRadius)
         }
         .navigationDestination(isPresented: $showWallet) {
             WalletView()
@@ -105,11 +102,10 @@ struct ProfileView: View {
                 }
                 VStack(alignment: .leading, spacing: 6) {
                     Text(user?.displayName ?? "Profile")
-                        .font(.title2.weight(.black))
+                        .font(.title2.bold())
                     Text(handleText)
-                        .font(.caption.weight(.bold))
+                        .font(.subheadline)
                         .foregroundStyle(Theme.primary)
-                        .textCase(.uppercase)
                     statsRow
                 }
                 Spacer(minLength: 0)
@@ -117,18 +113,17 @@ struct ProfileView: View {
 
             if let bio = user?.profile?.bio, !bio.isEmpty {
                 Text(bio)
-                    .font(.body.weight(.medium))
-                    .foregroundStyle(Color(white: 0.27))
+                    .font(.body)
+                    .foregroundStyle(Theme.textSecondary)
             }
 
             HStack(spacing: 8) {
                 if let location = user?.profile?.location, !location.isEmpty {
                     Label(location, systemImage: "mappin")
-                        .font(.caption.weight(.bold))
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
-                        .background(Color(white: 0.97))
-                        .clipShape(Capsule())
+                        .font(.caption)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(Color(.tertiarySystemFill), in: Capsule())
                 }
                 if let wallet = app.walletAddress, !wallet.isEmpty {
                     Button {
@@ -137,35 +132,34 @@ struct ProfileView: View {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { copiedWallet = false }
                     } label: {
                         Label(copiedWallet ? "Copied" : shortAddress(wallet), systemImage: copiedWallet ? "checkmark" : "wallet.pass")
-                            .font(.caption.weight(.bold))
+                            .font(.caption)
                             .monospacedDigit()
                     }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(Color.orange.opacity(0.1))
-                    .clipShape(Capsule())
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(Color.orange.opacity(0.15), in: Capsule())
                 }
             }
 
-            HStack(spacing: 10) {
-                Button("Edit profile") { showEditor = true }
-                    .buttonStyle(ProfilePillButtonStyle(fill: Color.black, foreground: .white))
+            HStack(spacing: 8) {
+                Button("Edit Profile") { showEditor = true }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.small)
                 Button("Wallet") { showWallet = true }
-                    .buttonStyle(ProfilePillButtonStyle(fill: Color(white: 0.96), foreground: Theme.textPrimary))
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
                 Button("Activity") { showActivity = true }
-                    .buttonStyle(ProfilePillButtonStyle(fill: Color(white: 0.96), foreground: Theme.textPrimary))
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
                 Button("Settings") { showSettings = true }
-                    .buttonStyle(ProfilePillButtonStyle(fill: Color(white: 0.96), foreground: Theme.textPrimary))
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
             }
         }
-        .padding(20)
+        .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 36, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 36, style: .continuous)
-                .strokeBorder(Color.black.opacity(0.06), lineWidth: 1)
-        )
+        .background(Color(.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: Theme.cardCornerRadius, style: .continuous))
     }
 
     private var statsRow: some View {
@@ -196,29 +190,20 @@ struct ProfileView: View {
     private func statColumn(value: Int, label: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(FormatCount.compact(value))
-                .font(.headline.weight(.black))
+                .font(.headline)
             Text(label)
-                .font(.system(size: 10, weight: .bold))
+                .font(.caption)
                 .foregroundStyle(Theme.textSecondary)
-                .textCase(.uppercase)
         }
     }
 
     private var tabPicker: some View {
-        HStack(spacing: 0) {
+        Picker("Content", selection: $activeTab) {
             ForEach(ProfileTab.allCases, id: \.self) { tab in
-                Button(tab.rawValue) { activeTab = tab }
-                    .font(.subheadline.weight(.bold))
-                    .foregroundStyle(activeTab == tab ? Theme.textPrimary : Theme.textSecondary)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)
-                    .background(activeTab == tab ? Color.white : Color.clear)
-                    .clipShape(Capsule())
+                Text(tab.rawValue).tag(tab)
             }
         }
-        .padding(4)
-        .background(Color(white: 0.94))
-        .clipShape(Capsule())
+        .pickerStyle(.segmented)
     }
 
     @ViewBuilder
@@ -288,10 +273,10 @@ struct ProfileView: View {
             statLine("Joined tribes", value: "\(app.joinedChannels.count)")
             statLine("Current city", value: app.currentCity?.displayName ?? "—")
         }
-        .padding(20)
+        .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .background(Color(.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: Theme.cardCornerRadius, style: .continuous))
     }
 
     private func statLine(_ label: String, value: String) -> some View {
@@ -345,18 +330,3 @@ struct ProfileView: View {
     }
 }
 
-private struct ProfilePillButtonStyle: ButtonStyle {
-    let fill: Color
-    let foreground: Color
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.subheadline.weight(.bold))
-            .foregroundStyle(foreground)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background(fill)
-            .clipShape(Capsule())
-            .opacity(configuration.isPressed ? 0.85 : 1)
-    }
-}

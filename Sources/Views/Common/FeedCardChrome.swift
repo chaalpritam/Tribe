@@ -1,22 +1,17 @@
 import SwiftUI
 
-/// Rounded card shell matching tribeapp.wtf home cards.
+/// Grouped-style card shell for feed items.
 struct FeedCardChrome<Content: View>: View {
     @ViewBuilder var content: () -> Content
 
     var body: some View {
         content()
-            .padding(20)
+            .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: Theme.modalCornerRadius, style: .continuous)
-                    .fill(Color(.systemBackground))
+                RoundedRectangle(cornerRadius: Theme.cardCornerRadius, style: .continuous)
+                    .fill(Color(.secondarySystemGroupedBackground))
             )
-            .overlay(
-                RoundedRectangle(cornerRadius: Theme.modalCornerRadius, style: .continuous)
-                    .strokeBorder(Color(.separator).opacity(0.35), lineWidth: 1)
-            )
-            .shadow(color: Theme.cardShadow, radius: Theme.cardShadowRadius, y: Theme.cardShadowY)
     }
 }
 
@@ -26,14 +21,9 @@ struct FeedTypeBadge: View {
     let tint: Color
 
     var body: some View {
-        HStack(spacing: 6) {
-            Image(systemName: icon)
-                .font(.caption.weight(.bold))
-            Text(label.uppercased())
-                .font(.caption2.weight(.bold))
-                .tracking(1.2)
-        }
-        .foregroundStyle(tint)
+        Label(label, systemImage: icon)
+            .font(.caption.weight(.medium))
+            .foregroundStyle(tint)
     }
 }
 
@@ -43,19 +33,10 @@ struct AvatarInitial: View {
 
     var body: some View {
         Text(initial)
-            .font(.system(size: size * 0.4, weight: .bold))
+            .font(.system(size: size * 0.4, weight: .semibold))
             .foregroundStyle(.white)
             .frame(width: size, height: size)
-            .background(
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [Theme.primary, Theme.primary.opacity(0.7)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-            )
+            .background(Circle().fill(Theme.primary.gradient))
     }
 
     private var initial: String {

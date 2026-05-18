@@ -41,40 +41,30 @@ private struct ConnectWelcomeView: View {
     var onContinue: () -> Void
 
     var body: some View {
-        VStack(spacing: 28) {
+        VStack(spacing: 24) {
             Spacer()
-            ZStack {
-                Circle()
-                    .fill(Theme.brandGradient)
-                    .frame(width: 120, height: 120)
-                    .shadow(color: Theme.primary.opacity(0.35), radius: 20, y: 10)
-                Image(systemName: "location.circle.fill")
-                    .font(.system(size: 52, weight: .bold))
-                    .foregroundStyle(.white)
-            }
-            VStack(spacing: 10) {
+            Image(systemName: "location.circle.fill")
+                .font(.system(size: 72))
+                .symbolRenderingMode(.hierarchical)
+                .foregroundStyle(Theme.primary)
+            VStack(spacing: 8) {
                 Text("Tribe")
                     .font(.largeTitle.bold())
                 Text("Hyperlocal social on the Tribe protocol. Connect your identity, pick your city, explore your neighborhood.")
                     .font(.subheadline)
                     .foregroundStyle(Theme.textSecondary)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, 28)
+                    .padding(.horizontal, 32)
             }
             Spacer()
-            Button(action: onContinue) {
-                Text("Get started")
-                    .font(.body.weight(.semibold))
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(Theme.primary)
-            .controlSize(.large)
-            .padding(.horizontal, 28)
-            .padding(.bottom, 36)
+            Button("Get started", action: onContinue)
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .padding(.horizontal, 24)
+                .padding(.bottom, 32)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Theme.softBrandBackground.ignoresSafeArea())
+        .background(Theme.onboardingBackground.ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
     }
 }
@@ -154,74 +144,65 @@ private struct IdentityChoiceView: View {
     @Binding var path: NavigationPath
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Sign in to Tribe")
-                    .font(.title2.bold())
+        List {
+            Section {
                 Text("Your TID lives on Solana. This device holds an app key that signs protocol envelopes.")
                     .font(.subheadline)
                     .foregroundStyle(Theme.textSecondary)
+                    .listRowBackground(Color.clear)
+            }
 
-                identityCard(
+            Section {
+                identityRow(
                     icon: "qrcode.viewfinder",
                     title: "Scan QR to sign in",
                     subtitle: "Pair from tribe-app → Wallet → Pair phone"
                 ) { path.append(ConnectFlow.Step.qrLogin) }
 
-                identityCard(
+                identityRow(
                     icon: "list.bullet.rectangle",
                     title: "Seed phrase",
                     subtitle: "Recover wallet via BIP39, then paste your app key"
                 ) { path.append(ConnectFlow.Step.seedPhrase) }
 
-                identityCard(
+                identityRow(
                     icon: "key.horizontal",
                     title: "Create app key",
                     subtitle: "Generate a fresh ed25519 key on this device"
                 ) { path.append(ConnectFlow.Step.createKey) }
 
-                identityCard(
+                identityRow(
                     icon: "square.and.arrow.down",
                     title: "Import TID + app key",
                     subtitle: "Paste credentials from tribe-app"
                 ) { path.append(ConnectFlow.Step.importKey) }
             }
-            .padding(20)
         }
-        .background(Theme.softBrandBackground.ignoresSafeArea())
-        .navigationTitle("Identity")
-        .navigationBarTitleDisplayMode(.inline)
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
+        .background(Theme.onboardingBackground.ignoresSafeArea())
+        .navigationTitle("Sign In")
+        .navigationBarTitleDisplayMode(.large)
     }
 
-    private func identityCard(
+    private func identityRow(
         icon: String,
         title: String,
         subtitle: String,
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
-            HStack(spacing: 14) {
-                Image(systemName: icon)
-                    .font(.title3)
-                    .foregroundStyle(Theme.primary)
-                    .frame(width: 40, height: 40)
-                    .background(Theme.primary.opacity(0.12))
-                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            Label {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(title).font(.headline)
-                    Text(subtitle).font(.caption).foregroundStyle(Theme.textSecondary)
+                    Text(title)
+                    Text(subtitle)
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecondary)
                 }
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.tertiary)
+            } icon: {
+                Image(systemName: icon)
+                    .foregroundStyle(Theme.primary)
             }
-            .padding(14)
-            .background(
-                RoundedRectangle(cornerRadius: Theme.cardCornerRadius, style: .continuous)
-                    .fill(Theme.surface)
-            )
         }
-        .buttonStyle(.plain)
     }
 }
