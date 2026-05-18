@@ -41,6 +41,8 @@
         <key>NSAllowsArbitraryLoads</key>
         <true/>
     </dict>
+    <key>NSCameraUsageDescription</key>
+    <string>Tribe uses your camera to scan the pairing QR from tribe-app so you can sign in without typing your TID and app key.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Tribe needs photo library access to attach images when you compose posts.</string>
     <key>NSLocationWhenInUseUsageDescription</key>

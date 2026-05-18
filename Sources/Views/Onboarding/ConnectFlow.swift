@@ -12,6 +12,8 @@ struct ConnectFlow: View {
                         ConfigureHubView { path.append(Step.identity) }
                     case .identity:
                         IdentityChoiceView(path: $path)
+                    case .qrLogin:
+                        QRLoginView()
                     case .seedPhrase:
                         SeedPhraseConnectView()
                     case .createKey:
@@ -26,6 +28,7 @@ struct ConnectFlow: View {
     enum Step: Hashable {
         case hub
         case identity
+        case qrLogin
         case seedPhrase
         case createKey
         case importKey
@@ -158,6 +161,12 @@ private struct IdentityChoiceView: View {
                 Text("Your TID lives on Solana. This device holds an app key that signs protocol envelopes.")
                     .font(.subheadline)
                     .foregroundStyle(Theme.textSecondary)
+
+                identityCard(
+                    icon: "qrcode.viewfinder",
+                    title: "Scan QR to sign in",
+                    subtitle: "Pair from tribe-app → Wallet → Pair phone"
+                ) { path.append(ConnectFlow.Step.qrLogin) }
 
                 identityCard(
                     icon: "list.bullet.rectangle",
