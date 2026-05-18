@@ -10,81 +10,76 @@ struct RootShellView: View {
 
     var body: some View {
         ZStack {
-            VStack(spacing: 0) {
-                AppHeader(
-                    title: headerTitle,
-                    showBackButton: showShellBack,
-                    onBack: {
-                        if selectedTab == .chat { chatPath.removeLast() }
-                    },
-                    onChangeCity: selectedTab == .home ? { showCitySwitcher = true } : nil
-                )
-                tabContent
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            TabView(selection: $selectedTab) {
+                NavigationStack {
+                    HomeFeedView()
+                        .environmentObject(app.interactions)
+                        .navigationTitle(app.currentCity?.displayName ?? "Home")
+                        .navigationBarTitleDisplayMode(.large)
+                        .toolbar { homeToolbar }
+                }
+                .tabItem { Label(ShellTab.home.title, systemImage: ShellTab.home.systemImage) }
+                .tag(ShellTab.home)
+
+                NavigationStack {
+                    MapView()
+                        .navigationTitle(ShellTab.explore.title)
+                        .navigationBarTitleDisplayMode(.large)
+                }
+                .tabItem { Label(ShellTab.explore.title, systemImage: ShellTab.explore.systemImage) }
+                .tag(ShellTab.explore)
+
+                NavigationStack(path: $chatPath) {
+                    ChatListView(path: $chatPath)
+                        .navigationTitle(ShellTab.chat.title)
+                        .navigationBarTitleDisplayMode(.large)
+                        .navigationDestination(for: DMTarget.self) { target in
+                            DMThreadView(target: target)
+                                .environmentObject(app)
+                        }
+                }
+                .tabItem { Label(ShellTab.chat.title, systemImage: ShellTab.chat.systemImage) }
+                .tag(ShellTab.chat)
+
+                NavigationStack {
+                    ProfileView()
+                        .environmentObject(app.interactions)
+                        .navigationTitle(ShellTab.profile.title)
+                        .navigationBarTitleDisplayMode(.large)
+                }
+                .tabItem { Label(ShellTab.profile.title, systemImage: ShellTab.profile.systemImage) }
+                .tag(ShellTab.profile)
             }
             .blur(radius: app.isSwitchingCity ? 6 : 0)
-            .scaleEffect(app.isSwitchingCity ? 0.96 : 1)
             .opacity(app.isSwitchingCity ? 0.5 : 1)
             .animation(.easeInOut(duration: 0.35), value: app.isSwitchingCity)
 
             CitySwitchOverlay()
         }
-        .background(Color(.systemBackground))
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            BottomPillNav(selectedTab: $selectedTab, onCreate: { showCreate = true })
-                .padding(.bottom, 8)
-        }
         .sheet(isPresented: $showCreate) {
             CreateHubView()
                 .environmentObject(app)
-                .presentationCornerRadius(Theme.sheetCornerRadius)
         }
         .sheet(isPresented: $showCitySwitcher) {
             CitySwitcherSheet()
         }
     }
 
-    private var headerTitle: String {
-        switch selectedTab {
-        case .home:
-            return app.currentCity?.displayName ?? "Home"
-        case .chat:
-            if let last = chatPath.last {
-                return last.displayTitle
+    @ToolbarContentBuilder
+    private var homeToolbar: some ToolbarContent {
+        ToolbarItem(placement: .topBarLeading) {
+            Button {
+                showCitySwitcher = true
+            } label: {
+                Label("Change city", systemImage: "location.fill")
             }
-            return "Chat"
-        default:
-            return selectedTab.title
         }
-    }
-
-    private var showShellBack: Bool {
-        selectedTab == .chat && !chatPath.isEmpty
-    }
-
-    @ViewBuilder
-    private var tabContent: some View {
-        switch selectedTab {
-        case .home:
-            HomeFeedView()
-                .environmentObject(app.interactions)
-        case .explore:
-            MapView()
-        case .chat:
-            NavigationStack(path: $chatPath) {
-                ChatListView(path: $chatPath)
-                    .navigationDestination(for: DMTarget.self) { target in
-                        DMThreadView(target: target)
-                            .environmentObject(app)
-                    }
+        ToolbarItem(placement: .primaryAction) {
+            Button {
+                showCreate = true
+            } label: {
+                Label("Create", systemImage: "square.and.pencil")
             }
-            .navigationBarHidden(true)
-        case .profile:
-            NavigationStack {
-                ProfileView()
-                    .environmentObject(app.interactions)
-            }
-            .navigationBarHidden(true)
         }
     }
 }
