@@ -13,6 +13,7 @@ struct ProfileView: View {
     @State private var followListMode: FollowListView.Mode?
     @State private var showWallet = false
     @State private var showActivity = false
+    @State private var showSettings = false
     @State private var copiedWallet = false
 
     enum ProfileTab: String, CaseIterable {
@@ -90,6 +91,10 @@ struct ProfileView: View {
             ActivityView()
                 .environmentObject(app)
         }
+        .navigationDestination(isPresented: $showSettings) {
+            SettingsView()
+                .environmentObject(app)
+        }
     }
 
     private var heroCard: some View {
@@ -148,6 +153,8 @@ struct ProfileView: View {
                 Button("Wallet") { showWallet = true }
                     .buttonStyle(ProfilePillButtonStyle(fill: Color(white: 0.96), foreground: Theme.textPrimary))
                 Button("Activity") { showActivity = true }
+                    .buttonStyle(ProfilePillButtonStyle(fill: Color(white: 0.96), foreground: Theme.textPrimary))
+                Button("Settings") { showSettings = true }
                     .buttonStyle(ProfilePillButtonStyle(fill: Color(white: 0.96), foreground: Theme.textPrimary))
             }
         }
