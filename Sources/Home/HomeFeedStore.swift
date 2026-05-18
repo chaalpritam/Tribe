@@ -176,7 +176,7 @@ final class HomeFeedStore: ObservableObject {
         return nil
     }
 
-    private func prependTweet(_ tweet: Tweet) {
+    internal func prependTweet(_ tweet: Tweet) {
         let newItem = FeedItem.tweet(tweet)
         guard !items.contains(where: { $0.id == newItem.id }) else { return }
         if let firstTweetIndex = items.firstIndex(where: {

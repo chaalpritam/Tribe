@@ -1,0 +1,10 @@
+{
+  "id": "poll-1",
+  "creator_tid": "42001",
+  "question": "Best taco spot?",
+  "options": ["La Taqueria", "El Farolito"],
+  "expires_at": null,
+  "channel_id": "sf",
+  "created_at": 1714560000,
+  "total_votes": 15
+}

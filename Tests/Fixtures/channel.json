@@ -1,0 +1,11 @@
+{
+  "id": "sf",
+  "name": "San Francisco",
+  "description": "Bay Area pulse",
+  "kind": 2,
+  "latitude": 37.7749,
+  "longitude": -122.4194,
+  "tweet_count": "128",
+  "member_count": 900,
+  "last_tweet_at": "2025-05-01T11:00:00Z"
+}

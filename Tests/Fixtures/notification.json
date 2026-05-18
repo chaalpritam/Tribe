@@ -1,0 +1,18 @@
+{
+  "notifications": [
+    {
+      "type": "follow",
+      "actor_tid": 42002,
+      "actor_username": "bob",
+      "actor_pfp_url": null,
+      "target_hash": null,
+      "preview": null,
+      "created_at": "2025-05-01T19:00:00Z"
+    },
+    {
+      "type": "unknown_future_type",
+      "actor_tid": "1",
+      "created_at": "2025-05-01T18:00:00Z"
+    }
+  ]
+}

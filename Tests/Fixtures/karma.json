@@ -1,0 +1,18 @@
+{
+  "total": 420,
+  "level": 3,
+  "breakdown": {
+    "tweets": 10,
+    "reactions_received": 50,
+    "followers": 100,
+    "tips_received": 5,
+    "tasks_completed": 2
+  },
+  "weights": {
+    "tweet": 1,
+    "reactionReceived": 2,
+    "follower": 5,
+    "tipReceived": 10,
+    "taskCompleted": 15
+  }
+}

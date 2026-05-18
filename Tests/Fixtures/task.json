@@ -1,0 +1,13 @@
+{
+  "id": "task-1",
+  "creator_tid": 42001,
+  "creator_username": "alice",
+  "title": "Help move couch",
+  "description": "Saturday morning",
+  "reward_text": "Pizza",
+  "status": "open",
+  "claimed_by_tid": null,
+  "completed_by_tid": null,
+  "channel_id": "general",
+  "created_at": "2025-05-02T08:00:00Z"
+}

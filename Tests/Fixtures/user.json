@@ -1,0 +1,16 @@
+{
+  "tid": "42001",
+  "custody_address": "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
+  "username": "alice",
+  "registered_at": 1710000000,
+  "following_count": "12",
+  "followers_count": 34,
+  "profile": {
+    "displayName": "Alice",
+    "bio": "Building locally",
+    "pfpUrl": "https://example.com/pfp.jpg",
+    "coverUrl": null,
+    "location": "San Francisco",
+    "url": "https://alice.example"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "hash": "tiphash1",
+  "sender_tid": 42001,
+  "recipient_tid": "42002",
+  "target_hash": "abc123hash",
+  "amount": "0.25",
+  "currency": "SOL",
+  "tx_signature": "5sig",
+  "sent_at": "2025-05-01T21:00:00.000Z"
+}

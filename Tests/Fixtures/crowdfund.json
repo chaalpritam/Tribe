@@ -1,0 +1,15 @@
+{
+  "id": "fund-1",
+  "creator_tid": "42001",
+  "creator_username": "alice",
+  "title": "Community garden",
+  "description": "Seeds and soil",
+  "goal_amount": "5000",
+  "raised_amount": 1200.5,
+  "pledger_count": 8,
+  "currency": "USD",
+  "deadline_at": "2025-12-31T23:59:59Z",
+  "image_url": null,
+  "channel_id": "sf",
+  "created_at": 1714561000
+}

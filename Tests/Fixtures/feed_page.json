@@ -1,0 +1,19 @@
+{
+  "tweets": [
+    {
+      "hash": "t1",
+      "tid": 1,
+      "text": "one",
+      "timestamp": "2025-05-01T10:00:00Z",
+      "channel_id": "sf"
+    },
+    {
+      "hash": "t2",
+      "tid": "2",
+      "text": "two",
+      "timestamp": 1714560000,
+      "channel_id": "other"
+    }
+  ],
+  "cursor": "cur-abc"
+}
