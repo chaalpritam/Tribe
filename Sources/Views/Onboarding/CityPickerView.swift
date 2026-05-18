@@ -37,14 +37,10 @@ struct CityPickerView: View {
 
     private var header: some View {
         VStack(spacing: 8) {
-            ZStack {
-                Circle()
-                    .fill(Theme.brandGradient)
-                    .frame(width: 72, height: 72)
-                Image(systemName: "mappin.and.ellipse")
-                    .font(.system(size: 32, weight: .semibold))
-                    .foregroundStyle(.white)
-            }
+            Image(systemName: "mappin.and.ellipse")
+                .font(.system(size: 48))
+                .symbolRenderingMode(.hierarchical)
+                .foregroundStyle(Theme.primary)
             .padding(.top, 24)
             Text("Choose your city")
                 .font(.title2.bold())
