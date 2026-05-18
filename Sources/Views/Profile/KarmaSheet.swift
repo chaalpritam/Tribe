@@ -30,7 +30,7 @@ struct KarmaSheet: View {
             }
             .padding(16)
         }
-        .background(Color(red: 0.99, green: 0.99, blue: 0.99))
+        .background(Theme.pageBackground)
     }
 
     private var breakdownCard: some View {

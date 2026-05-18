@@ -19,36 +19,17 @@ struct FollowButton: View {
         if isMe {
             EmptyView()
         } else {
-            Button {
-                explaining = true
-            } label: {
-                HStack(spacing: 6) {
-                    if loading {
-                        ProgressView().controlSize(.mini)
-                    } else if pending {
-                        Image(systemName: "clock")
-                    } else if following {
-                        Image(systemName: "checkmark")
-                    } else {
-                        Image(systemName: "plus")
-                    }
-                    Text(label)
-                        .font(.caption.weight(.semibold))
+            Group {
+                if following {
+                    followLabel
+                        .buttonStyle(.bordered)
+                } else {
+                    followLabel
+                        .buttonStyle(.borderedProminent)
                 }
-                .padding(.horizontal, 14)
-                .padding(.vertical, 7)
-                .foregroundStyle(following ? Theme.primary : .white)
-                .background(
-                    Capsule().fill(following ? Theme.primary.opacity(0.12) : Color.clear)
-                )
-                .background(
-                    following ? nil : Capsule().fill(Theme.brandGradient)
-                )
-                .overlay(
-                    Capsule().stroke(following ? Theme.primary.opacity(0.25) : Color.clear, lineWidth: 0.5)
-                )
             }
-            .buttonStyle(.plain)
+            .controlSize(.small)
+            .disabled(loading)
             .task(id: targetTID) { await refresh() }
             .task(id: pollKey) { await pollWhileSettling() }
             .sheet(isPresented: $explaining) {
@@ -60,6 +41,26 @@ struct FollowButton: View {
 
     private var pollKey: String {
         "\(targetTID)-\(status?.status ?? "unknown")"
+    }
+
+    private var followLabel: some View {
+        Button {
+            explaining = true
+        } label: {
+            HStack(spacing: 4) {
+                if loading {
+                    ProgressView().controlSize(.mini)
+                } else if pending {
+                    Image(systemName: "clock")
+                } else if following {
+                    Image(systemName: "checkmark")
+                } else {
+                    Image(systemName: "plus")
+                }
+                Text(label)
+            }
+            .font(.subheadline.weight(.semibold))
+        }
     }
 
     private var label: String {
@@ -100,6 +101,7 @@ private struct FollowExplainerSheet: View {
             VStack(spacing: 16) {
                 Image(systemName: "person.crop.circle.badge.exclamationmark")
                     .font(.system(size: 56, weight: .light))
+                    .symbolRenderingMode(.hierarchical)
                     .foregroundStyle(Theme.primary)
                     .padding(.top, 24)
 
@@ -116,11 +118,11 @@ private struct FollowExplainerSheet: View {
 
                 Button("Got it") { dismiss() }
                     .buttonStyle(.borderedProminent)
-                    .tint(Theme.primary)
                     .controlSize(.large)
                     .padding(.horizontal, 24)
                     .padding(.bottom, 24)
             }
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 
