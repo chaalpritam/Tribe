@@ -10,7 +10,7 @@ struct HomeFeedView: View {
 
     var body: some View {
         ScrollView {
-            LazyVStack(spacing: 16) {
+            LazyVStack(spacing: 12) {
                 HomeFeedItemsView(
                     store: store,
                     emptySubtitle: emptySubtitle,
@@ -18,10 +18,9 @@ struct HomeFeedView: View {
                 )
             }
             .padding(.horizontal, 16)
-            .padding(.top, 12)
-            .padding(.bottom, 24)
+            .padding(.vertical, 8)
         }
-        .background(Color(red: 0.99, green: 0.99, blue: 0.99))
+        .background(Theme.pageBackground)
         .refreshable {
             await store.refresh()
         }
