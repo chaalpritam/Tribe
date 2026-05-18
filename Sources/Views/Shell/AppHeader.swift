@@ -5,8 +5,6 @@ struct AppHeader: View {
     var showBackButton: Bool = false
     var onBack: (() -> Void)?
     var onChangeCity: (() -> Void)?
-    var onNotifications: (() -> Void)?
-    var notificationUnreadCount: Int = 0
 
     @EnvironmentObject private var app: AppState
 
@@ -14,7 +12,6 @@ struct AppHeader: View {
         HStack(alignment: .center, spacing: 12) {
             leading
             Spacer(minLength: 8)
-            trailing
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
@@ -68,33 +65,6 @@ struct AppHeader: View {
                         .foregroundStyle(Theme.primary)
                     }
                 }
-            }
-        }
-    }
-
-    private var trailing: some View {
-        HStack(spacing: 8) {
-            if let onNotifications {
-                Button(action: onNotifications) {
-                    ZStack(alignment: .topTrailing) {
-                        Image(systemName: "bell.fill")
-                            .font(.body)
-                            .frame(width: 40, height: 40)
-                            .background(Color(.tertiarySystemFill))
-                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                        if notificationUnreadCount > 0 {
-                            Text(notificationUnreadCount > 99 ? "99+" : "\(notificationUnreadCount)")
-                                .font(.system(size: 10, weight: .black))
-                                .foregroundStyle(.white)
-                                .padding(.horizontal, 5)
-                                .padding(.vertical, 2)
-                                .background(Theme.error)
-                                .clipShape(Capsule())
-                                .offset(x: 6, y: -6)
-                        }
-                    }
-                }
-                .buttonStyle(.plain)
             }
         }
     }
