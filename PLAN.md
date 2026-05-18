@@ -194,11 +194,11 @@ Deliverable: `PLAN.md` reviewed and approved. No code yet.
 Phases 1–10 landed the feature surface. The list below is what stands between "works on dev hub" and "shippable beta." Roughly ordered by leverage; nothing here is started.
 
 ### Production readiness
-- [ ] **Tests**. No `Tests/` target yet. Start with model decode (`HubDecode`, all 12 model types' JSON fixtures), then `MessageSigner` envelope round-trip, then a couple of `HomeFeedStore` async paths. Wire to scheme so `make test` works.
-- [ ] **App icon + launch screen**. Currently default Xcode placeholder. Ship marks before TestFlight.
-- [ ] **Info.plist permission strings** — verify usage descriptions for Photos (compose), Location (map / city), Camera if image capture is added. Missing strings = App Store rejection.
-- [ ] **Crash + analytics hookup**. Light-touch (Sentry or os_log + Console export) so beta crashes are debuggable.
-- [ ] **TestFlight pipeline**. Marketing/build version bumps, App Store Connect record, signing certs, screenshots.
+- [x] **Tests**. `TribeTests` target with `HubDecode`, model JSON fixtures (12 types), `MessageSigner` round-trip, `FeedMixer`/`ChannelScope`, and `HomeFeedStore` prepend/refresh paths. `make test` runs the scheme.
+- [x] **App icon + launch screen**. Branded 1024×1024 icon in `AppIcon.appiconset`; indigo `LaunchBackground` launch screen.
+- [x] **Info.plist permission strings** — Photos (compose) and Location (map / optional post tagging). Camera removed (app uses PhotosPicker only).
+- [x] **Crash + analytics hookup**. `TribeDiagnostics` — `os_log` + uncaught-exception handler (filter Console.app by subsystem `app.tribe.app`).
+- [x] **TestFlight pipeline**. `make archive`, `ExportOptions.plist`, `scripts/bump-build.sh`, `scripts/testflight-upload.sh`. Set `DEVELOPMENT_TEAM` and App Store Connect API key for upload.
 
 ### Deferred features (from initial non-goals)
 - [ ] **Single-tweet thread detail screen**. Web doesn't have one either, but iOS users expect a tap-into-thread surface. Reuse `TweetCardView` + a replies list scoped to the parent envelope id.
