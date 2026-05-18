@@ -87,8 +87,8 @@ struct CreateTribeComposer: View {
             try? await app.joinChannel(Channel(id: channelId, name: trimmedName, kind: kind.rawValue))
             dismiss()
             onCreated()
-        } catch {
-            error = error.localizedDescription
+        } catch let err {
+            error = err.localizedDescription
         }
     }
 }

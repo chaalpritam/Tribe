@@ -94,8 +94,8 @@ struct CreateEventComposer: View {
             )
             dismiss()
             onCreated()
-        } catch {
-            error = error.localizedDescription
+        } catch let err {
+            error = err.localizedDescription
         }
     }
 }

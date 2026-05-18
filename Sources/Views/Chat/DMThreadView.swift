@@ -65,7 +65,7 @@ struct DMThreadView: View {
         .navigationTitle(target.displayTitle)
         .navigationBarTitleDisplayMode(.inline)
         .task {
-            try? await app.ensureDMKey()
+            _ = try? await app.ensureDMKey()
             if case .oneOnOne(let conv) = target {
                 recipientPub = try? await app.api.fetchDMPublicKey(conv.peerTid)
             }
@@ -147,7 +147,14 @@ struct DMThreadView: View {
     }
 
     private func decryptMissing() async {
-        guard let dm = app.dmKey ?? (try? await app.ensureDMKey()) else { return }
+        let dm: DMKey
+        if let existing = app.dmKey {
+            dm = existing
+        } else if let fetched = try? await app.ensureDMKey() {
+            dm = fetched
+        } else {
+            return
+        }
         for msg in messages where rendered[msg.hash] == nil {
             guard let cipher = Data(base64Encoded: msg.ciphertext),
                   let nonce = Data(base64Encoded: msg.nonce) else {

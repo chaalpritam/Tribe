@@ -25,8 +25,10 @@ struct CreateTaskComposer: View {
                 TextField("Description", text: $description, axis: .vertical)
                     .lineLimit(2 ... 6)
             }
-            Section("Reward") {
+            Section {
                 TextField("e.g. 0.1 SOL, lunch, …", text: $rewardText)
+            } header: {
+                Text("Reward")
             } footer: {
                 Text("Descriptive only — rewards are not escrowed on-chain in this build.")
             }
@@ -66,8 +68,8 @@ struct CreateTaskComposer: View {
             )
             dismiss()
             onCreated()
-        } catch {
-            error = error.localizedDescription
+        } catch let err {
+            error = err.localizedDescription
         }
     }
 }

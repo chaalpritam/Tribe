@@ -16,12 +16,12 @@ struct TribeApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                .overlay { ToastOverlay() }
                 .environmentObject(appState)
                 .environmentObject(appState.interactions)
                 .environmentObject(appState.tipStats)
                 .environmentObject(appState.userAvatars)
                 .environmentObject(appState.toasts)
-                .overlay { ToastOverlay() }
         }
     }
 }
