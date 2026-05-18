@@ -70,7 +70,7 @@ struct ActivityView: View {
                 }
             }
         }
-        .background(Color(red: 0.99, green: 0.99, blue: 0.99))
+        .background(Theme.pageBackground)
         .navigationTitle("Activity")
         .navigationBarTitleDisplayMode(.inline)
         .refreshable { await refresh() }
