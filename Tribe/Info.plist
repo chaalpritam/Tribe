@@ -28,7 +28,10 @@
         <false/>
     </dict>
     <key>UILaunchScreen</key>
-    <dict/>
+    <dict>
+        <key>UIColorName</key>
+        <string>LaunchBackground</string>
+    </dict>
     <key>UISupportedInterfaceOrientations</key>
     <array>
         <string>UIInterfaceOrientationPortrait</string>
@@ -38,11 +41,9 @@
         <key>NSAllowsArbitraryLoads</key>
         <true/>
     </dict>
-    <key>NSCameraUsageDescription</key>
-    <string>Tribe uses the camera to scan a sign-in QR shown by tribe-app on your desktop.</string>
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>Tribe uses your photo library to attach images to tweets.</string>
+    <string>Tribe needs photo library access to attach images when you compose posts.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Tribe uses your location to anchor city channels and events to a place near you. Coordinates are only attached when you opt in on the create form.</string>
+    <string>Tribe uses your location to show nearby events on the map and to tag posts with a place when you choose to.</string>
 </dict>
 </plist>
