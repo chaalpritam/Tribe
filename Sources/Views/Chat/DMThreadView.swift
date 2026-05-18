@@ -58,10 +58,10 @@ struct DMThreadView: View {
                     .foregroundStyle(Theme.textSecondary)
                     .padding(12)
                     .frame(maxWidth: .infinity)
-                    .background(Color(white: 0.96))
+                    .background(Color(.secondarySystemGroupedBackground))
             }
         }
-        .background(Color(red: 0.99, green: 0.99, blue: 0.99))
+        .background(Theme.pageBackground)
         .navigationTitle(target.displayTitle)
         .navigationBarTitleDisplayMode(.inline)
         .task {
@@ -89,8 +89,7 @@ struct DMThreadView: View {
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 10)
-            .background(isOwn ? Color.black : Color(white: 0.94))
-            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .background(isOwn ? Theme.primary : Color(.systemGray5), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
             if !isOwn { Spacer(minLength: 48) }
         }
     }
@@ -99,10 +98,9 @@ struct DMThreadView: View {
         HStack(alignment: .bottom, spacing: 10) {
             TextField("Message", text: $draft, axis: .vertical)
                 .lineLimit(1 ... 4)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 10)
-                .background(Color(white: 0.96))
-                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             Button {
                 Task { await send() }
             } label: {
@@ -113,8 +111,8 @@ struct DMThreadView: View {
             .disabled(!canSend)
         }
         .padding(.horizontal, 12)
-        .padding(.vertical, 10)
-        .background(Color(.systemBackground))
+        .padding(.vertical, 8)
+        .background(.bar)
     }
 
     private var canSend: Bool {

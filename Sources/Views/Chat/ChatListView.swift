@@ -18,34 +18,20 @@ struct ChatListView: View {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if let errorMessage, isEmpty {
-                VStack(spacing: 8) {
-                    Text("Couldn't load messages")
-                        .font(.headline)
+                ContentUnavailableView {
+                    Label("Couldn't Load Messages", systemImage: "exclamationmark.triangle")
+                } description: {
                     Text(errorMessage)
-                        .font(.footnote)
-                        .foregroundStyle(Theme.textSecondary)
                 }
-                .padding()
             } else if isEmpty {
-                VStack(spacing: 12) {
-                    Image(systemName: "message")
-                        .font(.largeTitle)
-                        .foregroundStyle(Theme.textSecondary.opacity(0.35))
-                    Text("No conversations yet")
-                        .font(.headline)
-                    Text("DMs are encrypted with NaCl box. Tap + to start one.")
-                        .font(.footnote)
-                        .foregroundStyle(Theme.textSecondary)
-                        .multilineTextAlignment(.center)
-                    Button("New message") { showNewMessage = true }
-                        .font(.subheadline.weight(.bold))
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 12)
-                        .background(Color.black)
-                        .foregroundStyle(.white)
-                        .clipShape(Capsule())
+                ContentUnavailableView {
+                    Label("No Conversations", systemImage: "message")
+                } description: {
+                    Text("DMs are encrypted with NaCl box. Start a new message to chat.")
+                } actions: {
+                    Button("New Message") { showNewMessage = true }
+                        .buttonStyle(.borderedProminent)
                 }
-                .padding(24)
             } else {
                 List {
                     if !groups.isEmpty {
@@ -56,39 +42,32 @@ struct ChatListView: View {
                                 } label: {
                                     groupRow(group)
                                 }
-                                .buttonStyle(.plain)
                             }
                         }
                     }
                     if !conversations.isEmpty {
-                        Section(groups.isEmpty ? "" : "Direct messages") {
+                        Section(groups.isEmpty ? "" : "Direct Messages") {
                             ForEach(conversations) { conversation in
                                 Button {
                                     path.append(.oneOnOne(conversation))
                                 } label: {
                                     conversationRow(conversation)
                                 }
-                                .buttonStyle(.plain)
                             }
                         }
                     }
                 }
-                .listStyle(.plain)
+                .listStyle(.insetGrouped)
             }
         }
-        .background(Color(red: 0.99, green: 0.99, blue: 0.99))
-        .overlay(alignment: .bottomTrailing) {
-            if !isEmpty {
-                Button { showNewMessage = true } label: {
-                    Image(systemName: "square.and.pencil")
-                        .font(.title3.weight(.semibold))
-                        .foregroundStyle(.white)
-                        .frame(width: 52, height: 52)
-                        .background(Color.black)
-                        .clipShape(Circle())
-                        .shadow(color: .black.opacity(0.2), radius: 8, y: 4)
+        .background(Theme.pageBackground)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    showNewMessage = true
+                } label: {
+                    Label("New Message", systemImage: "square.and.pencil")
                 }
-                .padding(20)
             }
         }
         .task {
@@ -102,7 +81,6 @@ struct ChatListView: View {
                 Task { await refresh() }
             }
             .environmentObject(app)
-            .presentationCornerRadius(Theme.sheetCornerRadius)
         }
     }
 
@@ -116,7 +94,7 @@ struct ChatListView: View {
             )
             VStack(alignment: .leading, spacing: 4) {
                 Text(conversation.peerUsername.map { "@\($0).tribe" } ?? "TID #\(conversation.peerTid)")
-                    .font(.subheadline.weight(.bold))
+                    .font(.body.weight(.semibold))
                 Text("\(conversation.messageCount) messages")
                     .font(.caption)
                     .foregroundStyle(Theme.textSecondary)
@@ -124,12 +102,11 @@ struct ChatListView: View {
             Spacer()
             if conversation.unreadCount > 0 {
                 Text("\(conversation.unreadCount)")
-                    .font(.caption2.weight(.black))
+                    .font(.caption2.weight(.semibold))
                     .foregroundStyle(.white)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Theme.primary)
-                    .clipShape(Capsule())
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 3)
+                    .background(Theme.primary, in: Capsule())
             }
             if let last = conversation.lastMessageAt {
                 Text(RelativeTime.short(last))
@@ -137,7 +114,6 @@ struct ChatListView: View {
                     .foregroundStyle(Theme.textSecondary)
             }
         }
-        .padding(.vertical, 4)
     }
 
     private func groupRow(_ group: DMGroup) -> some View {
@@ -145,7 +121,7 @@ struct ChatListView: View {
             AvatarInitial(seed: group.id, size: 48)
             VStack(alignment: .leading, spacing: 4) {
                 Text(group.name)
-                    .font(.subheadline.weight(.bold))
+                    .font(.body.weight(.semibold))
                 Text("\(group.memberCount) members")
                     .font(.caption)
                     .foregroundStyle(Theme.textSecondary)
@@ -153,15 +129,13 @@ struct ChatListView: View {
             Spacer()
             if group.unreadCount > 0 {
                 Text("\(group.unreadCount)")
-                    .font(.caption2.weight(.black))
+                    .font(.caption2.weight(.semibold))
                     .foregroundStyle(.white)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Theme.primary)
-                    .clipShape(Capsule())
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 3)
+                    .background(Theme.primary, in: Capsule())
             }
         }
-        .padding(.vertical, 4)
     }
 
     private func refresh() async {
