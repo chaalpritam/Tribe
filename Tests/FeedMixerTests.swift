@@ -27,6 +27,13 @@ final class FeedMixerTests: XCTestCase {
         XCTAssertEqual(mixed[3].id, "tweet-t2")
     }
 
+    func testChannelScopeMatchesExact() {
+        XCTAssertTrue(ChannelScope.matchesExact(scopeId: "sf", channelId: "sf"))
+        XCTAssertFalse(ChannelScope.matchesExact(scopeId: "sf", channelId: "general"))
+        XCTAssertFalse(ChannelScope.matchesExact(scopeId: "sf", channelId: nil))
+        XCTAssertFalse(ChannelScope.matchesExact(scopeId: "sf", channelId: "nyc"))
+    }
+
     func testChannelScopeMatchesCityAndGeneral() {
         XCTAssertTrue(ChannelScope.matches(cityId: "sf", channelId: "sf"))
         XCTAssertTrue(ChannelScope.matches(cityId: "sf", channelId: "general"))

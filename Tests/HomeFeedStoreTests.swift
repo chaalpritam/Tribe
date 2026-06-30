@@ -40,7 +40,7 @@ final class HomeFeedStoreTests: XCTestCase {
         app.currentCity = nil
         store.attach(app: app)
         await store.refresh()
-        XCTAssertEqual(store.errorMessage, "No city selected.")
+        XCTAssertEqual(store.errorMessage, "No channel selected.")
         XCTAssertTrue(store.items.isEmpty)
     }
 }
