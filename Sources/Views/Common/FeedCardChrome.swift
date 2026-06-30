@@ -1,17 +1,13 @@
 import SwiftUI
 
-/// Grouped-style card shell for feed items.
+/// Card shell for non-tweet feed items (events, polls, tasks).
 struct FeedCardChrome<Content: View>: View {
     @ViewBuilder var content: () -> Content
 
     var body: some View {
         content()
-            .padding(16)
+            .tribeCard()
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                RoundedRectangle(cornerRadius: Theme.cardCornerRadius, style: .continuous)
-                    .fill(Color(.secondarySystemGroupedBackground))
-            )
     }
 }
 
@@ -32,11 +28,16 @@ struct AvatarInitial: View {
     var size: CGFloat = 44
 
     var body: some View {
-        Text(initial)
-            .font(.system(size: size * 0.4, weight: .semibold))
-            .foregroundStyle(.white)
-            .frame(width: size, height: size)
-            .background(Circle().fill(Theme.primary.gradient))
+        ZStack {
+            Theme.avatarGradient(seed: seed)
+            Text(initial)
+                .font(.system(size: size * 0.42, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
+        }
+        .frame(width: size, height: size)
+        .clipShape(Circle())
+        .overlay(Circle().strokeBorder(Color.white.opacity(0.18), lineWidth: 0.5))
+        .shadow(color: Color.black.opacity(0.08), radius: 3, x: 0, y: 1)
     }
 
     private var initial: String {

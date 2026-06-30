@@ -22,7 +22,9 @@ struct UserAvatarView: View {
             }
         }
         .frame(width: size, height: size)
-        .clipShape(RoundedRectangle(cornerRadius: size * 0.28, style: .continuous))
+        .clipShape(Circle())
+        .overlay(Circle().strokeBorder(Color.white.opacity(0.18), lineWidth: 0.5))
+        .shadow(color: Color.black.opacity(0.08), radius: 3, x: 0, y: 1)
         .task(id: tid) {
             app.userAvatars.ensureLoaded(tid: tid)
         }
