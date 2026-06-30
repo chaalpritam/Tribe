@@ -15,7 +15,7 @@ struct RootShellView: View {
                     HomeFeedView()
                         .environmentObject(app.interactions)
                         .navigationTitle(app.currentCity?.displayName ?? "Home")
-                        .navigationBarTitleDisplayMode(.large)
+                        .navigationBarTitleDisplayMode(.inline)
                         .toolbar { homeToolbar }
                 }
                 .tabItem { Label(ShellTab.home.title, systemImage: ShellTab.home.systemImage) }
@@ -24,7 +24,7 @@ struct RootShellView: View {
                 NavigationStack {
                     MapView()
                         .navigationTitle(ShellTab.explore.title)
-                        .navigationBarTitleDisplayMode(.large)
+                        .navigationBarTitleDisplayMode(.inline)
                 }
                 .tabItem { Label(ShellTab.explore.title, systemImage: ShellTab.explore.systemImage) }
                 .tag(ShellTab.explore)
@@ -32,7 +32,7 @@ struct RootShellView: View {
                 NavigationStack(path: $chatPath) {
                     ChatListView(path: $chatPath)
                         .navigationTitle(ShellTab.chat.title)
-                        .navigationBarTitleDisplayMode(.large)
+                        .navigationBarTitleDisplayMode(.inline)
                         .navigationDestination(for: DMTarget.self) { target in
                             DMThreadView(target: target)
                                 .environmentObject(app)
@@ -45,7 +45,7 @@ struct RootShellView: View {
                     ProfileView()
                         .environmentObject(app.interactions)
                         .navigationTitle(ShellTab.profile.title)
-                        .navigationBarTitleDisplayMode(.large)
+                        .navigationBarTitleDisplayMode(.inline)
                 }
                 .tabItem { Label(ShellTab.profile.title, systemImage: ShellTab.profile.systemImage) }
                 .tag(ShellTab.profile)

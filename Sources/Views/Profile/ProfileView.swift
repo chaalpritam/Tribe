@@ -141,9 +141,10 @@ struct ProfileView: View {
                 }
             }
 
-            HStack(spacing: 8) {
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
                 Button("Edit Profile") { showEditor = true }
                     .buttonStyle(.borderedProminent)
+                    .tint(Theme.brand)
                     .controlSize(.small)
                 Button("Wallet") { showWallet = true }
                     .buttonStyle(.bordered)
@@ -156,14 +157,11 @@ struct ProfileView: View {
                     .controlSize(.small)
             }
         }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: Theme.cardCornerRadius, style: .continuous))
+        .tribeCard()
     }
 
     private var statsRow: some View {
-        HStack(spacing: 16) {
+        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], alignment: .leading, spacing: 12) {
             statButton(value: user?.followersCount ?? 0, label: "Followers") {
                 followListMode = .followers
             }
@@ -198,12 +196,24 @@ struct ProfileView: View {
     }
 
     private var tabPicker: some View {
-        Picker("Content", selection: $activeTab) {
+        HStack(spacing: 0) {
             ForEach(ProfileTab.allCases, id: \.self) { tab in
-                Text(tab.rawValue).tag(tab)
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) { activeTab = tab }
+                } label: {
+                    VStack(spacing: 8) {
+                        Text(tab.rawValue)
+                            .font(.subheadline.weight(activeTab == tab ? .bold : .medium))
+                            .foregroundStyle(activeTab == tab ? Theme.textPrimary : Theme.textSecondary)
+                        Capsule()
+                            .fill(activeTab == tab ? Theme.brand : Color.clear)
+                            .frame(height: 3)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.plain)
             }
         }
-        .pickerStyle(.segmented)
     }
 
     @ViewBuilder
@@ -223,7 +233,7 @@ struct ProfileView: View {
             if tweets.isEmpty {
                 emptyTab(icon: "bubble.left", title: "No posts yet")
             } else {
-                LazyVStack(spacing: 12) {
+                LazyVStack(spacing: 0) {
                     ForEach(tweets) { tweet in
                         TweetCardView(tweet: tweet)
                             .environmentObject(app)
@@ -273,10 +283,7 @@ struct ProfileView: View {
             statLine("Joined tribes", value: "\(app.joinedChannels.count)")
             statLine("Current city", value: app.currentCity?.displayName ?? "—")
         }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: Theme.cardCornerRadius, style: .continuous))
+        .tribeCard()
     }
 
     private func statLine(_ label: String, value: String) -> some View {
