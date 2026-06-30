@@ -22,7 +22,7 @@ struct RootShellView: View {
                 .tag(ShellTab.home)
 
                 NavigationStack {
-                    MapView()
+                    ExploreView()
                         .navigationTitle(ShellTab.explore.title)
                         .navigationBarTitleDisplayMode(.inline)
                 }
