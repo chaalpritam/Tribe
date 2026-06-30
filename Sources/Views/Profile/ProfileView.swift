@@ -75,7 +75,7 @@ struct ProfileView: View {
             }
         }
         .refreshable { await refresh() }
-        .task { await refresh() }
+        .task(id: app.activeChannel?.id) { await refresh() }
         .sheet(isPresented: $showEditor) {
             NavigationStack {
                 ProfileEditorView()
@@ -539,7 +539,7 @@ struct ProfileView: View {
             }
             statLine("Joined tribes", value: "\(app.joinedChannels.count)")
             profileDivider
-            statLine("Current city", value: app.currentCity?.displayName ?? "—")
+            statLine("Current channel", value: app.activeChannel?.displayName ?? "—")
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 4)
@@ -615,7 +615,14 @@ struct ProfileView: View {
         async let tweetsTask = app.api.fetchFeed(tid: tid)
         async let karmaTask = app.api.fetchKarma(tid)
         user = try? await userTask
-        tweets = (try? await tweetsTask) ?? []
+        let allTweets = (try? await tweetsTask) ?? []
+        if let scopeId = app.activeChannel?.id {
+            tweets = allTweets.filter {
+                ChannelScope.matchesExact(scopeId: scopeId, channelId: $0.channelId)
+            }
+        } else {
+            tweets = []
+        }
         karma = try? await karmaTask
         if let user, let raw = user.profile?.pfpUrl, let url = app.api.resolveMediaURL(raw) {
             app.userAvatars.record(tid: tid, pfpUrl: url)
