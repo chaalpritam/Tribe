@@ -14,9 +14,14 @@ struct RootShellView: View {
                 NavigationStack {
                     HomeFeedView()
                         .environmentObject(app.interactions)
-                        .navigationTitle(app.currentCity?.displayName ?? "Home")
+                        .navigationTitle(app.activeChannel?.displayName ?? "Home")
                         .navigationBarTitleDisplayMode(.inline)
                         .toolbar { homeToolbar }
+                        .safeAreaInset(edge: .top, spacing: 0) {
+                            if app.isBrowsingSubChannel, let city = app.currentCity {
+                                browsingChannelBanner(city: city)
+                            }
+                        }
                 }
                 .tabItem { Label(ShellTab.home.title, systemImage: ShellTab.home.systemImage) }
                 .tag(ShellTab.home)
@@ -87,5 +92,22 @@ struct RootShellView: View {
                 Label("Create", systemImage: "square.and.pencil")
             }
         }
+    }
+
+    private func browsingChannelBanner(city: Channel) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: "number")
+                .foregroundStyle(Theme.brand)
+            Text("Viewing #\(app.activeChannel?.id ?? "")")
+                .font(.subheadline.weight(.medium))
+            Spacer()
+            Button("Back to \(city.displayName)") {
+                app.resetActiveChannelToCity()
+            }
+            .font(.subheadline.weight(.semibold))
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(Theme.brand.opacity(0.1))
     }
 }

@@ -128,6 +128,7 @@ struct TribesView: View {
     @ViewBuilder
     private func tribeRow(_ tribe: Channel, joined: Bool) -> some View {
         Button {
+            app.setActiveChannel(tribe)
             selectedTribe = tribe
         } label: {
             TribeChannelRow(channel: tribe, joined: joined)
