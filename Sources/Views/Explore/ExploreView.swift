@@ -35,7 +35,7 @@ struct ExploreView: View {
 
     @State private var filter: Filter = .all
     @State private var searchText = ""
-    @State private var users: [User] = []
+    @State private var members: [ChannelMember] = []
     @State private var events: [Event] = []
     @State private var polls: [Poll] = []
     @State private var tasks: [TaskItem] = []
@@ -47,12 +47,15 @@ struct ExploreView: View {
     @State private var mapSelection: ExploreMapPin?
     @State private var cameraPosition: MapCameraPosition = .automatic
 
-    private var cityId: String? { app.currentCity?.id }
-    private var cityName: String { app.currentCity?.displayName ?? "Your city" }
+    private var scopeId: String? { app.activeChannel?.id }
+    private var channelName: String { app.activeChannel?.displayName ?? "Your channel" }
     private var query: String { searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() }
 
     private var tribeChannels: [Channel] {
-        channels.filter { !$0.isCity }
+        if let active = app.activeChannel, !active.isCity {
+            return [active]
+        }
+        return app.joinedChannels.filter { !$0.isCity }
     }
 
     private var mapPins: [ExploreMapPin] {
@@ -96,8 +99,8 @@ struct ExploreView: View {
     private var filteredCrowdfunds: [Crowdfund] {
         scopedCrowdfunds.filter { matchesSearch($0.title) }
     }
-    private var filteredUsers: [User] {
-        users.filter {
+    private var filteredMembers: [ChannelMember] {
+        members.filter {
             query.isEmpty
             || matchesSearch($0.displayName)
             || matchesSearch($0.username)
@@ -113,12 +116,12 @@ struct ExploreView: View {
 
     private var everythingEmpty: Bool {
         filteredEvents.isEmpty && filteredPolls.isEmpty && filteredTasks.isEmpty
-            && filteredCrowdfunds.isEmpty && filteredUsers.isEmpty && filteredTribes.isEmpty
+            && filteredCrowdfunds.isEmpty && filteredMembers.isEmpty && filteredTribes.isEmpty
     }
 
     var body: some View {
         Group {
-            if loading, everythingEmpty, users.isEmpty, events.isEmpty {
+            if loading, everythingEmpty, members.isEmpty, events.isEmpty {
                 loadingState
             } else if let error, everythingEmpty {
                 EmptyStateView(
@@ -144,9 +147,9 @@ struct ExploreView: View {
             }
         }
         .background(Color(.systemGroupedBackground))
-        .searchable(text: $searchText, prompt: "Search \(cityName)")
+        .searchable(text: $searchText, prompt: "Search \(channelName)")
         .refreshable { await refresh() }
-        .task(id: cityId) { await refresh() }
+        .task(id: app.activeChannel?.id) { await refresh() }
         .navigationDestination(item: $selectedTribe) { tribe in
             HomeFeedView(channelId: tribe.id)
                 .environmentObject(app.interactions)
@@ -160,17 +163,23 @@ struct ExploreView: View {
     private var cityHeader: some View {
         VStack(alignment: .leading, spacing: 14) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(cityName)
+                Text(channelName)
                     .font(.title2.weight(.bold))
-                Text("Discover people, tribes, and local activity")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                if app.isBrowsingSubChannel, let city = app.currentCity {
+                    Text("Browsing within \(city.displayName)")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text("Content tagged to #\(scopeId ?? "…")")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
             }
 
             HStack(spacing: 8) {
                 headerStat(value: filteredEvents.count, label: "Events", tint: Theme.accentEmerald)
                 headerStat(value: filteredTribes.count, label: "Tribes", tint: Theme.brand)
-                headerStat(value: filteredUsers.count, label: "People", tint: Theme.accentIndigo)
+                headerStat(value: filteredMembers.count, label: "Members", tint: Theme.accentIndigo)
             }
         }
         .padding(16)
@@ -219,12 +228,12 @@ struct ExploreView: View {
             Group {
                 if mapPins.isEmpty {
                     ZStack {
-                        Theme.avatarGradient(seed: "map-\(cityName)")
+                        Theme.avatarGradient(seed: "map-\(channelName)")
                             .opacity(0.35)
                         VStack(spacing: 6) {
                             Image(systemName: "mappin.slash")
                                 .font(.title2)
-                            Text("No map pins in \(cityName) yet")
+                            Text("No map pins in \(channelName) yet")
                                 .font(.footnote.weight(.medium))
                         }
                         .foregroundStyle(.secondary)
@@ -374,17 +383,17 @@ struct ExploreView: View {
             }
         }
 
-        if filter == .all || filter == .people, !filteredUsers.isEmpty {
+        if filter == .all || filter == .people, !filteredMembers.isEmpty {
             exploreSection(
-                title: "People nearby",
+                title: "Channel members",
                 symbol: "person.2.fill",
                 tint: Theme.brand,
-                destination: ExplorePeopleList(users: filteredUsers)
+                destination: ExploreMembersList(members: filteredMembers)
             ) {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
-                        ForEach(filteredUsers.prefix(8)) { user in
-                            ExplorePersonCard(user: user)
+                        ForEach(filteredMembers.prefix(8)) { member in
+                            ExploreMemberCard(member: member)
                         }
                     }
                     .padding(.horizontal, 16)
@@ -394,7 +403,7 @@ struct ExploreView: View {
 
         if filter == .all || filter == .tribes, !filteredTribes.isEmpty {
             exploreSection(
-                title: "Tribes in \(cityName)",
+                title: app.activeChannel?.isCity == false ? "This tribe" : "Tribes in \(app.currentCity?.displayName ?? "your city")",
                 symbol: "number",
                 tint: Theme.accentTeal,
                 destination: ExploreTribesList(
@@ -404,7 +413,10 @@ struct ExploreView: View {
             ) {
                 VStack(spacing: 8) {
                     ForEach(filteredTribes.prefix(4)) { tribe in
-                        Button { selectedTribe = tribe } label: {
+                        Button { 
+                            app.setActiveChannel(tribe)
+                            selectedTribe = tribe 
+                        } label: {
                             ExploreTribeRow(channel: tribe, joined: app.isJoined(channelId: tribe.id))
                         }
                         .buttonStyle(.plain)
@@ -442,15 +454,15 @@ struct ExploreView: View {
         EmptyStateView(
             symbol: "sparkles",
             title: "Nothing to explore yet",
-            message: "As neighbors post events, polls, tasks, and tribes in \(cityName), they'll show up here."
+            message: "As neighbors post events, polls, and tasks in #\(scopeId ?? "this channel"), they'll show up here."
         )
     }
 
     // MARK: - Data
 
     private func scoped<T>(_ items: [T], channel: (T) -> String?) -> [T] {
-        guard let cityId else { return items }
-        return items.filter { ChannelScope.matches(cityId: cityId, channelId: channel($0)) }
+        guard let scopeId else { return [] }
+        return items.filter { ChannelScope.matchesExact(scopeId: scopeId, channelId: channel($0)) }
     }
 
     private func matchesSearch(_ text: String?) -> Bool {
@@ -460,28 +472,36 @@ struct ExploreView: View {
 
     @MainActor
     private func refresh() async {
-        loading = users.isEmpty && events.isEmpty
+        loading = members.isEmpty && events.isEmpty
         error = nil
         defer { loading = false }
 
-        async let usersTask = (try? await app.api.fetchUsers(limit: 24)) ?? []
+        guard let scopeId else {
+            members = []
+            events = []
+            polls = []
+            tasks = []
+            crowdfunds = []
+            channels = []
+            return
+        }
+
+        async let membersTask = (try? await app.api.fetchChannelMembers(scopeId)) ?? []
         async let eventsTask = (try? await app.api.fetchEvents(upcomingOnly: true)) ?? []
         async let pollsTask = (try? await app.api.fetchPolls()) ?? []
         async let tasksTask = (try? await app.api.fetchTasks()) ?? []
         async let fundsTask = (try? await app.api.fetchCrowdfunds()) ?? []
         async let channelsTask = (try? await app.api.fetchChannels()) ?? []
 
-        users = await usersTask
+        members = await membersTask
         events = await eventsTask
         polls = await pollsTask
         tasks = await tasksTask
         crowdfunds = await fundsTask
         channels = await channelsTask
 
-        for user in users {
-            if let raw = user.profile?.pfpUrl, let url = app.api.resolveMediaURL(raw) {
-                app.userAvatars.record(tid: user.tid, pfpUrl: url)
-            }
+        for member in members {
+            app.userAvatars.ensureLoaded(tid: member.tid)
         }
         recenterMapIfNeeded()
     }

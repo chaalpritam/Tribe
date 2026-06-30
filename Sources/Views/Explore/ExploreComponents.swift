@@ -93,6 +93,103 @@ struct ExploreCrowdfundPreview: View {
     }
 }
 
+struct ExploreMemberCard: View {
+    @EnvironmentObject private var app: AppState
+    let member: ChannelMember
+
+    private var handle: String {
+        if let u = member.username { return "@\(u).tribe" }
+        return "@tid\(member.tid)"
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            UserAvatarView(
+                tid: member.tid,
+                initial: member.initial,
+                size: 56,
+                seed: member.username ?? member.tid
+            )
+            VStack(alignment: .leading, spacing: 2) {
+                Text(member.displayName)
+                    .font(.subheadline.weight(.bold))
+                    .lineLimit(1)
+                Text(handle)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+            Spacer(minLength: 4)
+        }
+        .frame(width: 188, height: 140, alignment: .topLeading)
+        .tribeCard(cornerRadius: 16, padding: 14)
+    }
+}
+
+struct ExploreMembersList: View {
+    let members: [ChannelMember]
+
+    var body: some View {
+        List {
+            ForEach(members) { member in
+                ExploreMemberRow(member: member)
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color(.systemBackground))
+            }
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(Color(.systemGroupedBackground))
+        .navigationTitle("Members")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private struct ExploreMemberRow: View {
+    let member: ChannelMember
+
+    private var handle: String {
+        if let u = member.username { return "@\(u).tribe" }
+        return "@tid\(member.tid)"
+    }
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            UserAvatarView(
+                tid: member.tid,
+                initial: member.initial,
+                size: 48,
+                seed: member.username ?? member.tid
+            )
+            VStack(alignment: .leading, spacing: 4) {
+                Text(member.displayName)
+                    .font(.subheadline.weight(.bold))
+                    .lineLimit(1)
+                Text(handle)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                if let joinedAt = member.joinedAt {
+                    Text("Joined \(RelativeTime.short(joinedAt))")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
+            }
+            Spacer(minLength: 8)
+            FollowButton(targetTID: member.tid)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(Color(.systemBackground))
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(Theme.cardStroke.opacity(0.4))
+                .frame(height: 0.5)
+        }
+    }
+}
+
 struct ExplorePersonCard: View {
     let user: User
 
