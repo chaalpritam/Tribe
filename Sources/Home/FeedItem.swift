@@ -59,10 +59,3 @@ enum FeedMixer {
         return items
     }
 }
-
-enum ChannelScope {
-    static func matches(cityId: String, channelId: String?) -> Bool {
-        guard let channelId, !channelId.isEmpty else { return true }
-        return channelId == cityId || channelId == "general"
-    }
-}

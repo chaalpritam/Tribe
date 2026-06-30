@@ -36,6 +36,7 @@
 		577E9302C52778067B4396DF /* InteractionCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D9E8E58C4081E671EDFC4B /* InteractionCache.swift */; };
 		57CB3DA69CE6CD53A76E77CE /* InteractionReads.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF4F69FB1072F88B8847523E /* InteractionReads.swift */; };
 		5A6D388AEF0763C104ECA52C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210CB5BA0E0F802E20308F81 /* User.swift */; };
+		5B2E2B2AD6A55A273274F21C /* ChannelScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2111A36EFAE12CEC238630 /* ChannelScope.swift */; };
 		5B7FEC9D5BEA71D477C42C86 /* KarmaSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA23D4F13336D3DA83D7EA8B /* KarmaSheet.swift */; };
 		5E416E75302734805270BD8B /* QRLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F869687AF7F4B39B472F61D6 /* QRLoginView.swift */; };
 		629C4FA8D0FC44DEA14E2B5A /* CityCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAE50FF86DB593BE0565EFA /* CityCatalog.swift */; };
@@ -102,6 +103,7 @@
 		EE899113D3150B26FB8FEC77 /* EventCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B6A0773DFA446B06618A29 /* EventCardView.swift */; };
 		F10B4DD2E0D67424A7C94CF8 /* TribeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F263511F6D54A1411DBB62B /* TribeApp.swift */; };
 		F2C7511BFF594B4131451A35 /* CreateTaskComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE5D5668924DE49710E4C344 /* CreateTaskComposer.swift */; };
+		FAFCBDC870B6AAFB20A4AAA7 /* ChannelMember.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559B57E19316930B80E86691 /* ChannelMember.swift */; };
 		FC1DD2DB22B6CB242E0B13A8 /* FollowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F4E08FA62DE02D95E623CB /* FollowButton.swift */; };
 		FF3662099FB3C2F3B4C43D51 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E890785885D116D49AA9EA /* RootView.swift */; };
 /* End PBXBuildFile section */
@@ -125,10 +127,11 @@
 		155F8E1275747FF09B2BF696 /* ShellTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellTab.swift; sourceTree = "<group>"; };
 		1563E079D1D417DD80853935 /* Karma.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Karma.swift; sourceTree = "<group>"; };
 		1A65E5DFD5BC79A7D590F97C /* ToastOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastOverlay.swift; sourceTree = "<group>"; };
+		1C2111A36EFAE12CEC238630 /* ChannelScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelScope.swift; sourceTree = "<group>"; };
 		1DC87039824F071B18B782FC /* NotificationsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsListView.swift; sourceTree = "<group>"; };
 		20D1036BD275800BB629E522 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		210CB5BA0E0F802E20308F81 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		22E2C00902A5487A3C3C9C4F /* Tribe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tribe.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		22E2C00902A5487A3C3C9C4F /* Tribe.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Tribe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22E890785885D116D49AA9EA /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		26074694C874B32FB1504E70 /* ERClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ERClient.swift; sourceTree = "<group>"; };
 		2888D6CC9EEAD336982C0E17 /* Poll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
@@ -147,6 +150,7 @@
 		4574EEDEC4BB8FC28300AB90 /* NotificationsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsStore.swift; sourceTree = "<group>"; };
 		4EEEB51F07EA129D77CC2E88 /* HomeFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedView.swift; sourceTree = "<group>"; };
 		4F263511F6D54A1411DBB62B /* TribeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TribeApp.swift; sourceTree = "<group>"; };
+		559B57E19316930B80E86691 /* ChannelMember.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelMember.swift; sourceTree = "<group>"; };
 		5640137601A514F0EA537475 /* LocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProvider.swift; sourceTree = "<group>"; };
 		57D461CD15BF8F037599D855 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		57DB2940906876772C47FF0A /* CreateHubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHubView.swift; sourceTree = "<group>"; };
@@ -439,6 +443,7 @@
 		BB93AA862ACDF6E5CE965353 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				1C2111A36EFAE12CEC238630 /* ChannelScope.swift */,
 				CA90E59C1D793FB735DFF3B5 /* FeedItem.swift */,
 				82EBC89C6CCE1686D565DEC9 /* HomeFeedStore.swift */,
 			);
@@ -514,6 +519,7 @@
 			children = (
 				C58AEEC6020652595A0E48CD /* Activity.swift */,
 				57D461CD15BF8F037599D855 /* Channel.swift */,
+				559B57E19316930B80E86691 /* ChannelMember.swift */,
 				C846A798957F0FD033C6947A /* Crowdfund.swift */,
 				7E0339D1BC6661D15675D8FF /* DM.swift */,
 				796ECC5DA3081DD93E34E78A /* Event.swift */,
@@ -657,7 +663,9 @@
 				C4FAC6691C7EEB139CE52CB3 /* AppState.swift in Sources */,
 				E17D963EC4A2564DACE3CC5F /* CachedAsyncImage.swift in Sources */,
 				9BD996FB8E48D51C24C3D579 /* Channel.swift in Sources */,
+				FAFCBDC870B6AAFB20A4AAA7 /* ChannelMember.swift in Sources */,
 				ACC13B2416708C3A6CA5FE91 /* ChannelPickerField.swift in Sources */,
+				5B2E2B2AD6A55A273274F21C /* ChannelScope.swift in Sources */,
 				667FA0EE942405B2E90FBB88 /* ChatListView.swift in Sources */,
 				629C4FA8D0FC44DEA14E2B5A /* CityCatalog.swift in Sources */,
 				B8FB544630F096C62E6082AA /* CityPickerView.swift in Sources */,

@@ -103,6 +103,11 @@ public extension HubClient {
         return res.channels
     }
 
+    func fetchChannelMembers(_ channelId: String) async throws -> [ChannelMember] {
+        let res: ChannelMemberListResponse = try await get("v1/channels/\(channelId)/members")
+        return res.members
+    }
+
     // MARK: - Polls
 
     func fetchPolls() async throws -> [Poll] {
