@@ -4,6 +4,7 @@ import SwiftUI
 enum ShellTab: String, CaseIterable, Identifiable {
     case home
     case explore
+    case tribes
     case chat
     case profile
 
@@ -12,7 +13,8 @@ enum ShellTab: String, CaseIterable, Identifiable {
     var systemImage: String {
         switch self {
         case .home: return "house.fill"
-        case .explore: return "map.fill"
+        case .explore: return "safari.fill"
+        case .tribes: return "circle.hexagongrid.fill"
         case .chat: return "bubble.left.and.bubble.right.fill"
         case .profile: return "person.crop.circle.fill"
         }
@@ -22,6 +24,7 @@ enum ShellTab: String, CaseIterable, Identifiable {
         switch self {
         case .home: return "Home"
         case .explore: return "Explore"
+        case .tribes: return "Tribes"
         case .chat: return "Messages"
         case .profile: return "Profile"
         }

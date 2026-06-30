@@ -29,6 +29,12 @@ struct RootShellView: View {
                 .tabItem { Label(ShellTab.explore.title, systemImage: ShellTab.explore.systemImage) }
                 .tag(ShellTab.explore)
 
+                NavigationStack {
+                    TribesView()
+                }
+                .tabItem { Label(ShellTab.tribes.title, systemImage: ShellTab.tribes.systemImage) }
+                .tag(ShellTab.tribes)
+
                 NavigationStack(path: $chatPath) {
                     ChatListView(path: $chatPath)
                         .navigationTitle(ShellTab.chat.title)

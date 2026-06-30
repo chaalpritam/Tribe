@@ -61,6 +61,7 @@
 		91FC38CAC5E6B5AFF7CB77A4 /* DMThreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69E50D7DAC091CAA594671A /* DMThreadView.swift */; };
 		956F7E90178FC455E4641F1B /* CreateTribeComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B067C6CC263D477F4CF8FD3 /* CreateTribeComposer.swift */; };
 		95D14E4A7F49052EE8593716 /* FeedCardChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0E7A6A0657186A97975BD4 /* FeedCardChrome.swift */; };
+		97DC7AB340B7EC4BF457152A /* TribesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F157ED849731CD332836A2C /* TribesView.swift */; };
 		999710ECCF2BC462DEC8530D /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58AEEC6020652595A0E48CD /* Activity.swift */; };
 		99FA759B731D5D2E8E9EEEF9 /* HubRealtime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADD23F8C47237C6B6740BC2 /* HubRealtime.swift */; };
 		9BD996FB8E48D51C24C3D579 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D461CD15BF8F037599D855 /* Channel.swift */; };
@@ -152,6 +153,7 @@
 		5AA95259DB445C588F57AF33 /* CachedAsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedAsyncImage.swift; sourceTree = "<group>"; };
 		5C59DD4D305886A04B76BFA9 /* Tip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tip.swift; sourceTree = "<group>"; };
 		5C64AE38FA22EF52A3C9B412 /* SolanaRPCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolanaRPCClient.swift; sourceTree = "<group>"; };
+		5F157ED849731CD332836A2C /* TribesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TribesView.swift; sourceTree = "<group>"; };
 		5FA8FD7C67A4F087BE9CF2AE /* Slug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slug.swift; sourceTree = "<group>"; };
 		647235A3767BE0AD3C944792 /* CreateCrowdfundComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCrowdfundComposer.swift; sourceTree = "<group>"; };
 		6A90D474C319EDD7C840434E /* HomeFeedStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedStoreTests.swift; sourceTree = "<group>"; };
@@ -291,6 +293,7 @@
 				5F1ADAFD961CB8D7C0105CD1 /* Profile */,
 				BE9325FF90941B23CB0E5517 /* Settings */,
 				A221CBCA9378612D0CC0E507 /* Shell */,
+				798C1232AA9054A5EDA8D42F /* Tribes */,
 				F6D7E4E7A71BBC2C395A92D8 /* Wallet */,
 			);
 			path = Views;
@@ -373,6 +376,14 @@
 				DFFF58CB923DF415352F0B30 /* TweetCardView.swift */,
 			);
 			path = Home;
+			sourceTree = "<group>";
+		};
+		798C1232AA9054A5EDA8D42F /* Tribes */ = {
+			isa = PBXGroup;
+			children = (
+				5F157ED849731CD332836A2C /* TribesView.swift */,
+			);
+			path = Tribes;
 			sourceTree = "<group>";
 		};
 		80ABFFB4F50FC6CF30A33642 /* Theme */ = {
@@ -721,6 +732,7 @@
 				A50D8F17C8AF47C3CB14A73F /* ToastOverlay.swift in Sources */,
 				F10B4DD2E0D67424A7C94CF8 /* TribeApp.swift in Sources */,
 				345E644B276B350C3FEEB495 /* TribeDiagnostics.swift in Sources */,
+				97DC7AB340B7EC4BF457152A /* TribesView.swift in Sources */,
 				9FC781848D28FF3079127BFC /* Tweet.swift in Sources */,
 				6EC65981830DC529D0D8CDDE /* TweetCardView.swift in Sources */,
 				907B03368177D07E3C6E16EC /* TweetMedia.swift in Sources */,
