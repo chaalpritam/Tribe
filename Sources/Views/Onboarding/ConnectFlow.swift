@@ -43,10 +43,6 @@ private struct ConnectWelcomeView: View {
     var body: some View {
         VStack(spacing: 24) {
             Spacer()
-            Image(systemName: "location.circle.fill")
-                .font(.system(size: 72))
-                .symbolRenderingMode(.hierarchical)
-                .foregroundStyle(Theme.primary)
             VStack(spacing: 8) {
                 Text("Tribe")
                     .font(.largeTitle.bold())

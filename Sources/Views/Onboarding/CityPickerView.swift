@@ -37,13 +37,9 @@ struct CityPickerView: View {
 
     private var header: some View {
         VStack(spacing: 8) {
-            Image(systemName: "mappin.and.ellipse")
-                .font(.system(size: 48))
-                .symbolRenderingMode(.hierarchical)
-                .foregroundStyle(Theme.primary)
-            .padding(.top, 24)
             Text("Choose your city")
                 .font(.title2.bold())
+                .padding(.top, 24)
             Text("Your feed and tribes are scoped to this neighborhood.")
                 .font(.subheadline)
                 .foregroundStyle(Theme.textSecondary)
