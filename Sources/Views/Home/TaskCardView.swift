@@ -9,10 +9,10 @@ struct TaskCardView: View {
 
     var body: some View {
         FeedCardChrome {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 12) {
                 FeedTypeBadge(icon: "checklist", label: "Local Task", tint: Theme.warning)
                 Text(task.title)
-                    .font(.title3.weight(.bold))
+                    .font(.headline.weight(.bold))
                 if let description = task.description, !description.isEmpty {
                     Text(description)
                         .font(.subheadline)

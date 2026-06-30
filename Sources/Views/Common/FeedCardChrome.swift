@@ -1,13 +1,20 @@
 import SwiftUI
 
-/// Card shell for non-tweet feed items (events, polls, tasks).
+/// Flat full-width row chrome for non-tweet feed items (events, polls, tasks).
 struct FeedCardChrome<Content: View>: View {
     @ViewBuilder var content: () -> Content
 
     var body: some View {
         content()
-            .tribeCard()
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(.systemBackground))
+            .overlay(alignment: .bottom) {
+                Rectangle()
+                    .fill(Theme.cardStroke.opacity(0.4))
+                    .frame(height: 0.5)
+            }
     }
 }
 
@@ -18,7 +25,7 @@ struct FeedTypeBadge: View {
 
     var body: some View {
         Label(label, systemImage: icon)
-            .font(.caption.weight(.medium))
+            .font(.caption.weight(.semibold))
             .foregroundStyle(tint)
     }
 }

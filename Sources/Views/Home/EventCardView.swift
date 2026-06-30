@@ -9,17 +9,17 @@ struct EventCardView: View {
 
     var body: some View {
         FeedCardChrome {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 12) {
                 FeedTypeBadge(icon: "calendar", label: "Local Event", tint: Theme.primary)
                 Text(event.title)
-                    .font(.title3.weight(.bold))
+                    .font(.headline.weight(.bold))
                 if let description = event.description, !description.isEmpty {
                     Text(description)
                         .font(.subheadline)
                         .foregroundStyle(Theme.textSecondary)
                         .lineLimit(3)
                 }
-                HStack(spacing: 10) {
+                VStack(alignment: .leading, spacing: 8) {
                     metaChip(icon: "mappin.and.ellipse", text: event.locationText ?? "TBD")
                     metaChip(icon: "person.2", text: "\(event.yesCount) going")
                 }
@@ -48,14 +48,14 @@ struct EventCardView: View {
                 .font(.caption)
             Text(text)
                 .font(.caption.weight(.semibold))
-                .lineLimit(1)
+                .lineLimit(2)
         }
         .padding(.horizontal, 12)
-        .padding(.vertical, 10)
+        .padding(.vertical, 8)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Color(.tertiarySystemFill))
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(Theme.chipBackground)
         )
     }
 

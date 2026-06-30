@@ -9,10 +9,10 @@ struct PollCardView: View {
 
     var body: some View {
         FeedCardChrome {
-            VStack(alignment: .leading, spacing: 14) {
-                FeedTypeBadge(icon: "chart.bar.fill", label: "Community Poll", tint: Color(red: 0.34, green: 0.4, blue: 0.96))
+            VStack(alignment: .leading, spacing: 12) {
+                FeedTypeBadge(icon: "chart.bar.fill", label: "Community Poll", tint: Theme.accentIndigo)
                 Text(poll.question)
-                    .font(.title3.weight(.bold))
+                    .font(.headline.weight(.bold))
                 VStack(spacing: 8) {
                     ForEach(Array(poll.options.enumerated()), id: \.offset) { index, option in
                         Button {
@@ -28,10 +28,10 @@ struct PollCardView: View {
                                         .foregroundStyle(Theme.primary)
                                 }
                             }
-                            .padding(14)
+                            .padding(12)
                             .background(
-                                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                    .fill(votedIndex == index ? Theme.primary.opacity(0.1) : Color(.tertiarySystemFill))
+                                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                    .fill(votedIndex == index ? Theme.brand.opacity(0.1) : Theme.chipBackground)
                             )
                         }
                         .buttonStyle(.plain)
