@@ -1,5 +1,8 @@
 import SwiftUI
 
+/// Twitter-style tweet row. Avatar pinned to the leading edge; header,
+/// body, media, and actions share the trailing column. Edge-to-edge with
+/// a hairline separator — List should use zero row insets.
 struct TweetCardView: View {
     @EnvironmentObject private var app: AppState
     @EnvironmentObject private var interactions: InteractionCache
@@ -25,40 +28,41 @@ struct TweetCardView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .top, spacing: 12) {
-                UserAvatarView(
-                    tid: tweet.tid,
-                    initial: String((tweet.username ?? tweet.tid).prefix(1)),
-                    size: 44,
-                    seed: tweet.username ?? tweet.tid
-                )
+        HStack(alignment: .top, spacing: 12) {
+            UserAvatarView(
+                tid: tweet.tid,
+                initial: String((tweet.username ?? tweet.tid).prefix(1)),
+                size: 44,
+                seed: tweet.username ?? tweet.tid
+            )
 
-                VStack(alignment: .leading, spacing: 4) {
-                    headerRow
-                    if let text = tweet.text, !text.isEmpty {
-                        Text(text)
-                            .font(.body)
-                            .foregroundStyle(.primary)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
+            VStack(alignment: .leading, spacing: 4) {
+                headerRow
+                if let text = tweet.text, !text.isEmpty {
+                    Text(text)
+                        .font(.subheadline)
+                        .foregroundStyle(.primary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .lineSpacing(2)
                 }
+                TweetMediaPreview(tweet: tweet)
+                    .environmentObject(app)
+                if let actionError {
+                    Label(actionError, systemImage: "exclamationmark.triangle.fill")
+                        .font(.caption)
+                        .foregroundStyle(Theme.accentRose)
+                }
+                actionRow
+                    .padding(.top, 6)
             }
-
-            TweetMediaPreview(tweet: tweet)
-
-            if let actionError {
-                Text(actionError)
-                    .font(.caption)
-                    .foregroundStyle(Theme.error)
-            }
-
-            actionRow
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .padding(.horizontal, 16)
         .padding(.vertical, 12)
+        .background(Color(.systemBackground))
         .overlay(alignment: .bottom) {
             Rectangle()
-                .fill(Theme.cardStroke.opacity(0.5))
+                .fill(Theme.cardStroke.opacity(0.4))
                 .frame(height: 0.5)
         }
         .task { await interactions.ensureLoaded() }
@@ -96,17 +100,17 @@ struct TweetCardView: View {
     }
 
     private var actionRow: some View {
-        HStack {
-            actionButton("bubble.left", count: tweet.replyCount) {}
-            Spacer()
+        HStack(spacing: 0) {
+            actionButton("bubble.left", count: tweet.replyCount, tint: Theme.brand) {}
+            Spacer(minLength: 0)
             actionButton(
-                retweeted ? "arrow.2.squarepath" : "arrow.2.squarepath",
+                "arrow.2.squarepath",
                 active: retweeted,
                 tint: Theme.accentEmerald
             ) {
                 Task { await toggleRetweet() }
             }
-            Spacer()
+            Spacer(minLength: 0)
             actionButton(
                 liked ? "heart.fill" : "heart",
                 active: liked,
@@ -114,16 +118,16 @@ struct TweetCardView: View {
             ) {
                 Task { await toggleLike() }
             }
-            Spacer()
+            Spacer(minLength: 0)
             actionButton(
                 bookmarked ? "bookmark.fill" : "bookmark",
                 active: bookmarked,
-                tint: Theme.brand
+                tint: Theme.accentIndigo
             ) {
                 Task { await toggleBookmark() }
             }
         }
-        .foregroundStyle(Theme.textSecondary)
+        .foregroundStyle(.secondary)
     }
 
     private func actionButton(
@@ -139,11 +143,12 @@ struct TweetCardView: View {
                     .font(.subheadline.weight(active ? .semibold : .regular))
                 if let count, count > 0 {
                     Text("\(count)")
-                        .font(.caption)
+                        .font(.caption.weight(.medium))
                         .monospacedDigit()
                 }
             }
-            .foregroundStyle(active ? tint : Theme.textSecondary)
+            .foregroundStyle(active ? tint : .secondary)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .disabled(pending || app.appKey == nil)
