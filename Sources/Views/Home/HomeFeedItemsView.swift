@@ -12,7 +12,10 @@ struct HomeFeedItemsView: View {
         Group {
             if store.isLoading, store.items.isEmpty {
                 ProgressView()
+                    .frame(maxWidth: .infinity)
                     .padding(.vertical, 48)
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Theme.pageBackground)
             } else if let error = store.errorMessage, store.items.isEmpty {
                 EmptyStateView(
                     symbol: "wifi.exclamationmark",
@@ -21,15 +24,22 @@ struct HomeFeedItemsView: View {
                     retryTitle: "Retry",
                     onRetry: { Task { await store.refresh() } }
                 )
+                .listRowSeparator(.hidden)
+                .listRowBackground(Theme.pageBackground)
             } else if store.items.isEmpty {
                 EmptyStateView(
                     symbol: "sparkles",
                     title: "Quiet neighborhood…",
                     message: emptySubtitle
                 )
+                .listRowSeparator(.hidden)
+                .listRowBackground(Theme.pageBackground)
             } else {
                 if let error = store.errorMessage {
                     inlineErrorBanner(error)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                        .listRowBackground(Theme.pageBackground)
                 }
                 ForEach(Array(store.items.enumerated()), id: \.element.id) { index, item in
                     feedRow(item)
@@ -39,6 +49,8 @@ struct HomeFeedItemsView: View {
                         }
                 }
                 loadMoreFooter
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Theme.pageBackground)
             }
         }
     }
@@ -85,17 +97,32 @@ struct HomeFeedItemsView: View {
             TweetCardView(tweet: tweet)
                 .environmentObject(app)
                 .environmentObject(interactions)
+                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                .listRowSeparator(.hidden)
+                .listRowBackground(Theme.pageBackground)
         case .event(let event):
             EventCardView(event: event)
                 .environmentObject(app)
+                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                .listRowSeparator(.hidden)
+                .listRowBackground(Theme.pageBackground)
         case .poll(let poll):
             PollCardView(poll: poll)
                 .environmentObject(app)
+                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                .listRowSeparator(.hidden)
+                .listRowBackground(Theme.pageBackground)
         case .task(let task):
             TaskCardView(task: task)
                 .environmentObject(app)
+                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                .listRowSeparator(.hidden)
+                .listRowBackground(Theme.pageBackground)
         case .crowdfund(let crowdfund):
             CrowdfundCardView(crowdfund: crowdfund)
+                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                .listRowSeparator(.hidden)
+                .listRowBackground(Theme.pageBackground)
         }
     }
 }

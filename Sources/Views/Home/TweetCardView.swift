@@ -25,60 +25,101 @@ struct TweetCardView: View {
     }
 
     var body: some View {
-        FeedCardChrome {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack(alignment: .top, spacing: 12) {
-                    UserAvatarView(
-                        tid: tweet.tid,
-                        initial: String((tweet.username ?? tweet.tid).prefix(1)),
-                        size: 44,
-                        seed: tweet.username ?? tweet.tid
-                    )
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack(spacing: 4) {
-                            Text(displayName)
-                                .font(.subheadline.weight(.bold))
-                            Text(handle)
-                                .font(.subheadline)
-                                .foregroundStyle(Theme.textSecondary)
-                            Text("·")
-                                .foregroundStyle(Theme.textSecondary)
-                            Text(RelativeTime.short(tweet.timestamp))
-                                .font(.subheadline)
-                                .foregroundStyle(Theme.textSecondary)
-                        }
-                        if let text = tweet.text, !text.isEmpty {
-                            Text(text)
-                                .font(.body)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top, spacing: 12) {
+                UserAvatarView(
+                    tid: tweet.tid,
+                    initial: String((tweet.username ?? tweet.tid).prefix(1)),
+                    size: 44,
+                    seed: tweet.username ?? tweet.tid
+                )
+
+                VStack(alignment: .leading, spacing: 4) {
+                    headerRow
+                    if let text = tweet.text, !text.isEmpty {
+                        Text(text)
+                            .font(.body)
+                            .foregroundStyle(.primary)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
-                TweetMediaPreview(tweet: tweet)
-                if let actionError {
-                    Text(actionError)
-                        .font(.caption)
-                        .foregroundStyle(Theme.error)
-                }
-                actionRow
             }
+
+            TweetMediaPreview(tweet: tweet)
+
+            if let actionError {
+                Text(actionError)
+                    .font(.caption)
+                    .foregroundStyle(Theme.error)
+            }
+
+            actionRow
+        }
+        .padding(.vertical, 12)
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(Theme.cardStroke.opacity(0.5))
+                .frame(height: 0.5)
         }
         .task { await interactions.ensureLoaded() }
+    }
+
+    private var headerRow: some View {
+        HStack(spacing: 4) {
+            Text(displayName)
+                .font(.subheadline.weight(.bold))
+                .foregroundStyle(.primary)
+                .lineLimit(1)
+                .layoutPriority(1)
+            Text(handle)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .truncationMode(.tail)
+            Text("·")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .layoutPriority(1)
+            Text(RelativeTime.short(tweet.timestamp))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .layoutPriority(1)
+            Spacer(minLength: 4)
+            if let channel = tweet.channelId, !channel.isEmpty {
+                Text("#\(channel)")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(Theme.brand)
+                    .lineLimit(1)
+            }
+        }
     }
 
     private var actionRow: some View {
         HStack {
             actionButton("bubble.left", count: tweet.replyCount) {}
             Spacer()
-            actionButton(retweeted ? "arrow.2.squarepath" : "arrow.2.squarepath", active: retweeted, tint: Theme.success) {
+            actionButton(
+                retweeted ? "arrow.2.squarepath" : "arrow.2.squarepath",
+                active: retweeted,
+                tint: Theme.accentEmerald
+            ) {
                 Task { await toggleRetweet() }
             }
             Spacer()
-            actionButton(liked ? "heart.fill" : "heart", active: liked, tint: Theme.error) {
+            actionButton(
+                liked ? "heart.fill" : "heart",
+                active: liked,
+                tint: Theme.accentRose
+            ) {
                 Task { await toggleLike() }
             }
             Spacer()
-            actionButton(bookmarked ? "bookmark.fill" : "bookmark", active: bookmarked, tint: Theme.primary) {
+            actionButton(
+                bookmarked ? "bookmark.fill" : "bookmark",
+                active: bookmarked,
+                tint: Theme.brand
+            ) {
                 Task { await toggleBookmark() }
             }
         }
