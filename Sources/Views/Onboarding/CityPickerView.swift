@@ -31,7 +31,7 @@ struct CityPickerView: View {
             continueButton
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Theme.pageBackground)
+        .background(Theme.onboardingBackground.ignoresSafeArea())
         .task { await loadCities() }
     }
 
@@ -58,10 +58,12 @@ struct CityPickerView: View {
                 .autocorrectionDisabled()
         }
         .padding(12)
-        .background(
+        .background(Theme.surface)
+        .overlay(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Theme.surface)
+                .strokeBorder(Theme.cardStroke.opacity(0.4), lineWidth: 0.5)
         )
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         .padding(.horizontal, 20)
         .padding(.bottom, 12)
     }
@@ -94,7 +96,7 @@ struct CityPickerView: View {
                 .padding(.vertical, 16)
         }
         .buttonStyle(.borderedProminent)
-        .tint(.primary)
+        .tint(Theme.brand)
         .disabled(selectedId == nil || loading)
         .padding(20)
     }
@@ -128,14 +130,19 @@ struct CityPickerView: View {
                 }
             }
             .padding(14)
+            .frame(maxWidth: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: Theme.cardCornerRadius, style: .continuous)
-                    .fill(selected ? Theme.primary.opacity(0.08) : Theme.surface)
+                    .fill(selected ? Theme.brand.opacity(0.08) : Theme.surface)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: Theme.cardCornerRadius, style: .continuous)
-                    .strokeBorder(selected ? Theme.primary : Color.clear, lineWidth: 2)
+                    .strokeBorder(
+                        selected ? Theme.brand.opacity(0.6) : Theme.cardStroke.opacity(0.4),
+                        lineWidth: selected ? 1.5 : 0.5
+                    )
             )
+            .shadow(color: Color.black.opacity(selected ? 0.06 : 0.04), radius: 8, x: 0, y: 2)
         }
         .buttonStyle(.plain)
     }
