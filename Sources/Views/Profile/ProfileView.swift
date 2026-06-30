@@ -16,29 +16,64 @@ struct ProfileView: View {
     @State private var showSettings = false
     @State private var copiedWallet = false
 
-    enum ProfileTab: String, CaseIterable {
+    enum ProfileTab: String, CaseIterable, Identifiable {
         case posts = "Posts"
         case media = "Media"
         case stats = "Stats"
+        var id: String { rawValue }
     }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                if loading, user == nil {
-                    ProgressView()
-                        .padding(.vertical, 48)
-                } else {
-                    heroCard
-                    tabPicker
-                    tabContent
+        Group {
+            if app.myTID != nil {
+                List {
+                    profileHeader
+                        .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+
+                    quickActions
+                        .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color(.systemBackground))
+
+                    tabBar
+                        .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color(.systemBackground))
+
+                    switch activeTab {
+                    case .posts:
+                        postsSection
+                    case .media:
+                        mediaSection
+                    case .stats:
+                        statsSection
+                    }
                 }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(Theme.pageBackground)
+            } else {
+                EmptyStateView(
+                    symbol: "person.crop.circle",
+                    title: "No identity",
+                    message: "Connect your TID to see your profile."
+                )
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 12)
-            .padding(.bottom, 24)
         }
-        .background(Theme.pageBackground)
+        .navigationTitle("Profile")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showSettings = true
+                } label: {
+                    Image(systemName: "gearshape")
+                }
+                .accessibilityLabel("Settings")
+            }
+        }
         .refreshable { await refresh() }
         .task { await refresh() }
         .sheet(isPresented: $showEditor) {
@@ -67,6 +102,17 @@ struct ProfileView: View {
                 .presentationDetents([.medium, .large])
             }
         }
+        .sheet(isPresented: $showSettings) {
+            NavigationStack {
+                SettingsView()
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") { showSettings = false }
+                        }
+                    }
+            }
+            .environmentObject(app)
+        }
         .sheet(item: $followListMode) { mode in
             NavigationStack {
                 if let tid = app.myTID {
@@ -88,202 +134,424 @@ struct ProfileView: View {
             ActivityView()
                 .environmentObject(app)
         }
-        .navigationDestination(isPresented: $showSettings) {
-            SettingsView()
-                .environmentObject(app)
+    }
+
+    // MARK: - Header
+
+    @ViewBuilder
+    private var profileHeader: some View {
+        if let tid = app.myTID {
+            let seed = user?.username ?? tid
+            VStack(alignment: .leading, spacing: 0) {
+                banner(seed: seed)
+
+                HStack(alignment: .bottom) {
+                    UserAvatarView(
+                        tid: tid,
+                        initial: user?.initial ?? "T",
+                        size: 84,
+                        seed: seed
+                    )
+                    .overlay(Circle().strokeBorder(Color(.systemBackground), lineWidth: 4))
+                    .offset(y: -42)
+                    .padding(.leading, 16)
+                    .padding(.bottom, -42)
+
+                    Spacer()
+
+                    Button {
+                        showEditor = true
+                    } label: {
+                        Text("Edit profile")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(.primary)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(
+                                Capsule().strokeBorder(Theme.cardStroke, lineWidth: 1)
+                            )
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.trailing, 16)
+                    .padding(.top, 12)
+                }
+
+                VStack(alignment: .leading, spacing: 14) {
+                    identityBlock(tid: tid)
+
+                    if let bio = user?.profile?.bio, !bio.isEmpty {
+                        Text(bio)
+                            .font(.subheadline)
+                            .foregroundStyle(.primary)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .lineSpacing(2)
+                    }
+
+                    metaRow
+
+                    if let registeredAt = user?.registeredAt {
+                        HStack(spacing: 6) {
+                            Image(systemName: "calendar")
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(.secondary)
+                            Text("Joined \(joinedDateLabel(registeredAt))")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+
+                    statsRow
+                        .padding(.top, 2)
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
+                .padding(.bottom, 16)
+            }
         }
     }
 
-    private var heroCard: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack(alignment: .top, spacing: 16) {
-                if let tid = app.myTID {
-                    UserAvatarView(tid: tid, initial: user?.initial ?? "T", size: 88, seed: user?.username ?? tid)
+    private func banner(seed: String) -> some View {
+        ZStack(alignment: .bottomTrailing) {
+            if let raw = user?.profile?.coverUrl,
+               !raw.isEmpty,
+               let coverURL = app.api.resolveMediaURL(raw) {
+                CachedAsyncImage(url: coverURL) { image in
+                    image.resizable().scaledToFill()
+                } placeholder: {
+                    Theme.avatarGradient(seed: "banner-\(seed)")
                 }
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(user?.displayName ?? "Profile")
-                        .font(.title2.bold())
-                    Text(handleText)
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.primary)
-                    statsRow
+                .frame(height: 140)
+                .clipped()
+            } else {
+                Theme.avatarGradient(seed: "banner-\(seed)")
+                    .frame(height: 140)
+            }
+
+            Button {
+                showEditor = true
+            } label: {
+                Image(systemName: "camera.fill")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .padding(8)
+                    .background(Circle().fill(Color.black.opacity(0.5)))
+            }
+            .buttonStyle(.plain)
+            .padding(10)
+            .accessibilityLabel("Edit cover photo")
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    private func identityBlock(tid: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                Text(user?.displayName ?? "Profile")
+                    .font(.title2.weight(.bold))
+                    .lineLimit(1)
+                    .layoutPriority(1)
+                if let wallet = app.walletAddress, !wallet.isEmpty {
+                    walletChip(wallet)
                 }
                 Spacer(minLength: 0)
             }
+            Text(handleText)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+    }
 
-            if let bio = user?.profile?.bio, !bio.isEmpty {
-                Text(bio)
-                    .font(.body)
-                    .foregroundStyle(Theme.textSecondary)
+    private func walletChip(_ address: String) -> some View {
+        Button {
+            UIPasteboard.general.string = address
+            copiedWallet = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { copiedWallet = false }
+        } label: {
+            HStack(spacing: 5) {
+                Image(systemName: "wallet.pass")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                Image(systemName: copiedWallet ? "checkmark" : "doc.on.doc")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(copiedWallet ? Theme.accentEmerald : Theme.brand)
             }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 5)
+            .background(Capsule().fill(Theme.chipBackground))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(copiedWallet ? "Copied wallet address" : "Copy wallet address")
+    }
 
-            HStack(spacing: 8) {
-                if let location = user?.profile?.location, !location.isEmpty {
-                    Label(location, systemImage: "mappin")
-                        .font(.caption)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(Color(.tertiarySystemFill), in: Capsule())
-                }
-                if let wallet = app.walletAddress, !wallet.isEmpty {
-                    Button {
-                        UIPasteboard.general.string = wallet
-                        copiedWallet = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { copiedWallet = false }
-                    } label: {
-                        Label(copiedWallet ? "Copied" : shortAddress(wallet), systemImage: copiedWallet ? "checkmark" : "wallet.pass")
-                            .font(.caption)
-                            .monospacedDigit()
-                    }
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
-                    .background(Color.orange.opacity(0.15), in: Capsule())
-                }
-            }
-
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
-                Button("Edit Profile") { showEditor = true }
-                    .buttonStyle(.borderedProminent)
-                    .tint(Theme.brand)
-                    .controlSize(.small)
-                Button("Wallet") { showWallet = true }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
-                Button("Activity") { showActivity = true }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
-                Button("Settings") { showSettings = true }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
+    @ViewBuilder
+    private var metaRow: some View {
+        if let location = user?.profile?.location, !location.isEmpty {
+            HStack(spacing: 6) {
+                Image(systemName: "mappin.and.ellipse")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.accentTeal)
+                Text(location)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                Spacer(minLength: 0)
             }
         }
-        .tribeCard()
     }
 
     private var statsRow: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], alignment: .leading, spacing: 12) {
-            statButton(value: user?.followersCount ?? 0, label: "Followers") {
-                followListMode = .followers
-            }
-            statButton(value: user?.followingCount ?? 0, label: "Following") {
-                followListMode = .following
-            }
-            statButton(value: tweets.count, label: "Posts") {}
+        HStack(spacing: 22) {
             Button {
-                showKarma = true
+                followListMode = .following
             } label: {
-                statColumn(value: karma?.total ?? 0, label: "Karma")
+                inlineStat(
+                    value: FormatCount.compact(user?.followingCount ?? 0),
+                    label: "Following"
+                )
             }
             .buttonStyle(.plain)
-        }
-    }
 
-    private func statButton(value: Int, label: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            statColumn(value: value, label: label)
-        }
-        .buttonStyle(.plain)
-    }
+            Button {
+                followListMode = .followers
+            } label: {
+                inlineStat(
+                    value: FormatCount.compact(user?.followersCount ?? 0),
+                    label: "Followers"
+                )
+            }
+            .buttonStyle(.plain)
 
-    private func statColumn(value: Int, label: String) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(FormatCount.compact(value))
-                .font(.headline)
-            Text(label)
-                .font(.caption)
-                .foregroundStyle(Theme.textSecondary)
-        }
-    }
-
-    private var tabPicker: some View {
-        HStack(spacing: 0) {
-            ForEach(ProfileTab.allCases, id: \.self) { tab in
+            if let karma {
                 Button {
-                    withAnimation(.easeInOut(duration: 0.2)) { activeTab = tab }
+                    showKarma = true
                 } label: {
-                    VStack(spacing: 8) {
-                        Text(tab.rawValue)
-                            .font(.subheadline.weight(activeTab == tab ? .bold : .medium))
-                            .foregroundStyle(activeTab == tab ? Theme.textPrimary : Theme.textSecondary)
-                        Capsule()
-                            .fill(activeTab == tab ? Theme.brand : Color.clear)
-                            .frame(height: 3)
-                    }
-                    .frame(maxWidth: .infinity)
+                    inlineStat(
+                        value: FormatCount.compact(karma.total),
+                        label: "Karma · L\(karma.level)",
+                        valueTint: Theme.accentAmber
+                    )
                 }
                 .buttonStyle(.plain)
             }
         }
     }
 
+    private func inlineStat(value: String, label: String, valueTint: Color = .primary) -> some View {
+        HStack(spacing: 4) {
+            Text(value)
+                .font(.subheadline.weight(.bold))
+                .foregroundStyle(valueTint)
+                .monospacedDigit()
+            Text(label)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+        }
+    }
+
+    // MARK: - Quick actions
+
+    private var quickActions: some View {
+        let columns = Array(repeating: GridItem(.flexible(), spacing: 10), count: 3)
+        return LazyVGrid(columns: columns, spacing: 10) {
+            Button { showWallet = true } label: {
+                quickActionTile(title: "Wallet", symbol: "wallet.pass.fill", tint: Theme.accentAmber)
+            }
+            .buttonStyle(.plain)
+
+            Button { showActivity = true } label: {
+                quickActionTile(title: "Activity", symbol: "clock.arrow.circlepath", tint: Theme.accentEmerald)
+            }
+            .buttonStyle(.plain)
+
+            Button { showKarma = true } label: {
+                quickActionTile(title: "Karma", symbol: "star.fill", tint: Theme.brand)
+            }
+            .buttonStyle(.plain)
+            .disabled(karma == nil)
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 4)
+        .padding(.bottom, 12)
+    }
+
+    private func quickActionTile(title: String, symbol: String, tint: Color) -> some View {
+        VStack(spacing: 3) {
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [tint, tint.opacity(0.82)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                Image(systemName: symbol)
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(.white)
+            }
+            .frame(width: 22, height: 22)
+
+            Text(title)
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundStyle(.primary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 6)
+        .background(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(Color(.systemBackground))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .strokeBorder(Theme.cardStroke.opacity(0.3), lineWidth: 0.5)
+        )
+        .contentShape(Rectangle())
+    }
+
+    // MARK: - Tab bar
+
+    private var tabBar: some View {
+        HStack(spacing: 0) {
+            ForEach(ProfileTab.allCases) { tab in
+                Button {
+                    withAnimation(.easeInOut(duration: 0.15)) { activeTab = tab }
+                } label: {
+                    VStack(spacing: 8) {
+                        Text(tab.rawValue)
+                            .font(.subheadline.weight(activeTab == tab ? .bold : .medium))
+                            .foregroundStyle(activeTab == tab ? .primary : .secondary)
+                        Rectangle()
+                            .fill(activeTab == tab ? Theme.brand : Color.clear)
+                            .frame(height: 3)
+                            .clipShape(Capsule())
+                    }
+                    .frame(maxWidth: .infinity)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.top, 8)
+        .background(Color(.systemBackground))
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(Theme.cardStroke.opacity(0.4))
+                .frame(height: 0.5)
+        }
+    }
+
+    // MARK: - Sections
+
     @ViewBuilder
-    private var tabContent: some View {
-        switch activeTab {
-        case .posts:
-            postsTab
-        case .media:
-            mediaTab
-        case .stats:
-            statsTab
-        }
-    }
-
-    private var postsTab: some View {
-        Group {
-            if tweets.isEmpty {
-                emptyTab(icon: "bubble.left", title: "No posts yet")
-            } else {
-                LazyVStack(spacing: 0) {
-                    ForEach(tweets) { tweet in
-                        TweetCardView(tweet: tweet)
-                            .environmentObject(app)
-                            .environmentObject(app.interactions)
-                    }
-                }
+    private var postsSection: some View {
+        if loading, tweets.isEmpty {
+            ForEach(0..<3, id: \.self) { _ in
+                profileSkeletonRow
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparator(.hidden)
+            }
+        } else if tweets.isEmpty {
+            emptyTabLabel("No posts yet.")
+                .listRowSeparator(.hidden)
+        } else {
+            ForEach(tweets) { tweet in
+                TweetCardView(tweet: tweet)
+                    .environmentObject(app)
+                    .environmentObject(app.interactions)
+                    .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Theme.pageBackground)
             }
         }
     }
 
-    private var mediaTab: some View {
+    @ViewBuilder
+    private var mediaSection: some View {
         let mediaTweets = tweets.filter { $0.firstMediaURL(resolver: app.api.resolveMediaURL) != nil }
-        return Group {
-            if mediaTweets.isEmpty {
-                emptyTab(icon: "photo", title: "No media yet")
-            } else {
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 6) {
-                    ForEach(mediaTweets) { tweet in
-                        if let url = tweet.firstMediaURL(resolver: app.api.resolveMediaURL) {
-                            CachedAsyncImage(url: url) { image in
-                                image.resizable().scaledToFill()
-                            } placeholder: {
-                                Color(white: 0.92)
-                            }
-                            .aspectRatio(1, contentMode: .fill)
-                            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                        }
-                    }
-                }
-            }
+        if loading, tweets.isEmpty {
+            mediaGridSkeleton
+                .listRowInsets(EdgeInsets())
+                .listRowSeparator(.hidden)
+        } else if mediaTweets.isEmpty {
+            emptyTabLabel("No media yet.")
+                .listRowSeparator(.hidden)
+        } else {
+            mediaGrid(mediaTweets)
+                .listRowInsets(EdgeInsets())
+                .listRowSeparator(.hidden)
         }
     }
 
-    private var statsTab: some View {
-        VStack(alignment: .leading, spacing: 12) {
+    private func mediaGrid(_ mediaTweets: [Tweet]) -> some View {
+        let columns = Array(repeating: GridItem(.flexible(), spacing: 2), count: 3)
+        return LazyVGrid(columns: columns, spacing: 2) {
+            ForEach(mediaTweets) { tweet in
+                if let url = tweet.firstMediaURL(resolver: app.api.resolveMediaURL) {
+                    CachedAsyncImage(url: url) { image in
+                        image.resizable().scaledToFill()
+                    } placeholder: {
+                        Color(.tertiarySystemFill)
+                    }
+                    .aspectRatio(1, contentMode: .fill)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 124)
+                    .clipped()
+                }
+            }
+        }
+        .padding(.top, 2)
+    }
+
+    private var mediaGridSkeleton: some View {
+        let columns = Array(repeating: GridItem(.flexible(), spacing: 2), count: 3)
+        return LazyVGrid(columns: columns, spacing: 2) {
+            ForEach(0..<6, id: \.self) { _ in
+                Color(.tertiarySystemFill)
+                    .frame(height: 124)
+            }
+        }
+        .padding(.top, 2)
+        .redacted(reason: .placeholder)
+    }
+
+    @ViewBuilder
+    private var statsSection: some View {
+        VStack(alignment: .leading, spacing: 0) {
             if let karma {
                 statLine("Karma level", value: "L\(karma.level)")
+                profileDivider
                 statLine("Total karma", value: "\(karma.total)")
+                profileDivider
                 statLine("Tweets", value: "\(karma.breakdown.tweets)")
+                profileDivider
                 statLine("Reactions received", value: "\(karma.breakdown.reactionsReceived)")
+                profileDivider
                 statLine("Followers (karma)", value: "\(karma.breakdown.followers)")
+                profileDivider
             } else {
                 Text("Karma loads from the hub karma-registry.")
                     .font(.footnote)
                     .foregroundStyle(Theme.textSecondary)
+                    .padding(.vertical, 12)
+                profileDivider
             }
             statLine("Joined tribes", value: "\(app.joinedChannels.count)")
+            profileDivider
             statLine("Current city", value: app.currentCity?.displayName ?? "—")
         }
-        .tribeCard()
+        .padding(.horizontal, 16)
+        .padding(.vertical, 4)
+        .listRowInsets(EdgeInsets())
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color(.systemBackground))
+    }
+
+    private var profileDivider: some View {
+        Rectangle()
+            .fill(Theme.cardStroke.opacity(0.4))
+            .frame(height: 0.5)
     }
 
     private func statLine(_ label: String, value: String) -> some View {
@@ -294,30 +562,49 @@ struct ProfileView: View {
             Spacer()
             Text(value)
                 .font(.subheadline.weight(.bold))
+                .monospacedDigit()
         }
+        .padding(.vertical, 12)
     }
 
-    private func emptyTab(icon: String, title: String) -> some View {
-        VStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.largeTitle)
-                .foregroundStyle(Theme.textSecondary.opacity(0.4))
-            Text(title)
-                .font(.headline)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 48)
+    private func emptyTabLabel(_ text: String) -> some View {
+        Text(text)
+            .font(.subheadline)
+            .foregroundStyle(.tertiary)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding(.vertical, 32)
     }
+
+    private var profileSkeletonRow: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Circle().fill(Color(.tertiarySystemFill)).frame(width: 44, height: 44)
+            VStack(alignment: .leading, spacing: 8) {
+                RoundedRectangle(cornerRadius: 6).fill(Color(.tertiarySystemFill)).frame(width: 140, height: 11)
+                RoundedRectangle(cornerRadius: 6).fill(Color(.tertiarySystemFill)).frame(maxWidth: .infinity).frame(height: 11)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(Theme.cardStroke.opacity(0.4))
+                .frame(height: 0.5)
+        }
+        .redacted(reason: .placeholder)
+    }
+
+    // MARK: - Helpers
 
     private var handleText: String {
         if let u = user?.username ?? app.myUsername { return "@\(u).tribe" }
-        if let tid = app.myTID { return "#\(tid)" }
+        if let tid = app.myTID { return "@tid\(tid)" }
         return ""
     }
 
-    private func shortAddress(_ address: String) -> String {
-        guard address.count > 10 else { return address }
-        return "\(address.prefix(4))…\(address.suffix(4))"
+    private func joinedDateLabel(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM yyyy"
+        return formatter.string(from: date)
     }
 
     private func refresh() async {
@@ -336,4 +623,3 @@ struct ProfileView: View {
         await app.refreshIdentityMetadata()
     }
 }
-
