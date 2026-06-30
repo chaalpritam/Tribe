@@ -23,7 +23,7 @@ struct KarmaSheet: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 24)
-                .background(Color.white)
+                .background(Theme.surface)
                 .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
 
                 breakdownCard
@@ -45,7 +45,7 @@ struct KarmaSheet: View {
             divider
             row("Tasks done", count: karma.breakdown.tasksCompleted, weight: karma.weights.taskCompleted, icon: "checkmark.seal.fill", tint: Theme.success)
         }
-        .background(Color.white)
+        .background(Theme.surface)
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
     }
 

@@ -87,14 +87,14 @@ struct ActivityView: View {
                         .font(.caption.weight(.bold))
                         .padding(.horizontal, 12)
                         .padding(.vertical, 8)
-                        .background(filter == f ? Color.white : Color.clear)
+                        .background(filter == f ? Theme.surface : Color.clear)
                         .clipShape(Capsule())
                 }
                 .buttonStyle(.plain)
             }
         }
         .padding(4)
-        .background(Color(white: 0.94))
+        .background(Theme.chipBackground)
         .clipShape(Capsule())
     }
 
@@ -124,7 +124,7 @@ struct ActivityView: View {
             }
         }
         .padding(14)
-        .background(Color.white)
+        .background(Theme.surface)
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 

@@ -90,7 +90,7 @@ struct WalletView: View {
             }
         }
         .padding(16)
-        .background(Color.white)
+        .background(Theme.surface)
         .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
     }
 
@@ -101,7 +101,7 @@ struct WalletView: View {
         .font(.subheadline.weight(.bold))
         .frame(maxWidth: .infinity)
         .padding(.vertical, 14)
-        .background(Color.white)
+        .background(Theme.surface)
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 

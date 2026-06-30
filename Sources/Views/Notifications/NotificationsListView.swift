@@ -93,11 +93,11 @@ struct NotificationsListView: View {
             Spacer(minLength: 0)
         }
         .padding(14)
-        .background(Color.white)
+        .background(Theme.surface)
         .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .strokeBorder(Color.black.opacity(0.06), lineWidth: 1)
+                .strokeBorder(Theme.cardStroke.opacity(0.4), lineWidth: 0.5)
         )
     }
 
