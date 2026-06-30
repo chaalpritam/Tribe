@@ -37,7 +37,7 @@ struct HomeFeedView: View {
             }
         }
         .background(Color(.systemGroupedBackground))
-        .task(id: channelId ?? app.currentCity?.id) {
+        .task(id: channelId ?? app.activeChannel?.id) {
             store.feedChannelId = channelId
             store.attach(app: app)
             await store.refresh()
@@ -51,7 +51,7 @@ struct HomeFeedView: View {
         if let channelId {
             return "Be the first to post in #\(channelId)."
         }
-        return "Be the first to share something in \(app.currentCity?.displayName ?? "your city")!"
+        return "Be the first to share something in \(app.activeChannel?.displayName ?? "this channel")!"
     }
 }
 

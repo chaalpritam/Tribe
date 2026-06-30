@@ -8,7 +8,7 @@ final class HomeFeedStore: ObservableObject {
     @Published private(set) var canLoadMore = false
     @Published var errorMessage: String?
 
-    /// When set, loads a single channel feed instead of the current city home mix.
+    /// When set, loads a single channel feed instead of the active channel home mix.
     var feedChannelId: String?
 
     private var nextCursor: String?
@@ -39,7 +39,7 @@ final class HomeFeedStore: ObservableObject {
         if let channelId = feedChannelId {
             await refresh(channelId: channelId)
         } else {
-            await refresh(cityScope: app?.currentCity?.id)
+            await refresh(activeScope: app?.activeChannel?.id)
         }
     }
 
@@ -48,7 +48,7 @@ final class HomeFeedStore: ObservableObject {
               let cursor = nextCursor,
               !isLoadingMore,
               !isLoading else { return }
-        guard let app, let cityId = app.currentCity?.id else { return }
+        guard let app, let scopeId = app.activeChannel?.id else { return }
 
         isLoadingMore = true
         defer { isLoadingMore = false }
@@ -56,7 +56,7 @@ final class HomeFeedStore: ObservableObject {
         do {
             let page = try await app.api.fetchFeedPage(cursor: cursor)
             let fresh = page.tweets.filter {
-                ChannelScope.matches(cityId: cityId, channelId: $0.channelId)
+                ChannelScope.matchesExact(scopeId: scopeId, channelId: $0.channelId)
             }
             let existingHashes = Set(items.compactMap { item -> String? in
                 if case .tweet(let t) = item { return t.hash }
@@ -93,7 +93,7 @@ final class HomeFeedStore: ObservableObject {
             let tasks = try await tasksTask
             let funds = try await fundsTask
 
-            let matches = { (id: String?) in id == channelId }
+            let matches = { (id: String?) in ChannelScope.matchesExact(scopeId: channelId, channelId: id) }
             let tweetItems = tweets.map { FeedItem.tweet($0) }
             cachedOther = FeedMixer.mergeOther(
                 events: events.filter { matches($0.channelId) },
@@ -108,10 +108,10 @@ final class HomeFeedStore: ObservableObject {
         }
     }
 
-    private func refresh(cityScope cityId: String?) async {
-        guard let app, let cityId else {
+    private func refresh(activeScope scopeId: String?) async {
+        guard let app, let scopeId else {
             items = []
-            errorMessage = "No city selected."
+            errorMessage = "No channel selected."
             canLoadMore = false
             return
         }
@@ -119,29 +119,33 @@ final class HomeFeedStore: ObservableObject {
         errorMessage = nil
         defer { isLoading = false }
         do {
-            async let pageTask = app.api.fetchFeedPage(cursor: nil)
+            async let tweetsTask = app.api.fetchChannelFeed(scopeId)
             async let eventsTask = app.api.fetchEvents(upcomingOnly: true)
             async let pollsTask = app.api.fetchPolls()
             async let tasksTask = app.api.fetchTasks()
             async let fundsTask = app.api.fetchCrowdfunds()
 
-            let page = try await pageTask
+            let tweets = try await tweetsTask
             let events = try await eventsTask
             let polls = try await pollsTask
             let tasks = try await tasksTask
             let funds = try await fundsTask
 
-            let tweetItems = page.tweets
-                .filter { ChannelScope.matches(cityId: cityId, channelId: $0.channelId) }
-                .map { FeedItem.tweet($0) }
+            let matches = { (id: String?) in ChannelScope.matchesExact(scopeId: scopeId, channelId: id) }
+            let tweetItems = tweets.map { FeedItem.tweet($0) }
             cachedOther = FeedMixer.mergeOther(
-                events: events.filter { ChannelScope.matches(cityId: cityId, channelId: $0.channelId) },
-                polls: polls.filter { ChannelScope.matches(cityId: cityId, channelId: $0.channelId) },
-                tasks: tasks.filter { ChannelScope.matches(cityId: cityId, channelId: $0.channelId) },
-                crowdfunds: funds.filter { ChannelScope.matches(cityId: cityId, channelId: $0.channelId) }
+                events: events.filter { matches($0.channelId) },
+                polls: polls.filter { matches($0.channelId) },
+                tasks: tasks.filter { matches($0.channelId) },
+                crowdfunds: funds.filter { matches($0.channelId) }
             )
+
+            // Walk the global feed cursor for pagination, but only keep rows
+            // tagged to this channel when loading more.
+            let page = try await app.api.fetchFeedPage(cursor: nil)
             nextCursor = page.cursor
             canLoadMore = page.cursor != nil
+
             items = FeedMixer.interleave(tweets: tweetItems, other: cachedOther)
             await app.interactions.ensureLoaded()
         } catch {
@@ -156,13 +160,9 @@ final class HomeFeedStore: ObservableObject {
         guard let hash = event.data["hash"] as? String else { return }
         do {
             let tweet = try await app.api.fetchTweet(hash: hash)
-            if let channelId = feedChannelId {
-                guard tweet.channelId == channelId || tweet.channelId == nil else { return }
-            } else if let cityId = app.currentCity?.id {
-                guard ChannelScope.matches(cityId: cityId, channelId: tweet.channelId) else { return }
-            } else {
-                return
-            }
+            let scopeId = feedChannelId ?? app.activeChannel?.id
+            guard let scopeId else { return }
+            guard ChannelScope.matchesExact(scopeId: scopeId, channelId: tweet.channelId) else { return }
             prependTweet(tweet)
         } catch {
             await refresh()
