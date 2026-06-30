@@ -460,9 +460,9 @@ struct ProfileView: View {
                 TweetCardView(tweet: tweet)
                     .environmentObject(app)
                     .environmentObject(app.interactions)
-                    .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                    .listRowInsets(EdgeInsets())
                     .listRowSeparator(.hidden)
-                    .listRowBackground(Theme.pageBackground)
+                    .listRowBackground(Color(.systemBackground))
             }
         }
     }
