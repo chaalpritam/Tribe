@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Feed cards driven by a `HomeFeedStore` (used inside `HomeFeedView` and tribe detail).
+/// Feed rows driven by a `HomeFeedStore` (used inside `HomeFeedView` and tribe detail).
 struct HomeFeedItemsView: View {
     @EnvironmentObject private var app: AppState
     @EnvironmentObject private var interactions: InteractionCache
@@ -10,13 +10,7 @@ struct HomeFeedItemsView: View {
 
     var body: some View {
         Group {
-            if store.isLoading, store.items.isEmpty {
-                ProgressView()
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 48)
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Theme.pageBackground)
-            } else if let error = store.errorMessage, store.items.isEmpty {
+            if let error = store.errorMessage, store.items.isEmpty {
                 EmptyStateView(
                     symbol: "wifi.exclamationmark",
                     title: "Couldn't load feed",
@@ -25,7 +19,7 @@ struct HomeFeedItemsView: View {
                     onRetry: { Task { await store.refresh() } }
                 )
                 .listRowSeparator(.hidden)
-                .listRowBackground(Theme.pageBackground)
+                .listRowBackground(Color.clear)
             } else if store.items.isEmpty {
                 EmptyStateView(
                     symbol: "sparkles",
@@ -33,13 +27,13 @@ struct HomeFeedItemsView: View {
                     message: emptySubtitle
                 )
                 .listRowSeparator(.hidden)
-                .listRowBackground(Theme.pageBackground)
+                .listRowBackground(Color.clear)
             } else {
                 if let error = store.errorMessage {
                     inlineErrorBanner(error)
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                        .listRowBackground(Theme.pageBackground)
+                        .listRowBackground(Color(.systemGroupedBackground))
                 }
                 ForEach(Array(store.items.enumerated()), id: \.element.id) { index, item in
                     feedRow(item)
@@ -50,7 +44,7 @@ struct HomeFeedItemsView: View {
                 }
                 loadMoreFooter
                     .listRowSeparator(.hidden)
-                    .listRowBackground(Theme.pageBackground)
+                    .listRowBackground(Color.clear)
             }
         }
     }
@@ -58,21 +52,24 @@ struct HomeFeedItemsView: View {
     @ViewBuilder
     private var loadMoreFooter: some View {
         if store.isLoadingMore {
-            ProgressView()
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
+            HStack {
+                Spacer()
+                ProgressView()
+                Spacer()
+            }
+            .padding(.vertical, 16)
         } else if store.canLoadMore {
             Text("Scroll for more")
                 .font(.caption)
-                .foregroundStyle(Theme.textSecondary)
-                .frame(maxWidth: .infinity)
+                .foregroundStyle(.tertiary)
+                .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.vertical, 12)
         } else if !store.items.isEmpty, store.feedChannelId == nil {
             Text("End of feed")
                 .font(.caption)
-                .foregroundStyle(Theme.textSecondary)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
+                .foregroundStyle(.tertiary)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.vertical, 24)
         }
     }
 
@@ -97,32 +94,32 @@ struct HomeFeedItemsView: View {
             TweetCardView(tweet: tweet)
                 .environmentObject(app)
                 .environmentObject(interactions)
-                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                .listRowInsets(EdgeInsets())
                 .listRowSeparator(.hidden)
-                .listRowBackground(Theme.pageBackground)
+                .listRowBackground(Color(.systemBackground))
         case .event(let event):
             EventCardView(event: event)
                 .environmentObject(app)
-                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                .listRowSeparator(.hidden)
-                .listRowBackground(Theme.pageBackground)
+                .feedListRow()
         case .poll(let poll):
             PollCardView(poll: poll)
                 .environmentObject(app)
-                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                .listRowSeparator(.hidden)
-                .listRowBackground(Theme.pageBackground)
+                .feedListRow()
         case .task(let task):
             TaskCardView(task: task)
                 .environmentObject(app)
-                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                .listRowSeparator(.hidden)
-                .listRowBackground(Theme.pageBackground)
+                .feedListRow()
         case .crowdfund(let crowdfund):
             CrowdfundCardView(crowdfund: crowdfund)
-                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                .listRowSeparator(.hidden)
-                .listRowBackground(Theme.pageBackground)
+                .feedListRow()
         }
+    }
+}
+
+private extension View {
+    func feedListRow() -> some View {
+        listRowInsets(EdgeInsets())
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color(.systemBackground))
     }
 }
