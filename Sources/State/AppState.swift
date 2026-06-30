@@ -45,6 +45,12 @@ final class AppState: ObservableObject {
         didSet { persistCurrentCity(); recomputePhase() }
     }
 
+    /// Channel whose content Home, Explore, and Profile are scoped to.
+    /// Defaults to the selected city; can be set when browsing a tribe.
+    @Published var activeChannel: Channel? {
+        didSet { persistActiveChannel() }
+    }
+
     @Published var joinedChannels: [Channel] = [] {
         didSet { persistJoinedChannelIds() }
     }
@@ -131,7 +137,23 @@ final class AppState: ObservableObject {
     /// User picked a city — persist and enter the main app shell.
     func selectCity(_ channel: Channel) {
         currentCity = channel
+        activeChannel = channel
         recomputePhase()
+    }
+
+    /// Scope Home / Explore / Profile to a specific channel (e.g. a tribe).
+    func setActiveChannel(_ channel: Channel) {
+        activeChannel = channel
+    }
+
+    /// Return browsing context to the selected city channel.
+    func resetActiveChannelToCity() {
+        activeChannel = currentCity
+    }
+
+    var isBrowsingSubChannel: Bool {
+        guard let city = currentCity, let active = activeChannel else { return false }
+        return city.id != active.id
     }
 
     /// Animate a city change from the in-app switcher (header overlay).
@@ -141,6 +163,7 @@ final class AppState: ObservableObject {
         defer { isSwitchingCity = false }
         try? await Task.sleep(nanoseconds: 650_000_000)
         currentCity = channel
+        activeChannel = channel
         await interactions.refresh()
     }
 
@@ -171,6 +194,7 @@ final class AppState: ObservableObject {
         myUsername = nil
         walletAddress = nil
         currentCity = nil
+        activeChannel = nil
         joinedChannels = []
         UserDefaults.standard.removeObject(forKey: Keys.currentCityId)
         UserDefaults.standard.removeObject(forKey: Keys.joinedChannelIds)
@@ -211,6 +235,12 @@ final class AppState: ObservableObject {
             if let cityId = storedCityId {
                 currentCity = cityChannels.first { $0.id == cityId }
                     ?? allChannels.first { $0.id == cityId && $0.isCity }
+            }
+            if let storedActiveId = UserDefaults.standard.string(forKey: Keys.activeChannelId) {
+                activeChannel = allChannels.first { $0.id == storedActiveId }
+            }
+            if activeChannel == nil {
+                activeChannel = currentCity
             }
             if !storedJoinedIds.isEmpty {
                 let joined = allChannels.filter { storedJoinedIds.contains($0.id) }
@@ -300,6 +330,14 @@ final class AppState: ObservableObject {
         }
     }
 
+    private func persistActiveChannel() {
+        if let id = activeChannel?.id {
+            UserDefaults.standard.set(id, forKey: Keys.activeChannelId)
+        } else {
+            UserDefaults.standard.removeObject(forKey: Keys.activeChannelId)
+        }
+    }
+
     private func persistJoinedChannelIds() {
         let ids = joinedChannels.map(\.id)
         UserDefaults.standard.set(ids, forKey: Keys.joinedChannelIds)
@@ -331,6 +369,7 @@ final class AppState: ObservableObject {
         static let erURL = "tribe.erBaseURL"
         static let tid = "tribe.tid"
         static let currentCityId = "tribe.currentCityId"
+        static let activeChannelId = "tribe.activeChannelId"
         static let joinedChannelIds = "tribe.joinedChannelIds"
         static func notificationsReadAt(_ tid: String) -> String {
             "tribe.notificationsReadAt.\(tid)"
