@@ -206,6 +206,10 @@ struct ExploreView: View {
             UserProfileView(tid: route.tid)
                 .environmentObject(app)
         }
+        .navigationDestination(for: ExploreItemRoute.self) { route in
+            ExploreItemDetailView(route: route)
+                .environmentObject(app)
+        }
     }
 
     // MARK: - Header
@@ -378,8 +382,10 @@ struct ExploreView: View {
             ) {
                 VStack(spacing: 8) {
                     ForEach(filteredEvents.prefix(3)) { event in
-                        ExploreEventPreview(event: event)
-                            .padding(.horizontal, 16)
+                        ExplorePreviewLink(route: .event(event)) {
+                            ExploreEventPreview(event: event)
+                        }
+                        .padding(.horizontal, 16)
                     }
                 }
             }
@@ -394,8 +400,10 @@ struct ExploreView: View {
             ) {
                 VStack(spacing: 8) {
                     ForEach(filteredPolls.prefix(3)) { poll in
-                        ExplorePollPreview(poll: poll)
-                            .padding(.horizontal, 16)
+                        ExplorePreviewLink(route: .poll(poll)) {
+                            ExplorePollPreview(poll: poll)
+                        }
+                        .padding(.horizontal, 16)
                     }
                 }
             }
@@ -410,8 +418,10 @@ struct ExploreView: View {
             ) {
                 VStack(spacing: 8) {
                     ForEach(filteredTasks.prefix(3)) { task in
-                        ExploreTaskPreview(task: task)
-                            .padding(.horizontal, 16)
+                        ExplorePreviewLink(route: .task(task)) {
+                            ExploreTaskPreview(task: task)
+                        }
+                        .padding(.horizontal, 16)
                     }
                 }
             }
@@ -426,8 +436,10 @@ struct ExploreView: View {
             ) {
                 VStack(spacing: 8) {
                     ForEach(filteredCrowdfunds.prefix(3)) { fund in
-                        ExploreCrowdfundPreview(crowdfund: fund)
-                            .padding(.horizontal, 16)
+                        ExplorePreviewLink(route: .crowdfund(fund)) {
+                            ExploreCrowdfundPreview(crowdfund: fund)
+                        }
+                        .padding(.horizontal, 16)
                     }
                 }
             }
