@@ -47,10 +47,12 @@ struct ExploreSearchResultsView: View {
                     if !results.events.isEmpty {
                         Section("Events") {
                             ForEach(results.events) { event in
-                                ExploreEventPreview(event: event)
-                                    .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
-                                    .listRowSeparator(.hidden)
-                                    .listRowBackground(Color.clear)
+                                ExplorePreviewLink(route: .event(event)) {
+                                    ExploreEventPreview(event: event)
+                                }
+                                .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(Color.clear)
                             }
                         }
                     }
@@ -58,10 +60,12 @@ struct ExploreSearchResultsView: View {
                     if !results.polls.isEmpty {
                         Section("Polls") {
                             ForEach(results.polls) { poll in
-                                ExplorePollPreview(poll: poll)
-                                    .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
-                                    .listRowSeparator(.hidden)
-                                    .listRowBackground(Color.clear)
+                                ExplorePreviewLink(route: .poll(poll)) {
+                                    ExplorePollPreview(poll: poll)
+                                }
+                                .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(Color.clear)
                             }
                         }
                     }
@@ -69,10 +73,12 @@ struct ExploreSearchResultsView: View {
                     if !results.tasks.isEmpty {
                         Section("Tasks") {
                             ForEach(results.tasks) { task in
-                                ExploreTaskPreview(task: task)
-                                    .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
-                                    .listRowSeparator(.hidden)
-                                    .listRowBackground(Color.clear)
+                                ExplorePreviewLink(route: .task(task)) {
+                                    ExploreTaskPreview(task: task)
+                                }
+                                .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(Color.clear)
                             }
                         }
                     }
@@ -80,10 +86,12 @@ struct ExploreSearchResultsView: View {
                     if !results.crowdfunds.isEmpty {
                         Section("Crowdfunds") {
                             ForEach(results.crowdfunds) { fund in
-                                ExploreCrowdfundPreview(crowdfund: fund)
-                                    .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
-                                    .listRowSeparator(.hidden)
-                                    .listRowBackground(Color.clear)
+                                ExplorePreviewLink(route: .crowdfund(fund)) {
+                                    ExploreCrowdfundPreview(crowdfund: fund)
+                                }
+                                .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(Color.clear)
                             }
                         }
                     }
