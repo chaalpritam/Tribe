@@ -46,10 +46,23 @@ struct ExploreView: View {
     @State private var selectedTribe: Channel?
     @State private var mapSelection: ExploreMapPin?
     @State private var cameraPosition: MapCameraPosition = .automatic
+    @State private var debouncedSearchText = ""
+    @State private var searchDebounceTask: Task<Void, Never>?
+    @State private var searchResults = ExploreSearchResults()
+    @State private var searchLoading = false
+    @State private var profileRoute: ProfileRoute?
+
+    private struct ProfileRoute: Identifiable, Hashable {
+        let tid: String
+        var id: String { tid }
+    }
 
     private var scopeId: String? { app.activeChannel?.id }
     private var channelName: String { app.activeChannel?.displayName ?? "Your channel" }
     private var query: String { searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() }
+    private var isHubSearchActive: Bool {
+        debouncedSearchText.trimmingCharacters(in: .whitespacesAndNewlines).count >= ExploreSearch.minQueryLength
+    }
 
     private var tribeChannels: [Channel] {
         if let active = app.activeChannel, !active.isCity {
@@ -121,7 +134,18 @@ struct ExploreView: View {
 
     var body: some View {
         Group {
-            if loading, everythingEmpty, members.isEmpty, events.isEmpty {
+            if isHubSearchActive {
+                ExploreSearchResultsView(
+                    query: debouncedSearchText.trimmingCharacters(in: .whitespacesAndNewlines),
+                    results: searchResults,
+                    loading: searchLoading,
+                    onSelectProfile: { profileRoute = ProfileRoute(tid: $0) },
+                    onSelectTribe: { tribe in
+                        app.setActiveChannel(tribe)
+                        selectedTribe = tribe
+                    }
+                )
+            } else if loading, everythingEmpty, members.isEmpty, events.isEmpty {
                 loadingState
             } else if let error, everythingEmpty {
                 EmptyStateView(
@@ -148,13 +172,39 @@ struct ExploreView: View {
         }
         .background(Color(.systemGroupedBackground))
         .searchable(text: $searchText, prompt: "Search \(channelName)")
-        .refreshable { await refresh() }
-        .task(id: app.activeChannel?.id) { await refresh() }
+        .onChange(of: searchText) { _, newValue in
+            searchDebounceTask?.cancel()
+            searchDebounceTask = Task {
+                try? await Task.sleep(nanoseconds: 300_000_000)
+                guard !Task.isCancelled else { return }
+                await MainActor.run {
+                    debouncedSearchText = newValue.trimmingCharacters(in: .whitespacesAndNewlines)
+                }
+            }
+        }
+        .onChange(of: debouncedSearchText) { _, _ in
+            Task { await runHubSearch() }
+        }
+        .refreshable {
+            if isHubSearchActive {
+                await runHubSearch()
+            } else {
+                await refresh()
+            }
+        }
+        .task(id: app.activeChannel?.id) {
+            await refresh()
+            if isHubSearchActive { await runHubSearch() }
+        }
         .navigationDestination(item: $selectedTribe) { tribe in
             HomeFeedView(channelId: tribe.id)
                 .environmentObject(app.interactions)
                 .navigationTitle(tribe.displayName)
                 .navigationBarTitleDisplayMode(.inline)
+        }
+        .navigationDestination(item: $profileRoute) { route in
+            UserProfileView(tid: route.tid)
+                .environmentObject(app)
         }
     }
 
@@ -393,7 +443,9 @@ struct ExploreView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
                         ForEach(filteredMembers.prefix(8)) { member in
-                            ExploreMemberCard(member: member)
+                            ExploreMemberCard(member: member) {
+                                profileRoute = ProfileRoute(tid: member.tid)
+                            }
                         }
                     }
                     .padding(.horizontal, 16)
@@ -519,6 +571,27 @@ struct ExploreView: View {
             longitudeDelta: max(0.08, (lngs.max()! - lngs.min()!) * 1.5)
         )
         cameraPosition = .region(MKCoordinateRegion(center: center, span: span))
+    }
+
+    @MainActor
+    private func runHubSearch() async {
+        let q = debouncedSearchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard q.count >= ExploreSearch.minQueryLength else {
+            searchResults = ExploreSearchResults()
+            searchLoading = false
+            return
+        }
+
+        searchLoading = searchResults.isEmpty
+        searchResults = await ExploreSearch.run(
+            query: q,
+            activeChannel: app.activeChannel,
+            api: app.api
+        )
+        for user in searchResults.users {
+            app.userAvatars.ensureLoaded(tid: user.tid)
+        }
+        searchLoading = false
     }
 }
 
