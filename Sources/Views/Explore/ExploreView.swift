@@ -54,6 +54,7 @@ struct ExploreView: View {
     @State private var mapItemRoute: ExploreItemRoute?
     @State private var showFullscreenMap = false
     @StateObject private var mapLocation = LocationProvider()
+    @State private var joiningTribeId: String?
 
     private struct ProfileRoute: Identifiable, Hashable {
         let tid: String
@@ -67,11 +68,12 @@ struct ExploreView: View {
         debouncedSearchText.trimmingCharacters(in: .whitespacesAndNewlines).count >= ExploreSearch.minQueryLength
     }
 
-    private var tribeChannels: [Channel] {
-        if let active = app.activeChannel, !active.isCity {
-            return [active]
-        }
-        return app.joinedChannels.filter { !$0.isCity }
+    private var joinedTribes: [Channel] {
+        TribeDiscovery.joinedTribes(app: app, activeChannel: app.activeChannel)
+    }
+
+    private var discoverTribes: [Channel] {
+        TribeDiscovery.discoverTribes(allChannels: channels, app: app, activeChannel: app.activeChannel)
     }
 
     private var mapPins: [ExploreMapPin] {
@@ -102,17 +104,28 @@ struct ExploreView: View {
             || matchesSearch($0.username)
         }
     }
-    private var filteredTribes: [Channel] {
-        tribeChannels.filter {
+    private var filteredJoinedTribes: [Channel] {
+        joinedTribes.filter {
             query.isEmpty
             || matchesSearch($0.displayName)
             || matchesSearch($0.id)
+            || matchesSearch($0.description)
+        }
+    }
+
+    private var filteredDiscoverTribes: [Channel] {
+        discoverTribes.filter {
+            query.isEmpty
+            || matchesSearch($0.displayName)
+            || matchesSearch($0.id)
+            || matchesSearch($0.description)
         }
     }
 
     private var everythingEmpty: Bool {
         filteredEvents.isEmpty && filteredPolls.isEmpty && filteredTasks.isEmpty
-            && filteredCrowdfunds.isEmpty && filteredMembers.isEmpty && filteredTribes.isEmpty
+            && filteredCrowdfunds.isEmpty && filteredMembers.isEmpty
+            && filteredJoinedTribes.isEmpty && filteredDiscoverTribes.isEmpty
     }
 
     var body: some View {
@@ -233,7 +246,11 @@ struct ExploreView: View {
 
             HStack(spacing: 8) {
                 headerStat(value: filteredEvents.count, label: "Events", tint: Theme.accentEmerald)
-                headerStat(value: filteredTribes.count, label: "Tribes", tint: Theme.brand)
+                headerStat(
+                    value: filteredJoinedTribes.count + filteredDiscoverTribes.count,
+                    label: "Tribes",
+                    tint: Theme.brand
+                )
                 headerStat(value: filteredMembers.count, label: "Members", tint: Theme.accentIndigo)
             }
         }
@@ -425,29 +442,71 @@ struct ExploreView: View {
             }
         }
 
-        if filter == .all || filter == .tribes, !filteredTribes.isEmpty {
+        if filter == .all || filter == .tribes, !filteredJoinedTribes.isEmpty {
             exploreSection(
-                title: app.activeChannel?.isCity == false ? "This tribe" : "Tribes in \(app.currentCity?.displayName ?? "your city")",
-                symbol: "number",
-                tint: Theme.accentTeal,
+                title: app.activeChannel?.isCity == false ? "This tribe" : "Your tribes",
+                symbol: "checkmark.seal.fill",
+                tint: Theme.brand,
                 destination: ExploreTribesList(
-                    tribes: filteredTribes,
-                    onSelect: { selectedTribe = $0 }
+                    joined: filteredJoinedTribes,
+                    discover: [],
+                    joiningId: joiningTribeId,
+                    onSelect: selectTribe,
+                    onJoin: joinTribe
                 )
             ) {
                 VStack(spacing: 8) {
-                    ForEach(filteredTribes.prefix(4)) { tribe in
-                        Button { 
-                            app.setActiveChannel(tribe)
-                            selectedTribe = tribe 
-                        } label: {
-                            ExploreTribeRow(channel: tribe, joined: app.isJoined(channelId: tribe.id))
-                        }
-                        .buttonStyle(.plain)
-                        .padding(.horizontal, 16)
+                    ForEach(filteredJoinedTribes.prefix(4)) { tribe in
+                        tribeRow(tribe, joined: true)
+                            .padding(.horizontal, 16)
                     }
                 }
             }
+        }
+
+        if filter == .all || filter == .tribes, !filteredDiscoverTribes.isEmpty {
+            exploreSection(
+                title: "Discover in \(app.currentCity?.displayName ?? "your city")",
+                symbol: "sparkles",
+                tint: Theme.accentTeal,
+                destination: ExploreTribesList(
+                    joined: filteredJoinedTribes,
+                    discover: filteredDiscoverTribes,
+                    joiningId: joiningTribeId,
+                    onSelect: selectTribe,
+                    onJoin: joinTribe
+                )
+            ) {
+                VStack(spacing: 8) {
+                    ForEach(filteredDiscoverTribes.prefix(4)) { tribe in
+                        tribeRow(tribe, joined: false)
+                            .padding(.horizontal, 16)
+                    }
+                }
+            }
+        }
+    }
+
+    private func tribeRow(_ tribe: Channel, joined: Bool) -> some View {
+        ExploreTribeRow(
+            channel: tribe,
+            joined: joined,
+            joining: joiningTribeId == tribe.id,
+            onSelect: { selectTribe(tribe) },
+            onJoin: joined ? nil : { joinTribe(tribe) }
+        )
+    }
+
+    private func selectTribe(_ tribe: Channel) {
+        app.setActiveChannel(tribe)
+        selectedTribe = tribe
+    }
+
+    private func joinTribe(_ tribe: Channel) {
+        Task {
+            joiningTribeId = tribe.id
+            defer { joiningTribeId = nil }
+            try? await app.joinChannel(tribe)
         }
     }
 
