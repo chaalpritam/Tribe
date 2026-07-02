@@ -252,44 +252,89 @@ struct ExplorePersonCard: View {
 struct ExploreTribeRow: View {
     let channel: Channel
     let joined: Bool
+    var joining: Bool = false
+    var onSelect: (() -> Void)?
+    var onJoin: (() -> Void)?
 
     var body: some View {
         HStack(spacing: 12) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(Theme.accentTeal.opacity(0.15))
-                Image(systemName: "number")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.accentTeal)
+            Button {
+                onSelect?()
+            } label: {
+                HStack(spacing: 12) {
+                    avatar
+                    details
+                    Spacer(minLength: 8)
+                    if joined {
+                        joinedBadge
+                    }
+                    if joined || onJoin == nil {
+                        Image(systemName: "chevron.right")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.tertiary)
+                    }
+                }
             }
-            .frame(width: 40, height: 40)
+            .buttonStyle(.plain)
 
-            VStack(alignment: .leading, spacing: 2) {
-                Text(channel.displayName)
-                    .font(.subheadline.weight(.bold))
-                    .lineLimit(1)
-                Text("#\(channel.id)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
+            if !joined, let onJoin {
+                Button(action: onJoin) {
+                    Group {
+                        if joining {
+                            ProgressView()
+                                .controlSize(.small)
+                        } else {
+                            Text("Join")
+                                .font(.caption.weight(.bold))
+                        }
+                    }
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Capsule().fill(Theme.brand))
+                }
+                .buttonStyle(.plain)
+                .disabled(joining)
             }
-
-            Spacer(minLength: 8)
-
-            if joined {
-                Text("Joined")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.brand)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Capsule().fill(Theme.brand.opacity(0.12)))
-            }
-
-            Image(systemName: "chevron.right")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.tertiary)
         }
         .tribeCard(cornerRadius: 16, padding: 14)
+    }
+
+    private var avatar: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(Theme.avatarGradient(seed: "channel-\(channel.id)"))
+            Image(systemName: "number")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.white)
+        }
+        .frame(width: 40, height: 40)
+    }
+
+    private var details: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(channel.displayName)
+                .font(.subheadline.weight(.bold))
+                .foregroundStyle(.primary)
+                .lineLimit(1)
+            Text(channel.description ?? "#\(channel.id)")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+            Text("\(channel.memberCount) members")
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
+                .monospacedDigit()
+        }
+    }
+
+    private var joinedBadge: some View {
+        Text("Joined")
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(Theme.brand)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(Capsule().fill(Theme.brand.opacity(0.12)))
     }
 }
 
@@ -458,26 +503,48 @@ private struct ExplorePeopleRow: View {
 
 struct ExploreTribesList: View {
     @EnvironmentObject private var app: AppState
-    let tribes: [Channel]
+    let joined: [Channel]
+    let discover: [Channel]
+    let joiningId: String?
     let onSelect: (Channel) -> Void
+    let onJoin: (Channel) -> Void
 
     var body: some View {
         List {
-            ForEach(tribes) { tribe in
-                Button { onSelect(tribe) } label: {
-                    ExploreTribeRow(channel: tribe, joined: app.isJoined(channelId: tribe.id))
+            if !joined.isEmpty {
+                Section("Your tribes") {
+                    ForEach(joined) { tribe in
+                        tribeButton(tribe, joined: true)
+                    }
                 }
-                .buttonStyle(.plain)
-                .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.clear)
+            }
+
+            if !discover.isEmpty {
+                Section("Discover") {
+                    ForEach(discover) { tribe in
+                        tribeButton(tribe, joined: false)
+                    }
+                }
             }
         }
-        .listStyle(.plain)
+        .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
         .background(Color(.systemGroupedBackground))
         .navigationTitle("Tribes")
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func tribeButton(_ tribe: Channel, joined: Bool) -> some View {
+        ExploreTribeRow(
+            channel: tribe,
+            joined: joined,
+            joining: joiningId == tribe.id,
+            onSelect: { onSelect(tribe) },
+            onJoin: joined ? nil : { onJoin(tribe) }
+        )
+        .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
     }
 }
 
