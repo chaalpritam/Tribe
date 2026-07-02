@@ -19,6 +19,7 @@
 		1519FCB148C30F831F555542 /* OnchainTipStatsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D5FFEDC78531A2E9116928 /* OnchainTipStatsCache.swift */; };
 		18BD77F211271C5FB7EC502B /* FollowListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD367A684EDD86C88B3AF742 /* FollowListView.swift */; };
 		18F046D8A78918758995D7D0 /* CreatePollComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836F3F62D1D1612D4FD735B1 /* CreatePollComposer.swift */; };
+		1AE27AF06FD7B46D516AF7E8 /* TribeDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53DC53BAE457E33409AAB41 /* TribeDiscovery.swift */; };
 		1B3F3869869F783ECBD2F35E /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B9B6AA3EF18C34D538C2A4 /* Config.swift */; };
 		1F2BB97E54B4048F39DC7671 /* FormatCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B86BD45D2414FE1DFEA647 /* FormatCount.swift */; };
 		21DECAE119DAA5DB09BE08EF /* HomeFeedStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A90D474C319EDD7C840434E /* HomeFeedStoreTests.swift */; };
@@ -59,6 +60,7 @@
 		835258D036CAA9E6F9C6FB8D /* CitySwitcherSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED4139EAF4EA7022FFB919A /* CitySwitcherSheet.swift */; };
 		8609BC81D4B83810919D67E7 /* TaskItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F316E31ADD4D6EB42BDFE5 /* TaskItem.swift */; };
 		880C139A1BB53C4828802F5E /* ExploreMapFullscreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0AE0D2A884A5A0D810B946 /* ExploreMapFullscreenView.swift */; };
+		88613D12E782CEF6D4586512 /* TribeDiscoveryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7E2BCD26836AEA98328557 /* TribeDiscoveryTests.swift */; };
 		8B504839414AB5413F7C56AD /* ProfileEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067E8CE767B11F85B26D08FD /* ProfileEditorView.swift */; };
 		8C30E751B2D7EA2779186C89 /* FixtureLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0396174799C56A75EB7C67 /* FixtureLoader.swift */; };
 		8C327003D1D2C8E7B395C998 /* CreateMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8DB7207CE01C9CFB3F308F /* CreateMode.swift */; };
@@ -185,6 +187,7 @@
 		7B0396174799C56A75EB7C67 /* FixtureLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixtureLoader.swift; sourceTree = "<group>"; };
 		7BAE50FF86DB593BE0565EFA /* CityCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityCatalog.swift; sourceTree = "<group>"; };
 		7E0339D1BC6661D15675D8FF /* DM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DM.swift; sourceTree = "<group>"; };
+		7F7E2BCD26836AEA98328557 /* TribeDiscoveryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TribeDiscoveryTests.swift; sourceTree = "<group>"; };
 		82EBC89C6CCE1686D565DEC9 /* HomeFeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedStore.swift; sourceTree = "<group>"; };
 		836F3F62D1D1612D4FD735B1 /* CreatePollComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePollComposer.swift; sourceTree = "<group>"; };
 		84B7D76F713B555018D8909F /* SeedPhraseConnectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedPhraseConnectView.swift; sourceTree = "<group>"; };
@@ -197,6 +200,7 @@
 		9BA03DA351B97A19C409D4EC /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A303A5C9C0E1F914313853FE /* HubDecode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HubDecode.swift; sourceTree = "<group>"; };
 		A4D9E8E58C4081E671EDFC4B /* InteractionCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionCache.swift; sourceTree = "<group>"; };
+		A53DC53BAE457E33409AAB41 /* TribeDiscovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TribeDiscovery.swift; sourceTree = "<group>"; };
 		A7925052B6DE8FD2DF9D226B /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		A7A05E0148AA93495FF7C158 /* TweetMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetMedia.swift; sourceTree = "<group>"; };
 		B0B0317C6181770D4F27FA01 /* Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoints.swift; sourceTree = "<group>"; };
@@ -334,6 +338,7 @@
 				FD97737CA90A0857F0BE5F55 /* RelativeTime.swift */,
 				5FA8FD7C67A4F087BE9CF2AE /* Slug.swift */,
 				3F7C466F066EE4A1B576C4EE /* TribeDiagnostics.swift */,
+				A53DC53BAE457E33409AAB41 /* TribeDiscovery.swift */,
 				A7A05E0148AA93495FF7C158 /* TweetMedia.swift */,
 			);
 			path = Common;
@@ -525,6 +530,7 @@
 				6D211A1D44895CFE5AAE4245 /* HubDecodeTests.swift */,
 				D6EF746D40E85E350D5B1BAA /* MessageSignerTests.swift */,
 				448402E4A62278AD2269EC9A /* ModelDecodeTests.swift */,
+				7F7E2BCD26836AEA98328557 /* TribeDiscoveryTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -684,6 +690,7 @@
 				1432CEE2B1A238910B036B3D /* HubDecodeTests.swift in Sources */,
 				A9FB4B8D843C7DADEEFEAA79 /* MessageSignerTests.swift in Sources */,
 				B190A13300C8CDDA4A444463 /* ModelDecodeTests.swift in Sources */,
+				88613D12E782CEF6D4586512 /* TribeDiscoveryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -780,6 +787,7 @@
 				A50D8F17C8AF47C3CB14A73F /* ToastOverlay.swift in Sources */,
 				F10B4DD2E0D67424A7C94CF8 /* TribeApp.swift in Sources */,
 				345E644B276B350C3FEEB495 /* TribeDiagnostics.swift in Sources */,
+				1AE27AF06FD7B46D516AF7E8 /* TribeDiscovery.swift in Sources */,
 				97DC7AB340B7EC4BF457152A /* TribesView.swift in Sources */,
 				9FC781848D28FF3079127BFC /* Tweet.swift in Sources */,
 				6EC65981830DC529D0D8CDDE /* TweetCardView.swift in Sources */,

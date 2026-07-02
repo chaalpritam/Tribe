@@ -15,12 +15,11 @@ struct TribesView: View {
     private var cityName: String { app.currentCity?.displayName ?? "your city" }
 
     private var joinedTribes: [Channel] {
-        app.joinedChannels.filter { !$0.isCity }
+        TribeDiscovery.joinedTribes(app: app, activeChannel: app.currentCity)
     }
 
     private var discoverTribes: [Channel] {
-        channels
-            .filter { !$0.isCity && !app.isJoined(channelId: $0.id) }
+        TribeDiscovery.discoverTribes(allChannels: channels, app: app, activeChannel: app.currentCity)
     }
 
     var body: some View {
