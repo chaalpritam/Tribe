@@ -96,6 +96,7 @@ struct ExploreCrowdfundPreview: View {
 struct ExploreMemberCard: View {
     @EnvironmentObject private var app: AppState
     let member: ChannelMember
+    var onTap: (() -> Void)?
 
     private var handle: String {
         if let u = member.username { return "@\(u).tribe" }
@@ -103,6 +104,16 @@ struct ExploreMemberCard: View {
     }
 
     var body: some View {
+        Button {
+            onTap?()
+        } label: {
+            cardContent
+        }
+        .buttonStyle(.plain)
+        .disabled(onTap == nil)
+    }
+
+    private var cardContent: some View {
         VStack(alignment: .leading, spacing: 10) {
             UserAvatarView(
                 tid: member.tid,
@@ -127,15 +138,21 @@ struct ExploreMemberCard: View {
 }
 
 struct ExploreMembersList: View {
+    @EnvironmentObject private var app: AppState
     let members: [ChannelMember]
 
     var body: some View {
         List {
             ForEach(members) { member in
-                ExploreMemberRow(member: member)
-                    .listRowInsets(EdgeInsets())
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color(.systemBackground))
+                NavigationLink {
+                    UserProfileView(tid: member.tid)
+                        .environmentObject(app)
+                } label: {
+                    ExploreMemberRow(member: member)
+                }
+                .listRowInsets(EdgeInsets())
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color(.systemBackground))
             }
         }
         .listStyle(.plain)
