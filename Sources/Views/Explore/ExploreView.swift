@@ -51,6 +51,9 @@ struct ExploreView: View {
     @State private var searchResults = ExploreSearchResults()
     @State private var searchLoading = false
     @State private var profileRoute: ProfileRoute?
+    @State private var mapItemRoute: ExploreItemRoute?
+    @State private var showFullscreenMap = false
+    @StateObject private var mapLocation = LocationProvider()
 
     private struct ProfileRoute: Identifiable, Hashable {
         let tid: String
@@ -72,27 +75,7 @@ struct ExploreView: View {
     }
 
     private var mapPins: [ExploreMapPin] {
-        var pins: [ExploreMapPin] = []
-        for event in scopedEvents where event.latitude != nil && event.longitude != nil {
-            pins.append(ExploreMapPin(
-                id: "event:\(event.id)",
-                kind: .event,
-                title: event.title,
-                subtitle: event.locationText ?? "Event",
-                coordinate: CLLocationCoordinate2D(latitude: event.latitude!, longitude: event.longitude!)
-            ))
-        }
-        for channel in channels where channel.isCity {
-            guard let lat = channel.latitude, let lng = channel.longitude else { continue }
-            pins.append(ExploreMapPin(
-                id: "city:\(channel.id)",
-                kind: .city,
-                title: channel.displayName,
-                subtitle: "City channel",
-                coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lng)
-            ))
-        }
-        return pins
+        ExploreMapPin.from(events: scopedEvents, channels: channels)
     }
 
     private var scopedEvents: [Event] { scoped(events) { $0.channelId } }
@@ -210,6 +193,24 @@ struct ExploreView: View {
             ExploreItemDetailView(route: route)
                 .environmentObject(app)
         }
+        .navigationDestination(item: $mapItemRoute) { route in
+            ExploreItemDetailView(route: route)
+                .environmentObject(app)
+        }
+        .fullScreenCover(isPresented: $showFullscreenMap) {
+            ExploreMapFullscreenView(
+                channelName: channelName,
+                emptyMessage: "No map pins in \(channelName) yet",
+                pins: mapPins,
+                events: scopedEvents,
+                channels: channels,
+                cameraPosition: $cameraPosition,
+                selection: $mapSelection,
+                location: mapLocation,
+                onOpenEvent: openEventFromMap,
+                onOpenCity: openCityFromMap
+            )
+        }
     }
 
     // MARK: - Header
@@ -269,8 +270,6 @@ struct ExploreView: View {
         )
     }
 
-    // MARK: - Map
-
     @ViewBuilder
     private var mapSection: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -279,69 +278,30 @@ struct ExploreView: View {
                 .foregroundStyle(Theme.brand)
                 .padding(.horizontal, 16)
 
-            Group {
-                if mapPins.isEmpty {
-                    ZStack {
-                        Theme.avatarGradient(seed: "map-\(channelName)")
-                            .opacity(0.35)
-                        VStack(spacing: 6) {
-                            Image(systemName: "mappin.slash")
-                                .font(.title2)
-                            Text("No map pins in \(channelName) yet")
-                                .font(.footnote.weight(.medium))
-                        }
-                        .foregroundStyle(.secondary)
-                    }
-                } else {
-                    Map(position: $cameraPosition, selection: Binding(
-                        get: { mapSelection?.id },
-                        set: { id in mapSelection = mapPins.first { $0.id == id } }
-                    )) {
-                        ForEach(mapPins) { pin in
-                            Marker(pin.title, systemImage: pin.kind.symbol, coordinate: pin.coordinate)
-                                .tint(pin.kind.tint)
-                                .tag(pin.id)
-                        }
-                    }
-                    .mapStyle(.standard(elevation: .flat))
-                    .overlay(alignment: .bottom) {
-                        if let pin = mapSelection {
-                            mapPinCard(pin)
-                                .padding(12)
-                                .transition(.move(edge: .bottom).combined(with: .opacity))
-                        }
-                    }
-                }
-            }
-            .frame(height: 200)
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            ExploreMapView(
+                pins: mapPins,
+                events: scopedEvents,
+                channels: channels,
+                emptyMessage: "No map pins in \(channelName) yet",
+                onExpand: { showFullscreenMap = true },
+                cameraPosition: $cameraPosition,
+                selection: $mapSelection,
+                location: mapLocation,
+                onOpenEvent: openEventFromMap,
+                onOpenCity: openCityFromMap
+            )
             .padding(.horizontal, 16)
         }
     }
 
-    private func mapPinCard(_ pin: ExploreMapPin) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Image(systemName: pin.kind.symbol)
-                    .foregroundStyle(pin.kind.tint)
-                Text(pin.kind.label)
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Button { mapSelection = nil } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.tertiary)
-                }
-            }
-            Text(pin.title)
-                .font(.headline.weight(.bold))
-            Text(pin.subtitle)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-        }
-        .padding(14)
-        .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+    private func openEventFromMap(_ event: Event) {
+        mapSelection = nil
+        mapItemRoute = .event(event)
+    }
+
+    private func openCityFromMap(_ channel: Channel) {
+        mapSelection = nil
+        app.setActiveChannel(channel)
     }
 
     // MARK: - Filters
@@ -568,21 +528,15 @@ struct ExploreView: View {
             app.userAvatars.ensureLoaded(tid: member.tid)
         }
         recenterMapIfNeeded()
+        mapLocation.request()
     }
 
     private func recenterMapIfNeeded() {
         guard !mapPins.isEmpty else { return }
-        let lats = mapPins.map(\.coordinate.latitude)
-        let lngs = mapPins.map(\.coordinate.longitude)
-        let center = CLLocationCoordinate2D(
-            latitude: (lats.min()! + lats.max()!) / 2,
-            longitude: (lngs.min()! + lngs.max()!) / 2
+        cameraPosition = ExploreMapPin.regionFitting(
+            mapPins,
+            userCoordinate: mapLocation.coordinate
         )
-        let span = MKCoordinateSpan(
-            latitudeDelta: max(0.08, (lats.max()! - lats.min()!) * 1.5),
-            longitudeDelta: max(0.08, (lngs.max()! - lngs.min()!) * 1.5)
-        )
-        cameraPosition = .region(MKCoordinateRegion(center: center, span: span))
     }
 
     @MainActor
@@ -648,39 +602,4 @@ private func exploreSection<Content: View, Destination: View>(
 
         content()
     }
-}
-
-// MARK: - Map pin model
-
-private struct ExploreMapPin: Identifiable, Hashable {
-    enum Kind: Hashable {
-        case event, city
-        var symbol: String {
-            switch self {
-            case .event: return "calendar"
-            case .city: return "building.2.fill"
-            }
-        }
-        var tint: Color {
-            switch self {
-            case .event: return Theme.accentEmerald
-            case .city: return Theme.brand
-            }
-        }
-        var label: String {
-            switch self {
-            case .event: return "Event"
-            case .city: return "City"
-            }
-        }
-    }
-
-    let id: String
-    let kind: Kind
-    let title: String
-    let subtitle: String
-    let coordinate: CLLocationCoordinate2D
-
-    static func == (lhs: ExploreMapPin, rhs: ExploreMapPin) -> Bool { lhs.id == rhs.id }
-    func hash(into hasher: inout Hasher) { hasher.combine(id) }
 }
