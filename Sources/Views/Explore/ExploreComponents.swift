@@ -358,15 +358,23 @@ struct ExploreEventsList: View {
     @EnvironmentObject private var app: AppState
     let events: [Event]
 
+    private var sections: [EventTimeBuckets.Section] {
+        EventTimeBuckets.sections(from: events)
+    }
+
     var body: some View {
         List {
-            ForEach(events) { event in
-                EventCardView(event: event)
-                    .environmentObject(app)
-                    .feedListRow()
+            ForEach(sections) { section in
+                SwiftUI.Section(section.bucket.title) {
+                    ForEach(section.events) { event in
+                        EventCardView(event: event)
+                            .environmentObject(app)
+                            .feedListRow()
+                    }
+                }
             }
         }
-        .listStyle(.plain)
+        .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
         .background(Color(.systemGroupedBackground))
         .navigationTitle("Events")

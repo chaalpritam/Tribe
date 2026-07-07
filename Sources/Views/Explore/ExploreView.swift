@@ -88,6 +88,10 @@ struct ExploreView: View {
     private var filteredEvents: [Event] {
         scopedEvents.filter { matchesSearch($0.title) }
     }
+
+    private var eventSections: [EventTimeBuckets.Section] {
+        EventTimeBuckets.sections(from: filteredEvents)
+    }
     private var filteredPolls: [Poll] {
         scopedPolls.filter { matchesSearch($0.question) }
     }
@@ -350,19 +354,21 @@ struct ExploreView: View {
 
     @ViewBuilder
     private var contentSections: some View {
-        if filter == .all || filter == .events, !filteredEvents.isEmpty {
-            exploreSection(
-                title: "Upcoming events",
-                symbol: "calendar",
-                tint: Theme.accentEmerald,
-                destination: ExploreEventsList(events: filteredEvents)
-            ) {
-                VStack(spacing: 8) {
-                    ForEach(filteredEvents.prefix(3)) { event in
-                        ExplorePreviewLink(route: .event(event)) {
-                            ExploreEventPreview(event: event)
+        if filter == .all || filter == .events {
+            ForEach(eventSections) { section in
+                exploreSection(
+                    title: section.bucket.title,
+                    symbol: section.bucket.symbol,
+                    tint: Theme.accentEmerald,
+                    destination: ExploreEventsList(events: filteredEvents)
+                ) {
+                    VStack(spacing: 8) {
+                        ForEach(section.events.prefix(2)) { event in
+                            ExplorePreviewLink(route: .event(event)) {
+                                ExploreEventPreview(event: event)
+                            }
+                            .padding(.horizontal, 16)
                         }
-                        .padding(.horizontal, 16)
                     }
                 }
             }
